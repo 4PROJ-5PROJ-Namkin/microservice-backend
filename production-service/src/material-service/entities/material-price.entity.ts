@@ -3,7 +3,7 @@ import { Material } from './material.entity';
 
 @Entity()
 export class MaterialPrice {
-    @PrimaryGeneratedColumn("uuid")
+    @PrimaryGeneratedColumn("increment")
     id: number;
 
     @ManyToOne(() => Material, material => material.prices)

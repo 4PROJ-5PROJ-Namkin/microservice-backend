@@ -1,10 +1,10 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToMany, JoinTable } from 'typeorm';
 import { MaterialPrice } from './material-price.entity';
-import { PartInformation } from './part-information.entity';
+import { PartInformation } from '../../part-information-service/entities/part-information.entity';
 
 @Entity()
 export class Material {
-    @PrimaryGeneratedColumn("uuid")
+    @PrimaryGeneratedColumn("increment")
     id: number;
 
     @Column({ unique: true, nullable: false })
