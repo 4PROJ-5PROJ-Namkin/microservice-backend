@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { SupplyChain } from '../../../supply-chain-service/entities/supply-chain.entity';
+import { SupplyChain } from '../../supply-chain-service/entities/supply-chain.entity';
 
 @Entity()
 export class PartInformation {

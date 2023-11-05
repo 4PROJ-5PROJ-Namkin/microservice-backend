@@ -3,8 +3,8 @@ import { ConfigService, ConfigModule } from '@nestjs/config';
 import { MaterialPrice } from "src/material-service/entities/material-price.entity";
 import { Material } from "src/material-service/entities/material.entity";
 import { PartInformation } from "src/part-information-service/entities/part-information.entity";
-import { SupplyChain } from "supply-chain-service/entities/supply-chain.entity";
-import { Machine } from "supply-chain-service/entities/machine.entity";
+import { SupplyChain } from "src/supply-chain-service/entities/supply-chain.entity";
+import { Machine } from "src/supply-chain-service/entities/machine.entity";
 
 export default class TypeOrmConfig {
     static getProductionOrmConfig(configService: ConfigService): TypeOrmModuleOptions {

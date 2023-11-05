@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
-import { PartInformation } from '../../src/part-information-service/entities/part-information.entity';
+import { PartInformation } from '../../part-information-service/entities/part-information.entity';
 import { Machine } from './machine.entity';
 
 @Entity()
