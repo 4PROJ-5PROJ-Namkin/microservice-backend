@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsNotEmpty, IsObject, IsString, Validate, ValidateNested } from 'class-validator';
+import { IsNotEmpty, IsString, ValidateNested } from 'class-validator';
 
 export class CreateMaterialDto {
     @IsNotEmpty()
@@ -8,8 +8,7 @@ export class CreateMaterialDto {
 }
 
 export class CreateManyMaterialsDto {
-    @IsObject()
-    @ValidateNested()
+    @ValidateNested({ each: true })
     @Type(() => CreateMaterialDto)
     materials: CreateMaterialDto[];
-}
+}  
