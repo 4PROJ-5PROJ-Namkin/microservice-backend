@@ -14,7 +14,7 @@ export class MaterialService {
     private readonly materialPriceRepository: Repository<MaterialPrice>,
   ) { }
 
-  async createMaterial(createMaterialDto: CreateMaterialDto): Promise<CreateMaterialDto> {
+  async createMaterial(createMaterialDto: CreateMaterialDto): Promise<Material> {
     const materialFound = await this.materialRepository.findOne({ where: { name: createMaterialDto.name } });
     if (materialFound) {
       throw new HttpException({
@@ -34,7 +34,7 @@ export class MaterialService {
     }
   }
 
-  async createManyMaterials(createMaterialDtos: CreateMaterialDto[]): Promise<CreateMaterialDto[]> {
+  async createManyMaterials(createMaterialDtos: CreateMaterialDto[]): Promise<Material[]> {
     const conflicts = [];
 
     for (const dto of createMaterialDtos) {
