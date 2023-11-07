@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, HttpCode } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, HttpCode, ParseIntPipe } from '@nestjs/common';
 import { MaterialService } from './material.service';
 import { CreateManyMaterialsDto, CreateMaterialDto } from './dto/material-service-dto/create-material.dto';
 import { UpdateManyMaterialsDto, UpdateMaterialDto } from './dto/material-service-dto/update-material.dto';
@@ -9,10 +9,7 @@ export class MaterialController {
   constructor(private readonly materialService: MaterialService) { }
 
   @Get(':id')
-  async findMaterial(@Param('id') id: number) {
-    if (isNaN(+id)) {
-      throw new HttpException('Material ID must be a number', HttpStatus.BAD_REQUEST);
-    }
+  async findMaterial(@Param('id', ParseIntPipe) id: number) {
     return this.materialService.findMaterial(id);
   }
 
@@ -37,7 +34,7 @@ export class MaterialController {
   }
 
   @Patch(':id')
-  async update(@Param('id') id: number, @Body() updateMaterialDto: UpdateMaterialDto) {
+  async update(@Param('id', ParseIntPipe) id: number, @Body() updateMaterialDto: UpdateMaterialDto) {
     return this.materialService.updateMaterial(id, updateMaterialDto);
   }
 
@@ -48,10 +45,8 @@ export class MaterialController {
   }
 
   @Delete(':id')
-  async deleteMaterial(@Param('id') id: number) {
-    if (isNaN(+id)) {
-      throw new HttpException('Material ID must be a number', HttpStatus.BAD_REQUEST);
-    }
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deleteMaterial(@Param('id', ParseIntPipe) id: number) {
     return this.materialService.deleteMaterial(id);
   }
 

@@ -10,6 +10,12 @@ const DATE_FORMATS = [
     "DD-MM-YYYY",
     "YYYY-MM-DD",
     "MM-DD-YYYY",
+    "M-D-YYYY",
+    "D-M-YYYY",
+    "MM-D-YYYY",
+    "M-DD-YYYY",
+    "DD-M-YYYY",
+    "D-MM-YYYY",
     "YYYY-DD-MM"
 ];
 
@@ -58,7 +64,7 @@ export class DateTransformer implements ValueTransformer {
     }
 
     private parseDate(value: string): Date | null {
-        
+
         for (const format of DATE_FORMATS) {
             if (moment(value, format, true).isValid()) {
                 return moment(value, format).toDate();

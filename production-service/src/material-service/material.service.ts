@@ -66,6 +66,15 @@ export class MaterialService {
   }
 
   async updateMaterial(id: number, updateMaterialDto: UpdateMaterialDto): Promise<Material> {
+    const material = await this.materialRepository.findOne({ where: { id: id } });
+    if (!material) {
+      throw new HttpException("Material ID doesn't exist.", HttpStatus.NOT_FOUND);
+    }
+
+    if (updateMaterialDto.id != id) {
+      throw new HttpException("Material ID doesn't match.", HttpStatus.BAD_REQUEST);
+    }
+
     if (updateMaterialDto.name) {
       const existingMaterial = await this.materialRepository.findOne({
         where: {
@@ -102,6 +111,11 @@ export class MaterialService {
 
     await this.connection.transaction(async manager => {
       for (const updateMaterialDto of updateManyMaterialsDto.materials) {
+        const material = await this.materialRepository.findOne({ where: { id: updateMaterialDto.id } });
+        if (!material) {
+          throw new HttpException(`One of the materials with ID ${updateMaterialDto.id} doesn't exist.`, HttpStatus.NOT_FOUND);
+        }
+
         const existingMaterial = await manager.findOne(Material, {
           where: {
             name: updateMaterialDto.name,
