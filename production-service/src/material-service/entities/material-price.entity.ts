@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import { Material } from './material.entity';
+import { DateTransformer } from 'src/utils/date';
 
 @Entity()
 export class MaterialPrice {
@@ -14,10 +15,7 @@ export class MaterialPrice {
 
     @Column({
         type: 'varchar',
-        transformer: {
-            to: (value: Date) => value ? `${(value.getMonth() + 1).toString().padStart(2, '0')}-${value.getDate().toString().padStart(2, '0')}-${value.getFullYear()}` : null,
-            from: (value: string) => value ? new Date(value) : null,
-        },
+        transformer: new DateTransformer(),
     })
     date: string;
 }

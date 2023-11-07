@@ -12,8 +12,6 @@ export class MaterialService {
   constructor(
     @InjectRepository(Material)
     private readonly materialRepository: Repository<Material>,
-    @InjectRepository(MaterialPrice)
-    private readonly materialPriceRepository: Repository<MaterialPrice>,
     private readonly connection: Connection
   ) { }
 
