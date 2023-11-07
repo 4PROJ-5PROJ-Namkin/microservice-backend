@@ -2,21 +2,21 @@ import { registerDecorator, ValidationOptions, ValidatorConstraint, ValidatorCon
 import * as moment from "moment";
 import { ValueTransformer } from 'typeorm';
 
+const DATE_FORMATS = [
+    "DD/MM/YYYY",
+    "YYYY/MM/DD",
+    "MM/DD/YYYY",
+    "YYYY/DD/MM",
+    "DD-MM-YYYY",
+    "YYYY-MM-DD",
+    "MM-DD-YYYY",
+    "YYYY-DD-MM"
+];
+
 @ValidatorConstraint({ async: true })
 export class IsLooseDateStringConstraint implements ValidatorConstraintInterface {
     validate(date: string, args: ValidationArguments) {
-        const formats = [
-            "DD/MM/YYYY",
-            "YYYY/MM/DD",
-            "MM/DD/YYYY",
-            "YYYY/DD/MM",
-            "DD-MM-YYYY",
-            "YYYY-MM-DD",
-            "MM-DD-YYYY",
-            "YYYY-DD-MM"
-        ];
-
-        for (const format of formats) {
+        for (const format of DATE_FORMATS) {
             if (moment(date, format, true).isValid()) {
                 return true;
             }
@@ -58,18 +58,8 @@ export class DateTransformer implements ValueTransformer {
     }
 
     private parseDate(value: string): Date | null {
-        const formats = [
-            "DD/MM/YYYY",
-            "YYYY/MM/DD",
-            "MM/DD/YYYY",
-            "YYYY/DD/MM",
-            "DD-MM-YYYY",
-            "YYYY-MM-DD",
-            "MM-DD-YYYY",
-            "YYYY-DD-MM"
-        ];
-
-        for (const format of formats) {
+        
+        for (const format of DATE_FORMATS) {
             if (moment(value, format, true).isValid()) {
                 return moment(value, format).toDate();
             }
