@@ -3,6 +3,8 @@ import { MaterialService } from './material.service';
 import { CreateManyMaterialsDto, CreateMaterialDto } from './dto/material-service-dto/create-material.dto';
 import { UpdateManyMaterialsDto, UpdateMaterialDto } from './dto/material-service-dto/update-material.dto';
 import { DeleteManyMaterialsDto } from './dto/material-service-dto/delete-material.dto';
+import { CreateMaterialPartInformationsDto } from './dto/material-part-informations-dto/create-part-information-materials.dto';
+import { DeleteMaterialPartInformationsDto } from './dto/material-part-informations-dto/delete-part-information-materials.dto';
 
 @Controller('materials')
 export class MaterialController {
@@ -48,6 +50,21 @@ export class MaterialController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteMaterial(@Param('id', ParseIntPipe) id: number) {
     return this.materialService.deleteMaterial(id);
+  }
+
+  @Post(':id/part-informations')
+  async addPartInformationToMaterial(@Param('id', ParseIntPipe) id: number,
+    @Body() createMaterialPartInformationsDto: CreateMaterialPartInformationsDto
+  ) {
+    return this.materialService.addPartInformationToMaterial(id, createMaterialPartInformationsDto);
+  }
+
+  @Delete(':id/part-informations')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deletePartInformationToMaterial(@Param('id', ParseIntPipe) id: number,
+    @Body() deleteMaterialPartInformationsDto: DeleteMaterialPartInformationsDto
+  ) {
+    return this.materialService.deletePartInformationFromMaterial(id, deleteMaterialPartInformationsDto);
   }
 
 }

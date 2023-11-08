@@ -2,16 +2,20 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, Equal, In, Not, Repository } from 'typeorm';
 import { Material } from './entities/material.entity';
-import { MaterialPrice } from './entities/material-price.entity';
 import { CreateMaterialDto } from './dto/material-service-dto/create-material.dto';
 import { UpdateManyMaterialsDto, UpdateMaterialDto } from './dto/material-service-dto/update-material.dto';
 import { DeleteManyMaterialsDto } from './dto/material-service-dto/delete-material.dto';
+import { CreateMaterialPartInformationsDto } from './dto/material-part-informations-dto/create-part-information-materials.dto';
+import { PartInformation } from 'src/part-information-service/entities/part-information.entity';
+import { DeleteMaterialPartInformationsDto } from './dto/material-part-informations-dto/delete-part-information-materials.dto';
 
 @Injectable()
 export class MaterialService {
   constructor(
     @InjectRepository(Material)
     private readonly materialRepository: Repository<Material>,
+    @InjectRepository(PartInformation)
+    private readonly partInformationRepository: Repository<PartInformation>,
     private readonly connection: Connection
   ) { }
 
@@ -181,4 +185,52 @@ export class MaterialService {
 
     await this.materialRepository.delete(idsToDelete);
   }
+
+  async addPartInformationToMaterial(id: number, createMaterialPartInformationsDto: CreateMaterialPartInformationsDto): Promise<Material> {
+    const material = await this.materialRepository.findOne({
+      where: { id: id },
+      relations: ['partInformations']
+    });
+
+    if (!material) {
+      throw new HttpException('Material not found.', HttpStatus.NOT_FOUND);
+    }
+
+    const partInformationIds = createMaterialPartInformationsDto.partInformationIds;
+    const partInformationEntities = await this.partInformationRepository.findByIds(partInformationIds);
+
+    if (partInformationEntities.length !== partInformationIds.length) {
+      throw new HttpException('One or more part information not found.', HttpStatus.NOT_FOUND);
+    }
+
+    material.partInformations = [
+      ...material.partInformations,
+      ...partInformationEntities.filter((partInformation) => !material.partInformations.includes(partInformation))
+    ];
+
+    return this.materialRepository.save(material);
+  }
+
+  async deletePartInformationFromMaterial(id: number, deleteMaterialPartInformationsDto: DeleteMaterialPartInformationsDto): Promise<Material> {
+    const material = await this.materialRepository.findOne({
+      where: { id: id },
+      relations: ['partInformations']
+    });
+
+    if (!material) {
+      throw new HttpException('Material not found.', HttpStatus.NOT_FOUND);
+    }
+
+    const partInformationIds = deleteMaterialPartInformationsDto.partInformationIds;
+    material.partInformations = material.partInformations.filter(partInfo =>
+      !partInformationIds.includes(partInfo.id)
+    );
+
+    try {
+      return await this.materialRepository.save(material);
+    } catch (error) {
+      throw new HttpException(`Error removing part information from material: ${error.message}`, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
 }
