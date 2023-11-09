@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToMany } from 'typeorm';
 import { SupplyChain } from '../../supply-chain-service/entities/supply-chain.entity';
+import { Material } from 'src/material-service/entities/material.entity';
 
 @Entity()
 export class PartInformation {
@@ -14,4 +15,7 @@ export class PartInformation {
 
     @OneToMany(() => SupplyChain, supplyChain => supplyChain.part)
     supplyChain: SupplyChain;
+
+    @ManyToMany(() => Material, material => material.partInformations)
+    materials: Material[];
 }

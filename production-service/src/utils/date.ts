@@ -1,4 +1,4 @@
-import { registerDecorator, ValidationOptions, ValidatorConstraint, ValidatorConstraintInterface, ValidationArguments } from 'class-validator';
+import { registerDecorator, ValidationOptions, ValidatorConstraint, ValidatorConstraintInterface } from 'class-validator';
 import * as moment from "moment";
 import { ValueTransformer } from 'typeorm';
 
@@ -21,7 +21,7 @@ const DATE_FORMATS = [
 
 @ValidatorConstraint({ async: true })
 export class IsLooseDateStringConstraint implements ValidatorConstraintInterface {
-    validate(date: string, args: ValidationArguments) {
+    validate(date: string) {
         for (const format of DATE_FORMATS) {
             if (moment(date, format, true).isValid()) {
                 return true;
@@ -30,7 +30,7 @@ export class IsLooseDateStringConstraint implements ValidatorConstraintInterface
         return false;
     }
 
-    defaultMessage(args: ValidationArguments) {
+    defaultMessage() {
         return 'Date format is invalid.';
     }
 

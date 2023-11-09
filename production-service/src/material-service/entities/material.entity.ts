@@ -13,7 +13,7 @@ export class Material {
     @OneToMany(() => MaterialPrice, materialPrice => materialPrice.material)
     prices: MaterialPrice[];
 
-    @ManyToMany(() => PartInformation)
+    @ManyToMany(() => PartInformation, partInformation => partInformation.materials)
     @JoinTable({ name: 'material_part_information' })
     partInformations: PartInformation[];
 }
