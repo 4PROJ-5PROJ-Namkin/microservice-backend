@@ -200,7 +200,7 @@ export class MaterialService {
     const partInformationEntities = await this.partInformationRepository.findByIds(partInformationIds);
 
     if (partInformationEntities.length !== partInformationIds.length) {
-      throw new HttpException('One or more part information not found.', HttpStatus.NOT_FOUND);
+      throw new HttpException('One or more Part Information not found.', HttpStatus.NOT_FOUND);
     }
 
     material.partInformations = [

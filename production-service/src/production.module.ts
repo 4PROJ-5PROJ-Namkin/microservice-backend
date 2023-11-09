@@ -8,12 +8,14 @@ import { Material } from './material-service/entities/material.entity';
 import { MaterialPriceController } from './material-service/material-price.controller';
 import { MaterialPriceService } from './material-service/material-price.service';
 import { PartInformation } from './part-information-service/entities/part-information.entity';
+import { PartInformationController } from './part-information-service/part-information.controller';
+import { PartInformationService } from './part-information-service/part-information.service';
 
 @Module({
   imports: [TypeOrmModule.forRootAsync(productionDbConfig),
   TypeOrmModule.forFeature([Material, MaterialPrice, PartInformation])
   ],
-  controllers: [MaterialController, MaterialPriceController],
-  providers: [MaterialService, MaterialPriceService]
+  controllers: [MaterialController, MaterialPriceController, PartInformationController],
+  providers: [MaterialService, MaterialPriceService, PartInformationService]
 })
-export class ProductionModule {}
+export class ProductionModule { }

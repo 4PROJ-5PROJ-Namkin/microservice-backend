@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsArray, IsInt, ArrayNotEmpty, IsNumber, IsPositive, ValidateNested } from 'class-validator';
+import { IsArray, IsNumber, IsPositive, ValidateNested } from 'class-validator';
 
 class MaterialToDeleteDto {
     @IsNumber()

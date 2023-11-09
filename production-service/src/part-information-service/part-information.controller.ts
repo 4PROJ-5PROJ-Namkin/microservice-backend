@@ -1,12 +1,28 @@
-import { Controller, Get } from '@nestjs/common';
-import { AppService } from './part-information.service';
+import { Body, Controller, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
+import { PartInformationService } from './part-information.service';
+import { CreateManyPartInformationDto, CreatePartInformationDto } from './dto/part-information/create-part-information.dto';
 
-@Controller()
-export class AppController {
-  constructor(private readonly appService: AppService) {}
+@Controller('part-information')
+export class PartInformationController {
+  constructor(private readonly partInformationService: PartInformationService) { }
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  @Get('many-part-information')
+  async findAllPartInformations() {
+    return this.partInformationService.findAllPartInformations();
+  }
+
+  @Get(':id')
+  async findOnePartInformation(@Param('id', ParseIntPipe) id: number) {
+    return this.partInformationService.findOnePartInformation(id);
+  }
+
+  @Post()
+  async createPartInformation(@Body() createPartInformationDto: CreatePartInformationDto) {
+    return this.partInformationService.createPartInformation(createPartInformationDto);
+  }
+
+  @Post('many-part-information')
+  async createManyPartInformations(@Body() createManyPartInformationDto: CreateManyPartInformationDto) {
+    return this.partInformationService.createManyPartInformations(createManyPartInformationDto);
   }
 }
