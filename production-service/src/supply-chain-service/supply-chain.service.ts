@@ -4,7 +4,7 @@ import { ConflictException, HttpException, HttpStatus, Injectable, NotFoundExcep
 import { Repository } from "typeorm";
 import { PartInformation } from "src/part-information-service/entities/part-information.entity";
 import { Machine } from "./entities/machine.entity";
-import { CreateSupplyChainDto } from "./dto/supply-chain-dto/create-supply-chain.dto";
+import { CreateSupplyChainDto } from "./dto/create-supply-chain.dto";
 
 @Injectable()
 export class SupplyChainService {

@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { SupplyChainService } from './supply-chain.service';
-import { CreateSupplyChainDto } from './dto/supply-chain-dto/create-supply-chain.dto';
+import { CreateSupplyChainDto } from './dto/create-supply-chain.dto';
 
 @Controller('supply-chain')
 export class SupplyChainController {
