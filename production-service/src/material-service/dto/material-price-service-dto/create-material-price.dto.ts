@@ -42,7 +42,3 @@ export class CreateManyMaterialPricesDto {
     })
     prices: CreateMaterialPriceDto[];
 }
-
-function IsFloat(): (target: CreateMaterialPriceDto, propertyKey: "price") => void {
-    throw new Error('Function not implemented.');
-}
