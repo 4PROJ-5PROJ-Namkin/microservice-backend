@@ -16,6 +16,11 @@ export class UpdateMaterialDto extends PartialType(CreateMaterialDto) {
 
     @IsOptional()
     @IsString()
+    @ApiProperty({
+        description: 'The name of the material.',
+        example: "zinc",
+        type: String,
+    })
     name?: string;
 }
 

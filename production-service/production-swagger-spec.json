@@ -923,10 +923,16 @@
             "type": "number",
             "description": "Id to pinpoint the material to update.",
             "example": 12
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the material.",
+            "example": "zinc"
           }
         },
         "required": [
-          "id"
+          "id",
+          "name"
         ]
       },
       "UpdateManyMaterialsDto": {
