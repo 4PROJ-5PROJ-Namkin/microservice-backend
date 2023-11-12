@@ -1,8 +1,10 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Param, ParseIntPipe, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Param, ParseIntPipe, Post, UseGuards } from "@nestjs/common";
 import { MachineService } from "./machine.service";
 import { ApiTags } from "@nestjs/swagger";
+import { RateLimiterGuard } from "nestjs-rate-limiter";
 
 @ApiTags('Machine')
+@UseGuards(RateLimiterGuard)
 @Controller('machine')
 export class MachineController {
     constructor(private readonly machineService: MachineService) { }

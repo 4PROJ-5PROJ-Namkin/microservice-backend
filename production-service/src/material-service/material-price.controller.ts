@@ -1,10 +1,12 @@
-import { Controller, Post, Body, Param, ParseIntPipe, Get, Delete, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Body, Param, ParseIntPipe, Get, Delete, HttpCode, HttpStatus, UseGuards } from '@nestjs/common';
 import { MaterialPriceService } from './material-price.service';
 import { CreateMaterialPriceDto, CreateManyMaterialPricesDto } from './dto/material-price-service-dto/create-material-price.dto';
 import { DeleteManyMaterialPricesDto, DeleteMaterialPriceDto } from './dto/material-price-service-dto/delete-material-price.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { RateLimiterGuard } from 'nestjs-rate-limiter';
 
 @ApiTags('Materials')
+@UseGuards(RateLimiterGuard)
 @Controller('materials/prices')
 export class MaterialPriceController {
     constructor(private readonly materialPriceService: MaterialPriceService) { }

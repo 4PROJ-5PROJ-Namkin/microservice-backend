@@ -3,6 +3,7 @@ import { ProductionModule } from './production.module';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { writeFileSync } from 'fs';
+import { RateLimiterGuard } from 'nestjs-rate-limiter';
 
 async function bootstrap() {
   const app = await NestFactory.create(ProductionModule);
@@ -29,6 +30,7 @@ async function bootstrap() {
   writeFileSync('./production-swagger-spec.json', JSON.stringify(productionDocument, null, 2));
 
   app.setGlobalPrefix('api/v1');
+  app.enableCors();
   await app.listen(3000);
 }
 

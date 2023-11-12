@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Patch, Post, UseGuards } from '@nestjs/common';
 import { PartInformationService } from './part-information.service';
 import { CreateManyPartInformationDto, CreatePartInformationDto } from './dto/part-information/create-part-information.dto';
 import { UpdateManyPartInformationDto, UpdatePartInformationDto } from './dto/part-information/update-part-information.dto';
@@ -6,8 +6,10 @@ import { DeletePartInformationDto } from './dto/part-information/delete-part-inf
 import { CreatePartInformationMaterialsDto } from './dto/part-information-materials/create-part-information-materials.dto';
 import { DeletePartInformationMaterialsDto } from './dto/part-information-materials/delete-part-information-materials.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { RateLimiterGuard } from 'nestjs-rate-limiter';
 
 @ApiTags('Part Information')
+@UseGuards(RateLimiterGuard)
 @Controller('part-information')
 export class PartInformationController {
   constructor(private readonly partInformationService: PartInformationService) { }

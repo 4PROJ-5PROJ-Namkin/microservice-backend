@@ -18,6 +18,8 @@ import { SupplyChain } from './supply-chain-service/entities/supply-chain.entity
 import { SupplyChainService } from './supply-chain-service/supply-chain.service';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { RateLimiterGuard, RateLimiterModule } from 'nestjs-rate-limiter';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -26,10 +28,18 @@ import { join } from 'path';
       serveRoot: '/api/v1/production',
       renderPath: '/api/v1/production/production-swagger-spec.json'
     }),
+    RateLimiterModule.register({
+      points: 50,
+      duration: 60,
+    }),
     TypeOrmModule.forRootAsync(productionDbConfig),
     TypeOrmModule.forFeature([Material, MaterialPrice, PartInformation, Machine, SupplyChain])
   ],
   controllers: [MaterialController, MaterialPriceController, PartInformationController, MachineController, SupplyChainController],
-  providers: [MaterialService, MaterialPriceService, PartInformationService, MachineService, SupplyChainService]
+  providers: [MaterialService, MaterialPriceService, PartInformationService, MachineService, SupplyChainService,
+    {
+      provide: APP_GUARD,
+      useClass: RateLimiterGuard,
+    }]
 })
 export class ProductionModule { }

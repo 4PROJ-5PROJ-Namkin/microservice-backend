@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, HttpCode, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, HttpCode, ParseIntPipe, UseGuards } from '@nestjs/common';
 import { MaterialService } from './material.service';
 import { CreateManyMaterialsDto, CreateMaterialDto } from './dto/material-service-dto/create-material.dto';
 import { UpdateManyMaterialsDto, UpdateMaterialDto } from './dto/material-service-dto/update-material.dto';
@@ -6,8 +6,10 @@ import { DeleteManyMaterialsDto } from './dto/material-service-dto/delete-materi
 import { CreateMaterialPartInformationsDto } from './dto/material-part-informations-dto/create-part-information-materials.dto';
 import { DeleteMaterialPartInformationsDto } from './dto/material-part-informations-dto/delete-part-information-materials.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { RateLimiterGuard } from 'nestjs-rate-limiter';
 
 @ApiTags('Materials')
+@UseGuards(RateLimiterGuard)
 @Controller('materials')
 export class MaterialController {
   constructor(private readonly materialService: MaterialService) { }

@@ -1,10 +1,12 @@
-import { Body, Controller, Get, Param, ParseUUIDPipe, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseUUIDPipe, Patch, Post, UseGuards } from '@nestjs/common';
 import { SupplyChainService } from './supply-chain.service';
 import { CreateManySupplyChainDto, CreateSupplyChainDto } from './dto/create-supply-chain.dto';
 import { UpdateManySupplyChainDto, UpdateSupplyChainDto } from './dto/update-supply-chain.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { RateLimiterGuard } from 'nestjs-rate-limiter';
 
 @ApiTags('Supply Chain')
+@UseGuards(RateLimiterGuard)
 @Controller('supply-chain')
 export class SupplyChainController {
   constructor(private readonly supplyChainService: SupplyChainService) { }
