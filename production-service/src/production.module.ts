@@ -10,12 +10,18 @@ import { MaterialPriceService } from './material-service/material-price.service'
 import { PartInformation } from './part-information-service/entities/part-information.entity';
 import { PartInformationController } from './part-information-service/part-information.controller';
 import { PartInformationService } from './part-information-service/part-information.service';
+import { MachineController } from './supply-chain-service/machine-service/machine.controller';
+import { MachineService } from './supply-chain-service/machine-service/machine.service';
+import { Machine } from './supply-chain-service/entities/machine.entity';
+import { SupplyChainController } from './supply-chain-service/supply-chain.controller';
+import { SupplyChain } from './supply-chain-service/entities/supply-chain.entity';
+import { SupplyChainService } from './supply-chain-service/supply-chain.service';
 
 @Module({
   imports: [TypeOrmModule.forRootAsync(productionDbConfig),
-  TypeOrmModule.forFeature([Material, MaterialPrice, PartInformation])
+  TypeOrmModule.forFeature([Material, MaterialPrice, PartInformation, Machine, SupplyChain])
   ],
-  controllers: [MaterialController, MaterialPriceController, PartInformationController],
-  providers: [MaterialService, MaterialPriceService, PartInformationService]
+  controllers: [MaterialController, MaterialPriceController, PartInformationController, MachineController, SupplyChainController],
+  providers: [MaterialService, MaterialPriceService, PartInformationService, MachineService, SupplyChainService]
 })
 export class ProductionModule { }

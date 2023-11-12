@@ -10,7 +10,7 @@ export class Material {
     @Column({ unique: true, nullable: false })
     name: string;
 
-    @OneToMany(() => MaterialPrice, materialPrice => materialPrice.material)
+    @OneToMany(() => MaterialPrice, materialPrice => materialPrice.material, { cascade: true })
     prices: MaterialPrice[];
 
     @ManyToMany(() => PartInformation, partInformation => partInformation.materials)

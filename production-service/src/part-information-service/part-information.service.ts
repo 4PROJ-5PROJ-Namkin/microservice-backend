@@ -8,6 +8,7 @@ import { DeletePartInformationDto } from './dto/part-information/delete-part-inf
 import { CreatePartInformationMaterialsDto } from './dto/part-information-materials/create-part-information-materials.dto';
 import { Material } from 'src/material-service/entities/material.entity';
 import { DeletePartInformationMaterialsDto } from './dto/part-information-materials/delete-part-information-materials.dto';
+import { SupplyChain } from 'src/supply-chain-service/entities/supply-chain.entity';
 
 @Injectable()
 export class PartInformationService {
@@ -15,7 +16,9 @@ export class PartInformationService {
     @InjectRepository(PartInformation)
     private readonly partInformationRepository: Repository<PartInformation>,
     @InjectRepository(Material)
-    private readonly materialRepository: Repository<Material>
+    private readonly materialRepository: Repository<Material>,
+    @InjectRepository(SupplyChain)
+    private readonly supplyChainRepository: Repository<SupplyChain>
   ) { }
 
   async findOnePartInformation(id: number): Promise<PartInformation> {
@@ -97,6 +100,20 @@ export class PartInformationService {
   }
 
   async deletePartInformation(id: number): Promise<void> {
+    await this.supplyChainRepository.delete({ part: { id: id } });
+
+    const partInformation = await this.partInformationRepository.findOne({
+      where: { id },
+      relations: ['materials']
+    });
+
+    if (!partInformation) {
+      throw new HttpException('Material not found', HttpStatus.NOT_FOUND);
+    }
+
+    partInformation.materials = [];
+    await this.partInformationRepository.save(partInformation);
+
     const result = await this.partInformationRepository.delete(id);
     if (result.affected === 0) {
       throw new HttpException('Part information not found', HttpStatus.NOT_FOUND);
@@ -115,6 +132,13 @@ export class PartInformationService {
 
     if (notFoundIDs.length > 0) {
       throw new HttpException(`Part information with IDs ${notFoundIDs.join(', ')} not found`, HttpStatus.NOT_FOUND);
+    }
+
+    for (const partInformation of foundPartInformations) {
+      await this.supplyChainRepository.delete({ part: { id: partInformation.id } });
+
+      partInformation.materials = [];
+      await this.partInformationRepository.save(partInformation);
     }
 
     await this.partInformationRepository.delete(idsToDelete);

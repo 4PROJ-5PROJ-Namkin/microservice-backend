@@ -5,9 +5,9 @@ import { Machine } from './machine.entity';
 @Entity()
 export class SupplyChain {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
-  @ManyToOne(() => Machine, machine => machine.supplyChain)
+  @ManyToOne(() => Machine, machine => machine.supplyChain, { cascade: true })
   machine: Machine[];
 
   @Column({ type: 'timestamp' })
@@ -16,20 +16,20 @@ export class SupplyChain {
   @ManyToOne(() => PartInformation, partInformation => partInformation.supplyChain)
   part: PartInformation[];
 
-  @Column({ unique: true, nullable: false })
-  order: string;
+  @Column({ unique: false, nullable: false })
+  order: number;
 
-  @Column()
-  var1: string;
+  @Column({ unique: false, nullable: true })
+  var1: number;
 
-  @Column()
+  @Column({ unique: false, nullable: true })
   var2: string;
 
-  @Column()
+  @Column({ unique: false, nullable: true })
   var3: string;
 
-  @Column()
-  var4: string;
+  @Column({ unique: false, nullable: true })
+  var4: number;
 
   @Column({ nullable: false })
   var5: boolean;

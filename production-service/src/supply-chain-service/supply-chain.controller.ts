@@ -1,12 +1,13 @@
-import { Controller, Get } from '@nestjs/common';
-import { AppService } from './supply-chain.service';
+import { Body, Controller, Get, Post } from '@nestjs/common';
+import { SupplyChainService } from './supply-chain.service';
+import { CreateSupplyChainDto } from './dto/supply-chain-dto/create-supply-chain.dto';
 
-@Controller()
-export class AppController {
-  constructor(private readonly appService: AppService) {}
+@Controller('supply-chain')
+export class SupplyChainController {
+  constructor(private readonly supplyChainService: SupplyChainService) { }
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  @Post()
+  async createSupplyChain(@Body() createSupplyChainDto: CreateSupplyChainDto) {
+    return this.supplyChainService.createSupplyChain(createSupplyChainDto);
   }
 }

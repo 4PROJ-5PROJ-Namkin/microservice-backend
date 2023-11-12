@@ -10,7 +10,7 @@ import { DeletePartInformationMaterialsDto } from './dto/part-information-materi
 export class PartInformationController {
   constructor(private readonly partInformationService: PartInformationService) { }
 
-  @Get('many-part-information')
+  @Get()
   async findAllPartInformations() {
     return this.partInformationService.findAllPartInformations();
   }

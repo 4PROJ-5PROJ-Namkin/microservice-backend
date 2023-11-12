@@ -8,6 +8,7 @@ import { DeleteManyMaterialsDto } from './dto/material-service-dto/delete-materi
 import { CreateMaterialPartInformationsDto } from './dto/material-part-informations-dto/create-part-information-materials.dto';
 import { PartInformation } from 'src/part-information-service/entities/part-information.entity';
 import { DeleteMaterialPartInformationsDto } from './dto/material-part-informations-dto/delete-part-information-materials.dto';
+import { MaterialPrice } from './entities/material-price.entity';
 
 @Injectable()
 export class MaterialService {
@@ -16,6 +17,8 @@ export class MaterialService {
     private readonly materialRepository: Repository<Material>,
     @InjectRepository(PartInformation)
     private readonly partInformationRepository: Repository<PartInformation>,
+    @InjectRepository(MaterialPrice)
+    private readonly materialPriceRepository,
     private readonly connection: Connection
   ) { }
 
@@ -163,11 +166,26 @@ export class MaterialService {
   }
 
   async deleteMaterial(id: number): Promise<void> {
-    const result = await this.materialRepository.delete(id);
-    if (result.affected === 0) {
+    await this.materialPriceRepository.delete({ material: { id } });
+
+    const material = await this.materialRepository.findOne({
+      where: { id },
+      relations: ['partInformations']
+    });
+
+    if (!material) {
       throw new HttpException('Material not found', HttpStatus.NOT_FOUND);
     }
+
+    material.partInformations = [];
+    await this.materialRepository.save(material);
+
+    const deleteResult = await this.materialRepository.delete(id);
+    if (deleteResult.affected === 0) {
+      throw new HttpException('Error deleting the material', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
+
 
   async deleteManyMaterials(deleteManyMaterialsDto: DeleteManyMaterialsDto): Promise<void> {
     const idsToDelete = deleteManyMaterialsDto.materials.map(material => material.id);
@@ -181,6 +199,13 @@ export class MaterialService {
 
     if (notFoundIDs.length > 0) {
       throw new HttpException(`Materials with IDs ${notFoundIDs.join(', ')} not found`, HttpStatus.NOT_FOUND);
+    }
+
+    for (const material of foundMaterials) {
+      await this.materialPriceRepository.delete({ material: { id: material.id } });
+
+      material.partInformations = [];
+      await this.materialRepository.save(material);
     }
 
     await this.materialRepository.delete(idsToDelete);

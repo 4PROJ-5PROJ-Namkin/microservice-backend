@@ -13,9 +13,9 @@ export class PartInformation {
     @Column({ nullable: false })
     timeToProduce: number;
 
-    @OneToMany(() => SupplyChain, supplyChain => supplyChain.part)
+    @OneToMany(() => SupplyChain, supplyChain => supplyChain.part, { cascade: true })
     supplyChain: SupplyChain;
 
-    @ManyToMany(() => Material, material => material.partInformations)
+    @ManyToMany(() => Material, material => material.partInformations, { cascade: true })
     materials: Material[];
 }

@@ -11,4 +11,4 @@ export class CreateManyMaterialsDto {
     @ValidateNested({ each: true })
     @Type(() => CreateMaterialDto)
     materials: CreateMaterialDto[];
-}  
+}
