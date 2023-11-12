@@ -2,7 +2,9 @@ import { Controller, Post, Body, Param, ParseIntPipe, Get, Delete, HttpCode, Htt
 import { MaterialPriceService } from './material-price.service';
 import { CreateMaterialPriceDto, CreateManyMaterialPricesDto } from './dto/material-price-service-dto/create-material-price.dto';
 import { DeleteManyMaterialPricesDto, DeleteMaterialPriceDto } from './dto/material-price-service-dto/delete-material-price.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Materials')
 @Controller('materials/prices')
 export class MaterialPriceController {
     constructor(private readonly materialPriceService: MaterialPriceService) { }

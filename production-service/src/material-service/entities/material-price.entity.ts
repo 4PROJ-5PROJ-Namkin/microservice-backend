@@ -10,7 +10,10 @@ export class MaterialPrice {
     @ManyToOne(() => Material, material => material.prices)
     material: Material;
 
-    @Column({ default: 0 })
+    @Column({
+        type: 'decimal',
+        default: 0
+    })
     price: number;
 
     @Column({

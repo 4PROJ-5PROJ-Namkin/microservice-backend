@@ -16,10 +16,18 @@ import { Machine } from './supply-chain-service/entities/machine.entity';
 import { SupplyChainController } from './supply-chain-service/supply-chain.controller';
 import { SupplyChain } from './supply-chain-service/entities/supply-chain.entity';
 import { SupplyChainService } from './supply-chain-service/supply-chain.service';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
-  imports: [TypeOrmModule.forRootAsync(productionDbConfig),
-  TypeOrmModule.forFeature([Material, MaterialPrice, PartInformation, Machine, SupplyChain])
+  imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..'),
+      serveRoot: '/api/v1/production',
+      renderPath: '/api/v1/production/production-swagger-spec.json'
+    }),
+    TypeOrmModule.forRootAsync(productionDbConfig),
+    TypeOrmModule.forFeature([Material, MaterialPrice, PartInformation, Machine, SupplyChain])
   ],
   controllers: [MaterialController, MaterialPriceController, PartInformationController, MachineController, SupplyChainController],
   providers: [MaterialService, MaterialPriceService, PartInformationService, MachineService, SupplyChainService]

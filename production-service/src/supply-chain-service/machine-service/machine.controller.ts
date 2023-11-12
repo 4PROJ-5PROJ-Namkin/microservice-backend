@@ -1,6 +1,8 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Param, ParseIntPipe, Post } from "@nestjs/common";
 import { MachineService } from "./machine.service";
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags('Machine')
 @Controller('machine')
 export class MachineController {
     constructor(private readonly machineService: MachineService) { }

@@ -5,7 +5,9 @@ import { UpdateManyPartInformationDto, UpdatePartInformationDto } from './dto/pa
 import { DeletePartInformationDto } from './dto/part-information/delete-part-information.dto';
 import { CreatePartInformationMaterialsDto } from './dto/part-information-materials/create-part-information-materials.dto';
 import { DeletePartInformationMaterialsDto } from './dto/part-information-materials/delete-part-information-materials.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Part Information')
 @Controller('part-information')
 export class PartInformationController {
   constructor(private readonly partInformationService: PartInformationService) { }
@@ -25,7 +27,7 @@ export class PartInformationController {
     return this.partInformationService.createPartInformation(createPartInformationDto);
   }
 
-  @Post('many-part-information')
+  @Post('many-part-informations')
   async createManyPartInformations(@Body() createManyPartInformationDto: CreateManyPartInformationDto) {
     return this.partInformationService.createManyPartInformations(createManyPartInformationDto);
   }

@@ -5,7 +5,9 @@ import { UpdateManyMaterialsDto, UpdateMaterialDto } from './dto/material-servic
 import { DeleteManyMaterialsDto } from './dto/material-service-dto/delete-material.dto';
 import { CreateMaterialPartInformationsDto } from './dto/material-part-informations-dto/create-part-information-materials.dto';
 import { DeleteMaterialPartInformationsDto } from './dto/material-part-informations-dto/delete-part-information-materials.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Materials')
 @Controller('materials')
 export class MaterialController {
   constructor(private readonly materialService: MaterialService) { }

@@ -7,7 +7,10 @@ export class PartInformation {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
-    @Column({ default: 0 })
+    @Column({
+        type: 'decimal',
+        default: 0
+    })
     defaultPrice: number;
 
     @Column({ nullable: false })
@@ -16,6 +19,6 @@ export class PartInformation {
     @OneToMany(() => SupplyChain, supplyChain => supplyChain.part, { cascade: true })
     supplyChain: SupplyChain;
 
-    @ManyToMany(() => Material, material => material.partInformations, { cascade: true })
+    @ManyToMany(() => Material, material => material.partInformations)
     materials: Material[];
 }
