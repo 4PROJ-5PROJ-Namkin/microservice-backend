@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import { PartInformation } from '../../part-information-service/entities/part-information.entity';
 import { Machine } from './machine.entity';
+import { UnixTimestampTransformer } from 'src/utils/timestamp';
 
 @Entity()
 export class SupplyChain {
@@ -10,7 +11,10 @@ export class SupplyChain {
   @ManyToOne(() => Machine, machine => machine.supplyChain, { cascade: true })
   machine: Machine[];
 
-  @Column({ type: 'timestamp' })
+  @Column({
+    type: 'bigint',
+    transformer: new UnixTimestampTransformer(),
+  })
   timeOfProduction: Date;
 
   @ManyToOne(() => PartInformation, partInformation => partInformation.supplyChain)

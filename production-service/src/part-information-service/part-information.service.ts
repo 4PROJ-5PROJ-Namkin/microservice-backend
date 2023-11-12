@@ -108,7 +108,7 @@ export class PartInformationService {
     });
 
     if (!partInformation) {
-      throw new HttpException('Material not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('Part information not found', HttpStatus.NOT_FOUND);
     }
 
     partInformation.materials = [];

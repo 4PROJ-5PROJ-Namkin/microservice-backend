@@ -1,10 +1,11 @@
 import { InjectRepository } from "@nestjs/typeorm";
 import { SupplyChain } from "./entities/supply-chain.entity";
-import { ConflictException, HttpException, HttpStatus, Injectable, NotFoundException } from "@nestjs/common";
-import { Repository } from "typeorm";
+import { HttpException, HttpStatus, Injectable, NotFoundException } from "@nestjs/common";
+import { Connection, In, Repository } from "typeorm";
 import { PartInformation } from "src/part-information-service/entities/part-information.entity";
 import { Machine } from "./entities/machine.entity";
-import { CreateSupplyChainDto } from "./dto/create-supply-chain.dto";
+import { CreateManySupplyChainDto, CreateSupplyChainDto } from "./dto/create-supply-chain.dto";
+import { UpdateManySupplyChainDto, UpdateSupplyChainDto } from "./dto/update-supply-chain.dto";
 
 @Injectable()
 export class SupplyChainService {
@@ -17,31 +18,154 @@ export class SupplyChainService {
     private partInformationRepository: Repository<PartInformation>,
   ) { }
 
+  async findOneSupplyChain(id: string): Promise<SupplyChain> {
+    const supplyChain = await this.supplyChainRepository.findOne({ where: { id } });
+    if (!supplyChain) {
+      throw new NotFoundException(`SupplyChain with ID ${id} not found.`);
+    }
+    return supplyChain;
+  }
+
+  async findAllSupplyChains(): Promise<SupplyChain[]> {
+    return this.supplyChainRepository.find();
+  }
+
   async createSupplyChain(createSupplyChainDto: CreateSupplyChainDto): Promise<SupplyChain> {
-    for (const machineId of createSupplyChainDto.machineIds) {
-      const existingMachine = await this.machineRepository.findOne({ where: { id: machineId } });
-      if (!existingMachine) {
-        throw new NotFoundException(`Machine with ID ${machineId} not found.`);
-      }
+    const machines = await this.machineRepository.findByIds(createSupplyChainDto.machineIds);
+    if (machines.length !== createSupplyChainDto.machineIds.length) {
+      throw new NotFoundException('One or more Machine IDs not found.');
     }
 
-    for (const partId of createSupplyChainDto.partIds) {
-      const existingPart = await this.partInformationRepository.findOne({ where: { id: partId } });
-      if (!existingPart) {
-        throw new NotFoundException(`PartInformation with ID ${partId} not found.`);
-      }
+    const parts = await this.partInformationRepository.findByIds(createSupplyChainDto.partIds);
+    if (parts.length !== createSupplyChainDto.partIds.length) {
+      throw new NotFoundException('One or more PartInformation IDs not found.');
     }
 
+    const newSupplyChain = this.supplyChainRepository.create(createSupplyChainDto);
+
+    let savedSupplyChain;
     try {
-      const supplyChain = this.supplyChainRepository.create({
-        ...createSupplyChainDto,
-        machine: createSupplyChainDto.machineIds.map(id => ({ id })),
-        part: createSupplyChainDto.partIds.map(id => ({ id }))
-      });
-
-      return this.supplyChainRepository.save(supplyChain);
+      savedSupplyChain = await this.supplyChainRepository.save(newSupplyChain);
     } catch (error) {
       throw new HttpException('Error in creating a supply chain file.', HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    try {
+      await Promise.all(createSupplyChainDto.machineIds.map(machineId =>
+        this.machineRepository.createQueryBuilder()
+          .relation(Machine, 'supplyChain')
+          .of(machineId)
+          .add(savedSupplyChain)
+      ));
+
+      await Promise.all(createSupplyChainDto.partIds.map(partId =>
+        this.partInformationRepository.createQueryBuilder()
+          .relation(PartInformation, 'supplyChain')
+          .of(partId)
+          .add(savedSupplyChain)
+      ));
+
+      return savedSupplyChain;
+    } catch (error) {
+      throw new HttpException('Error in associating machines and parts with the supply chain.', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
+
+  async createManySupplyChains(createManySupplyChainDto: CreateManySupplyChainDto): Promise<SupplyChain[]> {
+    const createdSupplyChains: SupplyChain[] = [];
+
+    for (const createSupplyChainDto of createManySupplyChainDto.supplyChains) {
+      const machines = await this.machineRepository.findByIds(createSupplyChainDto.machineIds);
+      if (machines.length !== createSupplyChainDto.machineIds.length) {
+        throw new NotFoundException('One or more Machine IDs not found.');
+      }
+
+      const parts = await this.partInformationRepository.findByIds(createSupplyChainDto.partIds);
+      if (parts.length !== createSupplyChainDto.partIds.length) {
+        throw new NotFoundException('One or more PartInformation IDs not found.');
+      }
+
+      const newSupplyChain = this.supplyChainRepository.create(createSupplyChainDto);
+
+      try {
+        const savedSupplyChain = await this.supplyChainRepository.save(newSupplyChain);
+
+        await Promise.all(createSupplyChainDto.machineIds.map(machineId =>
+          this.machineRepository.createQueryBuilder()
+            .relation(Machine, 'supplyChain')
+            .of(machineId)
+            .add(savedSupplyChain)
+        ));
+
+        await Promise.all(createSupplyChainDto.partIds.map(partId =>
+          this.partInformationRepository.createQueryBuilder()
+            .relation(PartInformation, 'supplyChain')
+            .of(partId)
+            .add(savedSupplyChain)
+        ));
+
+        createdSupplyChains.push(savedSupplyChain);
+      } catch (error) {
+        throw new HttpException('Error in creating a supply chain file.', HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+    }
+
+    return createdSupplyChains;
+  }
+
+  async updateOneSupplyChain(updateSupplyChainDto: UpdateSupplyChainDto): Promise<SupplyChain> {
+    const { id, machineIds, partIds, ...updateData } = updateSupplyChainDto;
+
+    const supplyChainToUpdate = await this.supplyChainRepository.findOne({ where: { id } });
+    if (!supplyChainToUpdate) {
+      throw new NotFoundException(`SupplyChain with ID ${id} not found.`);
+    }
+
+    let isUpdateNeeded = false;
+
+    for (const key in updateData) {
+      if (supplyChainToUpdate[key] !== updateData[key]) {
+        isUpdateNeeded = true;
+        supplyChainToUpdate[key] = updateData[key];
+      }
+    }
+
+    if (isUpdateNeeded) {
+      await this.supplyChainRepository.save(supplyChainToUpdate);
+    }
+
+    return this.supplyChainRepository.findOne({ where: { id }, relations: ['machine', 'part'] });
+  }
+
+  async updateManySupplyChains(updateManySupplyChainDto: UpdateManySupplyChainDto): Promise<SupplyChain[]> {
+    const updatedSupplyChains: SupplyChain[] = [];
+
+    for (const updateDto of updateManySupplyChainDto.supplyChains) {
+      const supplyChain = await this.supplyChainRepository.findOne({ where: { id: updateDto.id } });
+      if (!supplyChain) {
+        throw new NotFoundException(`SupplyChain with ID ${updateDto.id} not found.`);
+      }
+      if (updateDto.machineIds) {
+        const foundMachines = await this.machineRepository.findByIds(updateDto.machineIds);
+        if (foundMachines.length !== updateDto.machineIds.length) {
+          throw new NotFoundException('One or more Machine IDs not found.');
+        }
+      }
+
+      if (updateDto.partIds) {
+        const foundParts = await this.partInformationRepository.findByIds(updateDto.partIds);
+        if (foundParts.length !== updateDto.partIds.length) {
+          throw new NotFoundException('One or more PartInformation IDs not found.');
+        }
+      }
+
+      Object.assign(supplyChain, updateDto);
+
+      const updatedSupplyChain = await this.supplyChainRepository.save(supplyChain);
+      updatedSupplyChains.push(updatedSupplyChain);
+    }
+
+    return updatedSupplyChains;
+  }
+
 }
