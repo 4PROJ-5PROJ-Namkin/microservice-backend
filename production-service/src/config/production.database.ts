@@ -10,8 +10,8 @@ export default class TypeOrmConfig {
     static getProductionOrmConfig(configService: ConfigService): TypeOrmModuleOptions {
         return {
             type: 'postgres',
-            host: 'localhost',
-            port: 5432,
+            host: configService.get<string>('DB_HOST'),
+            port: configService.get<number>('DB_PORT'),
             username: configService.get<string>('POSTGRES_USER'),
             password: configService.get<string>('POSTGRES_PASSWORD'),
             database: configService.get<string>('POSTGRES_DB'),

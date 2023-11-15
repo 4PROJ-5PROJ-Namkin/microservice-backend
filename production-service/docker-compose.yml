@@ -1,5 +1,18 @@
 version: "3.9"
 services:
+  backend:
+    container_name: production-services-backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - database
+    volumes:
+      - ./:/app
+
   database:
     container_name: production-services-database
     image: postgres:latest
@@ -11,7 +24,7 @@ services:
     volumes:
       - ./db-data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "5433:5432"
     healthcheck:
       test: psql -U ${POSTGRES_USER} -q -d ${POSTGRES_DB} -c "SELECT 'ready';"
       interval: 10s
