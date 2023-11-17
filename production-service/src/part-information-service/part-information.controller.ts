@@ -7,12 +7,16 @@ import { CreatePartInformationMaterialsDto } from './dto/part-information-materi
 import { DeletePartInformationMaterialsDto } from './dto/part-information-materials/delete-part-information-materials.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { RateLimiterGuard } from 'nestjs-rate-limiter';
+import { KafkaService } from 'src/kafka-producer-service/kafka-producer.service';
 
 @ApiTags('Part Information')
 @UseGuards(RateLimiterGuard)
 @Controller('part-information')
 export class PartInformationController {
-  constructor(private readonly partInformationService: PartInformationService) { }
+  constructor(
+    private readonly partInformationService: PartInformationService,
+    private readonly kafkaService: KafkaService
+    ) { }
 
   @Get()
   async findAllPartInformations() {
@@ -26,7 +30,9 @@ export class PartInformationController {
 
   @Post()
   async createPartInformation(@Body() createPartInformationDto: CreatePartInformationDto) {
-    return this.partInformationService.createPartInformation(createPartInformationDto);
+    const createdPart = this.partInformationService.createPartInformation(createPartInformationDto);
+    await this.kafkaService.sendMessage('part_information', createdPart);
+    return createdPart;
   }
 
   @Post('many-part-informations')

@@ -20,6 +20,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { RateLimiterGuard, RateLimiterModule } from 'nestjs-rate-limiter';
 import { APP_GUARD } from '@nestjs/core';
+import { KafkaService } from './kafka-producer-service/kafka-producer.service';
 
 @Module({
   imports: [
@@ -36,7 +37,7 @@ import { APP_GUARD } from '@nestjs/core';
     TypeOrmModule.forFeature([Material, MaterialPrice, PartInformation, Machine, SupplyChain])
   ],
   controllers: [MaterialController, MaterialPriceController, PartInformationController, MachineController, SupplyChainController],
-  providers: [MaterialService, MaterialPriceService, PartInformationService, MachineService, SupplyChainService,
+  providers: [MaterialService, MaterialPriceService, PartInformationService, MachineService, SupplyChainService, KafkaService,
     {
       provide: APP_GUARD,
       useClass: RateLimiterGuard,

@@ -24,7 +24,7 @@
         ]
       },
       "patch": {
-        "operationId": "MaterialController_update",
+        "operationId": "MaterialController_updateMaterial",
         "parameters": [
           {
             "name": "id",
@@ -136,7 +136,7 @@
         ]
       },
       "patch": {
-        "operationId": "MaterialController_updateMany",
+        "operationId": "MaterialController_updateManyMaterials",
         "parameters": [],
         "requestBody": {
           "required": true,

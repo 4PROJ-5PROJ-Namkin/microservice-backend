@@ -4,12 +4,16 @@ import { CreateMaterialPriceDto, CreateManyMaterialPricesDto } from './dto/mater
 import { DeleteManyMaterialPricesDto, DeleteMaterialPriceDto } from './dto/material-price-service-dto/delete-material-price.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { RateLimiterGuard } from 'nestjs-rate-limiter';
+import { KafkaService } from 'src/kafka-producer-service/kafka-producer.service';
 
 @ApiTags('Materials')
 @UseGuards(RateLimiterGuard)
 @Controller('materials/prices')
 export class MaterialPriceController {
-    constructor(private readonly materialPriceService: MaterialPriceService) { }
+    constructor(
+        private readonly materialPriceService: MaterialPriceService,
+        private readonly kafkaService: KafkaService
+        ) { }
 
     @Get(':materialId')
     async findMaterialPrices(@Param('materialId', ParseIntPipe) materialId: number) {
@@ -20,14 +24,20 @@ export class MaterialPriceController {
     async updateOrCreateMaterialPrice(@Param('materialId', ParseIntPipe) materialId: number,
         @Body() createMaterialPriceDto: CreateMaterialPriceDto
     ) {
-        return this.materialPriceService.updateOrCreateMaterialPrice(materialId, createMaterialPriceDto);
+        const createdMaterialPrice = await this.materialPriceService.updateOrCreateMaterialPrice(materialId, createMaterialPriceDto);
+        await this.kafkaService.sendMessage('material_prices', createdMaterialPrice);
+        return createdMaterialPrice;
     }
 
     @Post(':materialId/many-prices')
     async updateOrCreateManyMaterialPrices(@Param('materialId', ParseIntPipe) materialId: number,
         @Body() createManyMaterialPricesDto: CreateManyMaterialPricesDto
     ) {
-        return this.materialPriceService.updateOrCreateManyMaterialPrices(materialId, createManyMaterialPricesDto);
+        const createdManyMaterialPrices = await this.materialPriceService.updateOrCreateManyMaterialPrices(materialId, createManyMaterialPricesDto);
+        for (const materialPrice of createdManyMaterialPrices) {
+            await this.kafkaService.sendMessage('material_prices', materialPrice);
+          }
+        return createdManyMaterialPrices;
     }
 
     @Delete(':materialId/many-prices')

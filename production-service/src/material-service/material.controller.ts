@@ -7,12 +7,16 @@ import { CreateMaterialPartInformationsDto } from './dto/material-part-informati
 import { DeleteMaterialPartInformationsDto } from './dto/material-part-informations-dto/delete-part-information-materials.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { RateLimiterGuard } from 'nestjs-rate-limiter';
+import { KafkaService } from 'src/kafka-producer-service/kafka-producer.service';
 
 @ApiTags('Materials')
 @UseGuards(RateLimiterGuard)
 @Controller('materials')
 export class MaterialController {
-  constructor(private readonly materialService: MaterialService) { }
+  constructor(
+    private readonly materialService: MaterialService,
+    private readonly kafkaService: KafkaService
+  ) { }
 
   @Get(':id')
   async findMaterial(@Param('id', ParseIntPipe) id: number) {
@@ -26,21 +30,27 @@ export class MaterialController {
 
   @Post()
   async createMaterial(@Body() createMaterialDto: CreateMaterialDto) {
-    return this.materialService.createMaterial(createMaterialDto);
+    const createdMaterial = await this.materialService.createMaterial(createMaterialDto);
+    await this.kafkaService.sendMessage('materials', createdMaterial);
+    return createdMaterial;
   }
 
   @Post('many-materials')
   async createManyMaterials(@Body() createManyMaterialsDto: CreateManyMaterialsDto) {
-    return await this.materialService.createManyMaterials(createManyMaterialsDto.materials);
+    const createdManyMaterials = await this.materialService.createManyMaterials(createManyMaterialsDto.materials);
+    for (const material of createdManyMaterials) {
+      await this.kafkaService.sendMessage('materials', material);
+    }
+    return createdManyMaterials;
   }
 
   @Patch('many-materials')
-  async updateMany(@Body() updateManyMaterialsDto: UpdateManyMaterialsDto) {
+  async updateManyMaterials(@Body() updateManyMaterialsDto: UpdateManyMaterialsDto) {
     return this.materialService.updateManyMaterials(updateManyMaterialsDto);
   }
 
   @Patch(':id')
-  async update(@Param('id', ParseIntPipe) id: number, @Body() updateMaterialDto: UpdateMaterialDto) {
+  async updateMaterial(@Param('id', ParseIntPipe) id: number, @Body() updateMaterialDto: UpdateMaterialDto) {
     return this.materialService.updateMaterial(id, updateMaterialDto);
   }
 
