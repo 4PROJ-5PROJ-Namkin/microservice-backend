@@ -13,7 +13,7 @@ export class MaterialPriceController {
     constructor(
         private readonly materialPriceService: MaterialPriceService,
         private readonly kafkaService: KafkaService
-        ) { }
+    ) { }
 
     @Get(':materialId')
     async findMaterialPrices(@Param('materialId', ParseIntPipe) materialId: number) {
@@ -36,7 +36,7 @@ export class MaterialPriceController {
         const createdManyMaterialPrices = await this.materialPriceService.updateOrCreateManyMaterialPrices(materialId, createManyMaterialPricesDto);
         for (const materialPrice of createdManyMaterialPrices) {
             await this.kafkaService.sendMessage('material_prices', materialPrice);
-          }
+        }
         return createdManyMaterialPrices;
     }
 

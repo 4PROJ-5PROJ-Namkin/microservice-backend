@@ -27,7 +27,7 @@ export class KafkaService implements OnModuleInit, OnModuleDestroy {
     if (!topics.includes(topic)) {
       await this.admin.createTopics({
         topics: [{ topic }],
-        waitForLeaders: true,
+        waitForLeaders: false,
       });
       console.log(`Created topic ${topic}`);
     }
