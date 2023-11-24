@@ -5,20 +5,12 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { Users } from './users/entities/users.entity';
 import { AuthModule } from './auth/auth.modules';
+import { userDbConfig } from './config/user.database';
 
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'password',
-      database: 'postgres',
-      entities: [Users],
-      synchronize: true,
-    }),
+    // TypeOrmModule.forRootAsync(userDbConfig),
     UsersModule,
     AuthModule,
   ],
