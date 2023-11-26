@@ -3,11 +3,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { Users } from './entities/users.entity';
-import { userDbConfig } from 'src/config/user.database';
 
 
 @Module({
-  imports: [ TypeOrmModule.forRootAsync(userDbConfig),TypeOrmModule.forFeature([Users])],
+  imports: [ TypeOrmModule.forFeature([Users])],
   providers: [UsersService],
   controllers: [UsersController],
   exports: [UsersService],
