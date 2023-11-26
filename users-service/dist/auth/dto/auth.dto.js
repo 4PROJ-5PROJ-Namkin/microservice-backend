@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TokenStructure = exports.Token = exports.RegisterUserDto = exports.LoginUserDto = void 0;
 const openapi = require("@nestjs/swagger");
+const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
 class LoginUserDto {
     static _OPENAPI_METADATA_FACTORY() {
@@ -20,11 +21,21 @@ class LoginUserDto {
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsEmail)(),
+    (0, swagger_1.ApiProperty)({
+        description: 'first name',
+        example: "Rudy",
+        type: String
+    }),
     __metadata("design:type", String)
 ], LoginUserDto.prototype, "email", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsStrongPassword)({ minLength: 8, minLowercase: 1, minUppercase: 1, minNumbers: 1, minSymbols: 1 }),
+    (0, swagger_1.ApiProperty)({
+        description: 'password',
+        example: "1Afhs985!cw",
+        type: String
+    }),
     __metadata("design:type", String)
 ], LoginUserDto.prototype, "password", void 0);
 exports.LoginUserDto = LoginUserDto;
@@ -37,27 +48,52 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.Length)(2, 25),
+    (0, swagger_1.ApiProperty)({
+        description: 'email',
+        example: "rudy.turpin@gmail.com",
+        type: String
+    }),
     __metadata("design:type", String)
 ], RegisterUserDto.prototype, "first_name", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.Length)(2, 25),
+    (0, swagger_1.ApiProperty)({
+        description: 'Last name',
+        example: "turpin",
+        type: String
+    }),
     __metadata("design:type", String)
 ], RegisterUserDto.prototype, "last_name", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsEmail)(),
+    (0, swagger_1.ApiProperty)({
+        description: 'email',
+        example: "rudy.turpin@gmail.com",
+        type: String
+    }),
     __metadata("design:type", String)
 ], RegisterUserDto.prototype, "email", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsPhoneNumber)(),
+    (0, swagger_1.ApiProperty)({
+        description: 'telephone number',
+        example: "+336080705405",
+        type: String
+    }),
     __metadata("design:type", String)
 ], RegisterUserDto.prototype, "telephoneNumber", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsStrongPassword)({ minLength: 8, minLowercase: 1, minUppercase: 1, minNumbers: 1, minSymbols: 1 }),
+    (0, swagger_1.ApiProperty)({
+        description: 'password',
+        example: "1Afhs985!cw",
+        type: String
+    }),
     __metadata("design:type", String)
 ], RegisterUserDto.prototype, "password", void 0);
 exports.RegisterUserDto = RegisterUserDto;

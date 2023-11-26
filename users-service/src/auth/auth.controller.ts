@@ -1,11 +1,11 @@
 import { Body, Controller, Post, UsePipes, ValidationPipe } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { Token, LoginUserDto, RegisterUserDto } from "./dto/auth.dto";
-import { ApiResponse } from "@nestjs/swagger";
+import { ApiResponse, ApiTags } from "@nestjs/swagger";
 import { Roles } from "./guards/auth.decorator";
 import { Role } from "./guards/auth.enum";
 
-
+@ApiTags('Authentification ')
 @Controller('login')
 export class LoginController {
   constructor(private readonly authService: AuthService) { }
@@ -21,7 +21,7 @@ export class LoginController {
 
 }
 
-
+@ApiTags('Authentification ')
 @Controller('register')
 export class RegisterController {
   constructor(private readonly authService: AuthService) { }

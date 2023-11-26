@@ -3,10 +3,11 @@ import { UUID } from './dto/params-user.dto';
 import { UpdateUsersDto } from './dto/update-users.dto';
 import { UsersService } from './users.service';
 import Users from "./entities/users.entity";
-import { ApiOperation, ApiResponse } from "@nestjs/swagger";
+import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { Roles } from "src/auth/guards/auth.decorator";
 import { Role } from "src/auth/guards/auth.enum";
 
+@ApiTags('Users')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}

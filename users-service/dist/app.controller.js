@@ -17,17 +17,7 @@ let AppController = class AppController {
     constructor(appService) {
         this.appService = appService;
     }
-    isAlive() {
-        return this.appService.healthCheck();
-    }
 };
-__decorate([
-    (0, common_1.Get)(),
-    openapi.ApiResponse({ status: 200, type: String }),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", Promise)
-], AppController.prototype, "isAlive", null);
 AppController = __decorate([
     (0, common_1.Controller)(),
     __metadata("design:paramtypes", [app_service_1.AppService])

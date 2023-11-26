@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateUsersDto = void 0;
 const openapi = require("@nestjs/swagger");
+const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
 class CreateUsersDto {
     static _OPENAPI_METADATA_FACTORY() {
@@ -21,27 +22,52 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.Length)(2, 25),
+    (0, swagger_1.ApiProperty)({
+        description: 'First name',
+        example: "Rudy",
+        type: String
+    }),
     __metadata("design:type", String)
 ], CreateUsersDto.prototype, "first_name", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.Length)(2, 25),
+    (0, swagger_1.ApiProperty)({
+        description: 'Last name',
+        example: "turpin",
+        type: String
+    }),
     __metadata("design:type", String)
 ], CreateUsersDto.prototype, "last_name", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsEmail)(),
+    (0, swagger_1.ApiProperty)({
+        description: 'email',
+        example: "rudy.turpin@supinfo.com",
+        type: String
+    }),
     __metadata("design:type", String)
 ], CreateUsersDto.prototype, "email", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsPhoneNumber)(),
+    (0, swagger_1.ApiProperty)({
+        description: 'email',
+        example: "rudy.turpin@supinfo.com",
+        type: String
+    }),
     __metadata("design:type", String)
 ], CreateUsersDto.prototype, "telephoneNumber", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsStrongPassword)({ minLength: 8, minLowercase: 1, minUppercase: 1, minNumbers: 1, minSymbols: 1 }),
+    (0, swagger_1.ApiProperty)({
+        description: 'password',
+        example: "ajfr51!fjbe",
+        type: String
+    }),
     __metadata("design:type", String)
 ], CreateUsersDto.prototype, "password", void 0);
 exports.CreateUsersDto = CreateUsersDto;

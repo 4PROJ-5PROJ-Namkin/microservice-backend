@@ -41,6 +41,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], LoginController.prototype, "login", null);
 LoginController = __decorate([
+    (0, swagger_1.ApiTags)('Authentification '),
     (0, common_1.Controller)('login'),
     __metadata("design:paramtypes", [auth_service_1.AuthService])
 ], LoginController);
@@ -80,6 +81,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], RegisterController.prototype, "createAdmin", null);
 RegisterController = __decorate([
+    (0, swagger_1.ApiTags)('Authentification '),
     (0, common_1.Controller)('register'),
     __metadata("design:paramtypes", [auth_service_1.AuthService])
 ], RegisterController);
