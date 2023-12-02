@@ -5,4 +5,5 @@ export declare class UsersService {
     constructor(usersRepository: Repository<Users>);
     findById(id: string, headers: any): Promise<Users>;
     findAllUsers(headers: any): Promise<Users[]>;
+    remove(id: string): Promise<import("typeorm").DeleteResult>;
 }

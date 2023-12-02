@@ -21,11 +21,19 @@ let AppController = exports.AppController = class AppController {
         this.httpService = httpService;
     }
     getAllUsers() {
-        return this.httpService.get('http://localhost:3001/users')
+        return this.httpService.get('http://localhost:3001/api/v1/users/')
             .pipe((0, operators_1.map)(response => response.data));
     }
     getUserById(id) {
-        return this.httpService.get(`http://localhost:3001/users/${id}`)
+        return this.httpService.get(`http://localhost:3001/api/v1/users/${id}`)
+            .pipe((0, operators_1.map)(response => response.data));
+    }
+    updateUserById(id, updateUserData) {
+        return this.httpService.patch(`http://localhost:3001/api/v1/users/${id}`, updateUserData)
+            .pipe((0, operators_1.map)(response => response.data));
+    }
+    deleteUserById(id) {
+        return this.httpService.delete(`http://localhost:3001/api/v1/users/${id}`)
             .pipe((0, operators_1.map)(response => response.data));
     }
     getProductionById(id) {
@@ -46,6 +54,21 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], AppController.prototype, "getUserById", null);
+__decorate([
+    (0, common_1.Patch)('users/:id'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", void 0)
+], AppController.prototype, "updateUserById", null);
+__decorate([
+    (0, common_1.Delete)('users/:id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], AppController.prototype, "deleteUserById", null);
 __decorate([
     (0, common_1.Get)('gateway/production/:id'),
     __param(0, (0, common_1.Param)('id')),

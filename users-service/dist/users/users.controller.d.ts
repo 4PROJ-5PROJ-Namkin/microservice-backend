@@ -6,4 +6,5 @@ export declare class UsersController {
     constructor(usersService: UsersService);
     findAllUser(headers: any): Promise<Users[]>;
     findOneById(id: UUID): Promise<Users>;
+    remove(id: UUID): Promise<import("typeorm").DeleteResult>;
 }

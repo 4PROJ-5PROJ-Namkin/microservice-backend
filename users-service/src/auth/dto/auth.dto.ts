@@ -6,8 +6,8 @@ export class LoginUserDto {
   @IsNotEmpty()
   @IsEmail()
   @ApiProperty({
-    description: 'first name',
-    example: "Rudy",
+    description: 'email',
+    example: "rudy.turpin@gmail.com",
     type: String
 })
   readonly email: string;
@@ -29,8 +29,8 @@ export class RegisterUserDto {
     @IsString()
     @Length(2, 25)
     @ApiProperty({
-      description: 'email',
-      example: "rudy.turpin@gmail.com",
+      description: 'first name',
+      example: "rudy",
       type: String
   })
     readonly first_name: string;
@@ -58,7 +58,7 @@ export class RegisterUserDto {
     @IsPhoneNumber()
     @ApiProperty({
       description: 'telephone number',
-      example: "+336080705405",
+      example: "+33608070545",
       type: String
   })
     readonly telephoneNumber: string;

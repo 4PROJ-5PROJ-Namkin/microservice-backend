@@ -18,16 +18,16 @@ export class UsersService {
 
   async findById(id: string, headers: any): Promise<Users> {
 
-    const token: Token = await headers.authorization.split(' ')[1];
-    const decoded = await DecodeToken(token);
+    // const token: Token = await headers.authorization.split(' ')[1];
+    // const decoded = await DecodeToken(token);
 
-    if (decoded.id === id) {
+    // if (decoded.id === id) {
       const user = await this.usersRepository.findOneBy({ id })
-      if (!user)
-        throw new HttpException({ message: 'User not found' }, HttpStatus.NOT_FOUND);
-      else
+      // if (!user)
+      //   throw new HttpException({ message: 'User not found' }, HttpStatus.NOT_FOUND);
+      // else
         return user;
-    }
+    // }
   }
 
     async findAllUsers(headers: any): Promise<Users[]> {
@@ -96,6 +96,13 @@ export class UsersService {
   // }
 
 
+    async remove(id: string) {
+    const user = await this.usersRepository.findOneBy({ id });
+    if (!user)
+      throw new HttpException({ message: 'User not found.' }, HttpStatus.NOT_FOUND);
+    else
+      return await this.usersRepository.delete({ id });
+  }
   // async remove(id: string) {
   //   const user = await this.usersRepository.findOneBy({ id });
   //   if (!user)

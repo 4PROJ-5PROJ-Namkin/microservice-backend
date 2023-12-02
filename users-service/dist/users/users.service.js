@@ -18,24 +18,23 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("typeorm");
 const typeorm_2 = require("@nestjs/typeorm");
 const users_entity_1 = require("./entities/users.entity");
-const jwt_1 = require("../auth/utils/jwt");
 let UsersService = class UsersService {
     constructor(usersRepository) {
         this.usersRepository = usersRepository;
     }
     async findById(id, headers) {
-        const token = await headers.authorization.split(' ')[1];
-        const decoded = await (0, jwt_1.DecodeToken)(token);
-        if (decoded.id === id) {
-            const user = await this.usersRepository.findOneBy({ id });
-            if (!user)
-                throw new common_1.HttpException({ message: 'User not found' }, common_1.HttpStatus.NOT_FOUND);
-            else
-                return user;
-        }
+        const user = await this.usersRepository.findOneBy({ id });
+        return user;
     }
     async findAllUsers(headers) {
         return await this.usersRepository.find();
+    }
+    async remove(id) {
+        const user = await this.usersRepository.findOneBy({ id });
+        if (!user)
+            throw new common_1.HttpException({ message: 'User not found.' }, common_1.HttpStatus.NOT_FOUND);
+        else
+            return await this.usersRepository.delete({ id });
     }
 };
 UsersService = __decorate([

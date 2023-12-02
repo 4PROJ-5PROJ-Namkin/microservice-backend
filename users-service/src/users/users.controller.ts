@@ -14,14 +14,13 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  @MessagePattern({ cmd: 'get_allUser' })
   async findAllUser(@Headers() headers: any): Promise<Users[]> {
     return this.usersService.findAllUsers(headers);
   }
 
   @Get(':id')
-  @MessagePattern({ cmd: 'get_OneUser' })
-  async findOneById(@Payload() id: UUID) {
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async findOneById(@Param() id: UUID) {
     return this.usersService.findById(id.id, Headers);
   }
 
@@ -36,12 +35,12 @@ export class UsersController {
   //   return this.usersService.updatePassword(id.id, updateUsersDto);
   // }
 
-  // @Delete(':id')
+  @Delete(':id')
   // @Roles(Role.ADMIN)
   // @ApiOperation({ summary: 'delete one user' })
   // @ApiResponse({ status: 403, description: 'Forbidden' })
-  // @UsePipes(new ValidationPipe({ transform: true }))
-  // async remove(@Param() id: UUID) {
-  //   return this.usersService.remove(id.id);
-  // }
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async remove(@Param() id: UUID) {
+    return this.usersService.remove(id.id);
+  }
 }

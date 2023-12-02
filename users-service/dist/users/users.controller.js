@@ -18,7 +18,6 @@ const common_1 = require("@nestjs/common");
 const params_user_dto_1 = require("./dto/params-user.dto");
 const users_service_1 = require("./users.service");
 const swagger_1 = require("@nestjs/swagger");
-const microservices_1 = require("@nestjs/microservices");
 let UsersController = class UsersController {
     constructor(usersService) {
         this.usersService = usersService;
@@ -29,10 +28,12 @@ let UsersController = class UsersController {
     async findOneById(id) {
         return this.usersService.findById(id.id, common_1.Headers);
     }
+    async remove(id) {
+        return this.usersService.remove(id.id);
+    }
 };
 __decorate([
     (0, common_1.Get)(),
-    (0, microservices_1.MessagePattern)({ cmd: 'get_allUser' }),
     openapi.ApiResponse({ status: 200, type: [require("./entities/users.entity").Users] }),
     __param(0, (0, common_1.Headers)()),
     __metadata("design:type", Function),
@@ -41,13 +42,22 @@ __decorate([
 ], UsersController.prototype, "findAllUser", null);
 __decorate([
     (0, common_1.Get)(':id'),
-    (0, microservices_1.MessagePattern)({ cmd: 'get_OneUser' }),
+    (0, common_1.UsePipes)(new common_1.ValidationPipe({ transform: true })),
     openapi.ApiResponse({ status: 200, type: require("./entities/users.entity").Users }),
-    __param(0, (0, microservices_1.Payload)()),
+    __param(0, (0, common_1.Param)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [params_user_dto_1.UUID]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "findOneById", null);
+__decorate([
+    (0, common_1.Delete)(':id'),
+    (0, common_1.UsePipes)(new common_1.ValidationPipe({ transform: true })),
+    openapi.ApiResponse({ status: 200 }),
+    __param(0, (0, common_1.Param)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [params_user_dto_1.UUID]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "remove", null);
 UsersController = __decorate([
     (0, swagger_1.ApiTags)('Users'),
     (0, common_1.Controller)('users'),

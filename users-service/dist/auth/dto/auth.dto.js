@@ -22,8 +22,8 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsEmail)(),
     (0, swagger_1.ApiProperty)({
-        description: 'first name',
-        example: "Rudy",
+        description: 'email',
+        example: "rudy.turpin@gmail.com",
         type: String
     }),
     __metadata("design:type", String)
@@ -49,8 +49,8 @@ __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.Length)(2, 25),
     (0, swagger_1.ApiProperty)({
-        description: 'email',
-        example: "rudy.turpin@gmail.com",
+        description: 'first name',
+        example: "rudy",
         type: String
     }),
     __metadata("design:type", String)
@@ -81,7 +81,7 @@ __decorate([
     (0, class_validator_1.IsPhoneNumber)(),
     (0, swagger_1.ApiProperty)({
         description: 'telephone number',
-        example: "+336080705405",
+        example: "+33608070545",
         type: String
     }),
     __metadata("design:type", String)
