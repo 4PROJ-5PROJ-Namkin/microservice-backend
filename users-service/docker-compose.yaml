@@ -32,7 +32,7 @@ services:
     volumes:
       - ./userData:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "5439:5432"
     healthcheck:
       test: psql -U ${POSTGRES_USER} -q -d ${POSTGRES_DB} -c "SELECT 'ready';"
       interval: 10s
