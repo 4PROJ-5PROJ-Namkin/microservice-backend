@@ -1,7 +1,8 @@
-import { Body, Controller, Delete, Get, Param, Patch } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { map } from 'rxjs/operators';
 import { AppService } from './app.service';
+import { LoginUserDto, RegisterUserDto } from './gateway/auth.dto';
 
 @Controller()
 export class AppController {
@@ -31,16 +32,25 @@ export class AppController {
       .pipe(map(response => response.data));
   }
 
-
-
-
-
-
-
-  @Get('gateway/production/:id')
-  getProductionById(@Param('id') id: string) {
-    return this.httpService.get(`http://production-service-url/production/${id}`)
+  @Post('register')
+  createUser(@Body() userData: RegisterUserDto) {
+    return this.httpService.post('http://localhost:3001/api/v1/register', userData)
       .pipe(map(response => response.data));
   }
+
+  @Post('login')
+  login(@Body() loginData: LoginUserDto) {
+    return this.httpService.post('http://localhost:3001/api/v1/login', loginData)
+      .pipe(map(response => response.data));
+  }
+
+
+
+
+  // @Get('gateway/production/:id')
+  // getProductionById(@Param('id') id: string) {
+  //   return this.httpService.get(`http://production-service-url/production/${id}`)
+  //     .pipe(map(response => response.data));
+  // }
 
 }

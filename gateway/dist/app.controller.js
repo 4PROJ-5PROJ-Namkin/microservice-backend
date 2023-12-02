@@ -16,6 +16,7 @@ exports.AppController = void 0;
 const common_1 = require("@nestjs/common");
 const axios_1 = require("@nestjs/axios");
 const operators_1 = require("rxjs/operators");
+const auth_dto_1 = require("./gateway/auth.dto");
 let AppController = exports.AppController = class AppController {
     constructor(httpService) {
         this.httpService = httpService;
@@ -36,8 +37,12 @@ let AppController = exports.AppController = class AppController {
         return this.httpService.delete(`http://localhost:3001/api/v1/users/${id}`)
             .pipe((0, operators_1.map)(response => response.data));
     }
-    getProductionById(id) {
-        return this.httpService.get(`http://production-service-url/production/${id}`)
+    createUser(userData) {
+        return this.httpService.post('http://localhost:3001/api/v1/register', userData)
+            .pipe((0, operators_1.map)(response => response.data));
+    }
+    login(loginData) {
+        return this.httpService.post('http://localhost:3001/api/v1/login', loginData)
             .pipe((0, operators_1.map)(response => response.data));
     }
 };
@@ -70,12 +75,19 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], AppController.prototype, "deleteUserById", null);
 __decorate([
-    (0, common_1.Get)('gateway/production/:id'),
-    __param(0, (0, common_1.Param)('id')),
+    (0, common_1.Post)('register'),
+    __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [auth_dto_1.RegisterUserDto]),
     __metadata("design:returntype", void 0)
-], AppController.prototype, "getProductionById", null);
+], AppController.prototype, "createUser", null);
+__decorate([
+    (0, common_1.Post)('login'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [auth_dto_1.LoginUserDto]),
+    __metadata("design:returntype", void 0)
+], AppController.prototype, "login", null);
 exports.AppController = AppController = __decorate([
     (0, common_1.Controller)(),
     __metadata("design:paramtypes", [axios_1.HttpService])
