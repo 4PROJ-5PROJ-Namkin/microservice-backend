@@ -26,22 +26,30 @@ let AppController = exports.AppController = class AppController {
     getAllUsers(authHeader) {
         return this.httpService.get('http://localhost:3001/api/v1/users', {
             headers: { 'Authorization': authHeader },
-        }).pipe((0, operators_1.map)(response => response.data));
+        }).pipe((0, operators_1.map)(response => response.data), (0, operators_1.catchError)(err => {
+            throw new common_1.HttpException(err.response.data, err.response.status);
+        }));
     }
     getUserById(authHeader, id) {
         return this.httpService.get(`http://localhost:3001/api/v1/users/${id}`, {
             headers: { 'Authorization': authHeader },
-        }).pipe((0, operators_1.map)(response => response.data));
+        }).pipe((0, operators_1.map)(response => response.data), (0, operators_1.catchError)(err => {
+            throw new common_1.HttpException(err.response.data, err.response.status);
+        }));
     }
     updateUserById(userData, authHeader, id) {
         return this.httpService.patch(`http://localhost:3001/api/v1/users/${id}`, userData, {
             headers: { 'Authorization': authHeader },
-        }).pipe((0, operators_1.map)(response => response.data));
+        }).pipe((0, operators_1.map)(response => response.data), (0, operators_1.catchError)(err => {
+            throw new common_1.HttpException(err.response.data, err.response.status);
+        }));
     }
     deleteUserById(authHeader, id) {
         return this.httpService.delete(`http://localhost:3001/api/v1/users/${id}`, {
             headers: { 'Authorization': authHeader },
-        }).pipe((0, operators_1.map)(response => response.data));
+        }).pipe((0, operators_1.map)(response => response.data), (0, operators_1.catchError)(err => {
+            throw new common_1.HttpException(err.response.data, err.response.status);
+        }));
     }
     createUser(userData) {
         return this.httpService.post('http://localhost:3001/api/v1/register', userData)

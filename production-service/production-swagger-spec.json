@@ -1,0 +1,1398 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/materials/{id}": {
+      "get": {
+        "operationId": "MaterialController_findMaterial",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Materials"
+        ]
+      },
+      "patch": {
+        "operationId": "MaterialController_updateMaterial",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMaterialDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Materials"
+        ]
+      },
+      "delete": {
+        "operationId": "MaterialController_deleteMaterial",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Materials"
+        ]
+      }
+    },
+    "/materials": {
+      "get": {
+        "operationId": "MaterialController_findAllMaterials",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Materials"
+        ]
+      },
+      "post": {
+        "operationId": "MaterialController_createMaterial",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMaterialDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Materials"
+        ]
+      }
+    },
+    "/materials/many-materials": {
+      "post": {
+        "operationId": "MaterialController_createManyMaterials",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateManyMaterialsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Materials"
+        ]
+      },
+      "patch": {
+        "operationId": "MaterialController_updateManyMaterials",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateManyMaterialsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Materials"
+        ]
+      },
+      "delete": {
+        "operationId": "MaterialController_deleteManyMaterials",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteManyMaterialsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Materials"
+        ]
+      }
+    },
+    "/materials/{id}/part-informations": {
+      "post": {
+        "operationId": "MaterialController_addPartInformationToMaterial",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMaterialPartInformationsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Materials"
+        ]
+      },
+      "delete": {
+        "operationId": "MaterialController_deletePartInformationToMaterial",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteMaterialPartInformationsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Materials"
+        ]
+      }
+    },
+    "/materials/prices/{materialId}": {
+      "get": {
+        "operationId": "MaterialPriceController_findMaterialPrices",
+        "parameters": [
+          {
+            "name": "materialId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Materials"
+        ]
+      },
+      "post": {
+        "operationId": "MaterialPriceController_updateOrCreateMaterialPrice",
+        "parameters": [
+          {
+            "name": "materialId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMaterialPriceDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Materials"
+        ]
+      },
+      "delete": {
+        "operationId": "MaterialPriceController_deleteMaterialPrice",
+        "parameters": [
+          {
+            "name": "materialId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteMaterialPriceDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Materials"
+        ]
+      }
+    },
+    "/materials/prices/{materialId}/many-prices": {
+      "post": {
+        "operationId": "MaterialPriceController_updateOrCreateManyMaterialPrices",
+        "parameters": [
+          {
+            "name": "materialId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateManyMaterialPricesDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Materials"
+        ]
+      },
+      "delete": {
+        "operationId": "MaterialPriceController_deleteManyMaterialPrices",
+        "parameters": [
+          {
+            "name": "materialId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteManyMaterialPricesDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Materials"
+        ]
+      }
+    },
+    "/part-information": {
+      "get": {
+        "operationId": "PartInformationController_findAllPartInformations",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Part Information"
+        ]
+      },
+      "post": {
+        "operationId": "PartInformationController_createPartInformation",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePartInformationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Part Information"
+        ]
+      }
+    },
+    "/part-information/{id}": {
+      "get": {
+        "operationId": "PartInformationController_findOnePartInformation",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Part Information"
+        ]
+      },
+      "patch": {
+        "operationId": "PartInformationController_updateOnePartInformation",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePartInformationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Part Information"
+        ]
+      },
+      "delete": {
+        "operationId": "PartInformationController_removePartInformation",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Part Information"
+        ]
+      }
+    },
+    "/part-information/many-part-informations": {
+      "post": {
+        "operationId": "PartInformationController_createManyPartInformations",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateManyPartInformationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Part Information"
+        ]
+      },
+      "patch": {
+        "operationId": "PartInformationController_updateManyPartInformations",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateManyPartInformationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Part Information"
+        ]
+      },
+      "delete": {
+        "operationId": "PartInformationController_removeManyPartInformation",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeletePartInformationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Part Information"
+        ]
+      }
+    },
+    "/part-information/{id}/materials": {
+      "post": {
+        "operationId": "PartInformationController_addPartInformationToMaterial",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePartInformationMaterialsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Part Information"
+        ]
+      },
+      "delete": {
+        "operationId": "PartInformationController_deletePartInformationToMaterial",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeletePartInformationMaterialsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Part Information"
+        ]
+      }
+    },
+    "/machine/{id}": {
+      "get": {
+        "operationId": "MachineController_findOneMachine",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Machine"
+        ]
+      },
+      "delete": {
+        "operationId": "MachineController_deleteOneMachine",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Machine"
+        ]
+      }
+    },
+    "/machine": {
+      "get": {
+        "operationId": "MachineController_findAllMachines",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Machine"
+        ]
+      },
+      "post": {
+        "operationId": "MachineController_createOneMachine",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Machine"
+        ]
+      }
+    },
+    "/machine/many-machines": {
+      "post": {
+        "operationId": "MachineController_createManyMachines",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Machine"
+        ]
+      },
+      "delete": {
+        "operationId": "MachineController_deleteManyMachines",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Machine"
+        ]
+      }
+    },
+    "/supply-chain": {
+      "get": {
+        "operationId": "SupplyChainController_findAllSupplyChains",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Supply Chain"
+        ]
+      },
+      "post": {
+        "operationId": "SupplyChainController_createSupplyChain",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSupplyChainDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Supply Chain"
+        ]
+      }
+    },
+    "/supply-chain/{id}": {
+      "get": {
+        "operationId": "SupplyChainController_findSupplyChain",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Supply Chain"
+        ]
+      },
+      "patch": {
+        "operationId": "SupplyChainController_updateSupplyChain",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSupplyChainDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Supply Chain"
+        ]
+      }
+    },
+    "/supply-chain/many-supply-chain": {
+      "post": {
+        "operationId": "SupplyChainController_createManySupplyChain",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateManySupplyChainDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Supply Chain"
+        ]
+      },
+      "patch": {
+        "operationId": "SupplyChainController_updateManySupplyChain",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateManySupplyChainDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Supply Chain"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Production API Service - Namkin X SUPINFO",
+    "description": "<a href=\"/api/v1/production/production-swagger-spec.json\" target=\"_blank\">https://localhost:3000/api/v1/production/production-swagger-spec.json</a>",
+    "version": "v1",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [
+    {
+      "url": "/api/v1"
+    }
+  ],
+  "components": {
+    "schemas": {
+      "CreateMaterialDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the material.",
+            "example": "zinc"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "CreateManyMaterialsDto": {
+        "type": "object",
+        "properties": {
+          "materials": {
+            "description": "Collection of material objects.",
+            "example": [
+              {
+                "name": "zinc"
+              }
+            ],
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateMaterialDto"
+            }
+          }
+        },
+        "required": [
+          "materials"
+        ]
+      },
+      "UpdateMaterialDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "Id to pinpoint the material to update.",
+            "example": 12
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the material.",
+            "example": "zinc"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      },
+      "UpdateManyMaterialsDto": {
+        "type": "object",
+        "properties": {
+          "materials": {
+            "description": "Array of material update objects.",
+            "example": [
+              {
+                "id": 1,
+                "name": "zinc"
+              }
+            ],
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UpdateMaterialDto"
+            }
+          }
+        },
+        "required": [
+          "materials"
+        ]
+      },
+      "MaterialToDeleteDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "Id to pinpoint the material to delete.",
+            "example": 12
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "DeleteManyMaterialsDto": {
+        "type": "object",
+        "properties": {
+          "materials": {
+            "description": "Array of material delete objects.",
+            "example": [
+              {
+                "id": 1
+              }
+            ],
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MaterialToDeleteDto"
+            }
+          }
+        },
+        "required": [
+          "materials"
+        ]
+      },
+      "CreateMaterialPartInformationsDto": {
+        "type": "object",
+        "properties": {
+          "partInformationIds": {
+            "description": "Array of targetted part information ids to associate in the Material Part Information join table.",
+            "example": [
+              10,
+              22,
+              24,
+              57
+            ],
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        },
+        "required": [
+          "partInformationIds"
+        ]
+      },
+      "DeleteMaterialPartInformationsDto": {
+        "type": "object",
+        "properties": {
+          "partInformationIds": {
+            "description": "Array of targetted part information ids to associate in the Material Part Information join table.",
+            "example": [
+              10,
+              22,
+              24,
+              57
+            ],
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        },
+        "required": [
+          "partInformationIds"
+        ]
+      },
+      "CreateMaterialPriceDto": {
+        "type": "object",
+        "properties": {
+          "price": {
+            "type": "number",
+            "description": "Price of a given material.",
+            "example": 110.5
+          },
+          "date": {
+            "type": "string",
+            "description": "Date of material price attribution.",
+            "example": "15/02/2020"
+          }
+        },
+        "required": [
+          "price",
+          "date"
+        ]
+      },
+      "CreateManyMaterialPricesDto": {
+        "type": "object",
+        "properties": {
+          "prices": {
+            "description": "Collection of material prices objects.",
+            "example": [
+              {
+                "price": 58.75,
+                "date": "10/10/2022"
+              }
+            ],
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateMaterialPriceDto"
+            }
+          }
+        },
+        "required": [
+          "prices"
+        ]
+      },
+      "DeleteMaterialPriceDto": {
+        "type": "object",
+        "properties": {
+          "price": {
+            "type": "number",
+            "description": "Price of a given material.",
+            "example": 110.5
+          },
+          "date": {
+            "type": "string",
+            "description": "Date of material price attribution.",
+            "example": "15/02/2020"
+          }
+        },
+        "required": [
+          "price",
+          "date"
+        ]
+      },
+      "DeleteManyMaterialPricesDto": {
+        "type": "object",
+        "properties": {
+          "prices": {
+            "description": "Array of material prices delete objects.",
+            "example": [
+              {
+                "price": 58.75,
+                "date": "10/10/2022"
+              }
+            ],
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeleteMaterialPriceDto"
+            }
+          }
+        },
+        "required": [
+          "prices"
+        ]
+      },
+      "CreatePartInformationDto": {
+        "type": "object",
+        "properties": {
+          "defaultPrice": {
+            "type": "number",
+            "description": "The default price of a given part.",
+            "example": 14999.99
+          },
+          "timeToProduce": {
+            "type": "number",
+            "description": "Time of production of a part in seconds.",
+            "example": 360
+          }
+        },
+        "required": [
+          "defaultPrice",
+          "timeToProduce"
+        ]
+      },
+      "CreateManyPartInformationDto": {
+        "type": "object",
+        "properties": {
+          "partInformations": {
+            "description": "Collection of part information objects.",
+            "example": [
+              {
+                "defaultPrice": 14999.99,
+                "timeToProduce": 360
+              }
+            ],
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreatePartInformationDto"
+            }
+          }
+        },
+        "required": [
+          "partInformations"
+        ]
+      },
+      "UpdateManyPartInformationDto": {
+        "type": "object",
+        "properties": {
+          "partInformations": {
+            "description": "Array of part update objects.",
+            "example": [
+              {
+                "id": 8,
+                "defaultPrice": 14999.99,
+                "timeToProduce": 360
+              }
+            ],
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreatePartInformationDto"
+            }
+          }
+        },
+        "required": [
+          "partInformations"
+        ]
+      },
+      "UpdatePartInformationDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "Part Information ID.",
+            "example": 47
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "PartInformationToDeleteDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "Id to pinpoint the part information to delete.",
+            "example": 17
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "DeletePartInformationDto": {
+        "type": "object",
+        "properties": {
+          "partInformations": {
+            "description": "Array of part delete objects.",
+            "example": [
+              {
+                "id": 9
+              }
+            ],
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PartInformationToDeleteDto"
+            }
+          }
+        },
+        "required": [
+          "partInformations"
+        ]
+      },
+      "CreatePartInformationMaterialsDto": {
+        "type": "object",
+        "properties": {
+          "materialIds": {
+            "description": "Array of targetted material ids to associate in the Material Part Information join table.",
+            "example": [
+              1,
+              4,
+              24,
+              64
+            ],
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        },
+        "required": [
+          "materialIds"
+        ]
+      },
+      "DeletePartInformationMaterialsDto": {
+        "type": "object",
+        "properties": {
+          "materialIds": {
+            "description": "Array of targetted material ids to associate in the Material Part Information join table.",
+            "example": [
+              1,
+              4,
+              24,
+              64
+            ],
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        },
+        "required": [
+          "materialIds"
+        ]
+      },
+      "CreateSupplyChainDto": {
+        "type": "object",
+        "properties": {
+          "timeOfProduction": {
+            "type": "string",
+            "description": "Date of production for a given piece in timestamp (epoch)",
+            "example": "10/10/2023"
+          },
+          "order": {
+            "type": "number",
+            "description": "Id of a piece order.",
+            "example": 5
+          },
+          "var1": {
+            "type": "number"
+          },
+          "var2": {
+            "type": "string"
+          },
+          "var3": {
+            "type": "string"
+          },
+          "var4": {
+            "type": "number"
+          },
+          "var5": {
+            "type": "boolean",
+            "description": "State of a damaged piece.",
+            "example": false
+          },
+          "machineIds": {
+            "description": "Array of machine Ids.",
+            "example": [
+              1,
+              2,
+              3,
+              4
+            ],
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "partIds": {
+            "description": "Array of part information Ids.",
+            "example": [
+              10,
+              20,
+              30,
+              40
+            ],
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        },
+        "required": [
+          "timeOfProduction",
+          "order",
+          "var1",
+          "var2",
+          "var3",
+          "var4",
+          "var5",
+          "machineIds",
+          "partIds"
+        ]
+      },
+      "CreateManySupplyChainDto": {
+        "type": "object",
+        "properties": {
+          "supplyChains": {
+            "description": "Collection of supply chain objects.",
+            "example": [
+              {
+                "timeOfProduction": "10/12/2023",
+                "order": 5,
+                "var5": false,
+                "machineIds": [
+                  1,
+                  4,
+                  7
+                ],
+                "partIds": [
+                  40,
+                  45,
+                  50
+                ]
+              }
+            ],
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateSupplyChainDto"
+            }
+          }
+        },
+        "required": [
+          "supplyChains"
+        ]
+      },
+      "UpdateSupplyChainDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "UUID of a given supply chain.",
+            "example": "cde7964c-819b-11ee-b962-0242ac120002"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "UpdateManySupplyChainDto": {
+        "type": "object",
+        "properties": {
+          "supplyChains": {
+            "description": "Array of supply chain update objects.",
+            "example": [
+              "cde7964c-819b-11ee-b962-0242ac120002"
+            ],
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UpdateSupplyChainDto"
+            }
+          }
+        },
+        "required": [
+          "supplyChains"
+        ]
+      }
+    }
+  }
+}
