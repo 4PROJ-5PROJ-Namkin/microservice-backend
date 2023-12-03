@@ -3,7 +3,6 @@ import { ProductionModule } from './production.module';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { writeFileSync } from 'fs';
-import { RateLimiterGuard } from 'nestjs-rate-limiter';
 
 async function bootstrap() {
   const app = await NestFactory.create(ProductionModule);
@@ -18,7 +17,7 @@ async function bootstrap() {
 
   const openApiOptions = new DocumentBuilder()
     .setTitle('Production API Service - Namkin X SUPINFO')
-    .setDescription('<a href="/api/v1/production/production-swagger-spec.json" target="_blank">https://localhost:3000/api/v1/production/production-swagger-spec.json</a>')
+    .setDescription('<a href="/api/v1/production/production-swagger-spec.json" target="_blank">https://localhost:3002/api/v1/production/production-swagger-spec.json</a>')
     .setVersion('v1')
     .addServer('/api/v1')
     .build();
@@ -31,7 +30,7 @@ async function bootstrap() {
 
   app.setGlobalPrefix('api/v1');
   app.enableCors();
-  await app.listen(3000);
+  await app.listen(3002);
 }
 
 bootstrap();
