@@ -1,4 +1,4 @@
-import { Body, Controller,Headers, Delete, Get, Param, Patch, Post, HttpException } from '@nestjs/common';
+import { Body, Controller, Headers, Delete, Get, ParseIntPipe, Param, Patch, Post, HttpException } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { catchError, map } from 'rxjs/operators';
 import { LoginUserDto, RegisterUserDto } from './gateway/auth.dto';
@@ -8,9 +8,10 @@ import { UpdateUsersDto } from './gateway/update-users.dto';
 @ApiBearerAuth('JWT-auth')
 @Controller()
 export class AppController {
-  constructor(private httpService: HttpService) {}
+  constructor(private httpService: HttpService) { }
 
-  @Get('api/v1/gateway/users')
+  // Users service
+  @Get('gateway/users')
   getAllUsers(@Headers('authorization') authHeader: any) {
     return this.httpService.get('http://localhost:3001/api/v1/users', {
       headers: { 'Authorization': authHeader },
@@ -35,7 +36,7 @@ export class AppController {
   }
 
   @Patch('gateway/users/:id')
-  updateUserById(@Body()userData:UpdateUsersDto,@Headers('authorization') authHeader: any,@Param('id') id: string) {
+  updateUserById(@Body() userData: UpdateUsersDto, @Headers('authorization') authHeader: any, @Param('id') id: string) {
     return this.httpService.patch(`http://localhost:3001/api/v1/users/${id}`, userData, {
       headers: { 'Authorization': authHeader },
     }).pipe(
@@ -57,7 +58,7 @@ export class AppController {
       })
     );
   }
-  
+
   @Post('register')
   createUser(@Body() userData: RegisterUserDto) {
     return this.httpService.post('http://localhost:3001/api/v1/register', userData)
@@ -71,12 +72,16 @@ export class AppController {
   }
 
 
-
-
-  // @Get('gateway/production/:id')
-  // getProductionById(@Param('id') id: string) {
-  //   return this.httpService.get(`http://production-service-url/production/${id}`)
-  //     .pipe(map(response => response.data));
-  // }
-
+  //----------------------------------------------
+  // production service
+  // Material
+  @Get('gateway/production/:materialId')
+  getMaterialPrices(@Param('materialId', ParseIntPipe) materialId: number) {
+    return this.httpService.get('http://localhost:3002/api/v1/materials')
+      .pipe(map(response => response.data),
+        catchError(err => {
+          throw new HttpException(err.response.data, err.response.status);
+        })
+      );
+  }
 }
