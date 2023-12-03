@@ -12,10 +12,6 @@ let AppService = exports.AppService = class AppService {
     getHello() {
         return 'Hello World!';
     }
-    async findById(id) {
-        const user = id;
-        return user;
-    }
 };
 exports.AppService = AppService = __decorate([
     (0, common_1.Injectable)()

@@ -14,6 +14,7 @@ const openapi = require("@nestjs/swagger");
 const mapped_types_1 = require("@nestjs/mapped-types");
 const create_users_dto_1 = require("./create-users.dto");
 const class_validator_1 = require("class-validator");
+const swagger_1 = require("@nestjs/swagger");
 class UpdateUsersDto extends (0, mapped_types_1.PartialType)(create_users_dto_1.CreateUsersDto) {
     static _OPENAPI_METADATA_FACTORY() {
         return { password: { required: true, type: () => String } };
@@ -22,6 +23,11 @@ class UpdateUsersDto extends (0, mapped_types_1.PartialType)(create_users_dto_1.
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsStrongPassword)({ minLength: 8, minLowercase: 1, minUppercase: 1, minNumbers: 1, minSymbols: 1 }),
+    (0, swagger_1.ApiProperty)({
+        description: 'password',
+        example: "1Afhs985!cw",
+        type: String
+    }),
     __metadata("design:type", String)
 ], UpdateUsersDto.prototype, "password", void 0);
 exports.UpdateUsersDto = UpdateUsersDto;

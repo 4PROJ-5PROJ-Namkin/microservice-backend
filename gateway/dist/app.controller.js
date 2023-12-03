@@ -17,25 +17,31 @@ const common_1 = require("@nestjs/common");
 const axios_1 = require("@nestjs/axios");
 const operators_1 = require("rxjs/operators");
 const auth_dto_1 = require("./gateway/auth.dto");
+const swagger_1 = require("@nestjs/swagger");
+const update_users_dto_1 = require("./gateway/update-users.dto");
 let AppController = exports.AppController = class AppController {
     constructor(httpService) {
         this.httpService = httpService;
     }
-    getAllUsers() {
-        return this.httpService.get('http://localhost:3001/api/v1/users/')
-            .pipe((0, operators_1.map)(response => response.data));
+    getAllUsers(authHeader) {
+        return this.httpService.get('http://localhost:3001/api/v1/users', {
+            headers: { 'Authorization': authHeader },
+        }).pipe((0, operators_1.map)(response => response.data));
     }
-    getUserById(id) {
-        return this.httpService.get(`http://localhost:3001/api/v1/users/${id}`)
-            .pipe((0, operators_1.map)(response => response.data));
+    getUserById(authHeader, id) {
+        return this.httpService.get(`http://localhost:3001/api/v1/users/${id}`, {
+            headers: { 'Authorization': authHeader },
+        }).pipe((0, operators_1.map)(response => response.data));
     }
-    updateUserById(id, updateUserData) {
-        return this.httpService.patch(`http://localhost:3001/api/v1/users/${id}`, updateUserData)
-            .pipe((0, operators_1.map)(response => response.data));
+    updateUserById(userData, authHeader, id) {
+        return this.httpService.patch(`http://localhost:3001/api/v1/users/${id}`, userData, {
+            headers: { 'Authorization': authHeader },
+        }).pipe((0, operators_1.map)(response => response.data));
     }
-    deleteUserById(id) {
-        return this.httpService.delete(`http://localhost:3001/api/v1/users/${id}`)
-            .pipe((0, operators_1.map)(response => response.data));
+    deleteUserById(authHeader, id) {
+        return this.httpService.delete(`http://localhost:3001/api/v1/users/${id}`, {
+            headers: { 'Authorization': authHeader },
+        }).pipe((0, operators_1.map)(response => response.data));
     }
     createUser(userData) {
         return this.httpService.post('http://localhost:3001/api/v1/register', userData)
@@ -48,30 +54,34 @@ let AppController = exports.AppController = class AppController {
 };
 __decorate([
     (0, common_1.Get)('gateway/users'),
+    __param(0, (0, common_1.Headers)('authorization')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], AppController.prototype, "getAllUsers", null);
 __decorate([
     (0, common_1.Get)('gateway/users/:id'),
-    __param(0, (0, common_1.Param)('id')),
+    __param(0, (0, common_1.Headers)('authorization')),
+    __param(1, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", void 0)
 ], AppController.prototype, "getUserById", null);
 __decorate([
-    (0, common_1.Patch)('users/:id'),
-    __param(0, (0, common_1.Param)('id')),
-    __param(1, (0, common_1.Body)()),
+    (0, common_1.Patch)('gateway/users/:id'),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Headers)('authorization')),
+    __param(2, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:paramtypes", [update_users_dto_1.UpdateUsersDto, Object, String]),
     __metadata("design:returntype", void 0)
 ], AppController.prototype, "updateUserById", null);
 __decorate([
-    (0, common_1.Delete)('users/:id'),
-    __param(0, (0, common_1.Param)('id')),
+    (0, common_1.Delete)('gateway/users/:id'),
+    __param(0, (0, common_1.Headers)('authorization')),
+    __param(1, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", void 0)
 ], AppController.prototype, "deleteUserById", null);
 __decorate([
@@ -89,6 +99,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], AppController.prototype, "login", null);
 exports.AppController = AppController = __decorate([
+    (0, swagger_1.ApiBearerAuth)('JWT-auth'),
     (0, common_1.Controller)(),
     __metadata("design:paramtypes", [axios_1.HttpService])
 ], AppController);

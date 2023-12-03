@@ -1,35 +1,42 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller,Headers, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { map } from 'rxjs/operators';
 import { AppService } from './app.service';
 import { LoginUserDto, RegisterUserDto } from './gateway/auth.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { UpdateUsersDto } from './gateway/update-users.dto';
 
+@ApiBearerAuth('JWT-auth')
 @Controller()
 export class AppController {
   constructor(private httpService: HttpService) {}
 
   @Get('gateway/users')
-  getAllUsers() {
-    return this.httpService.get('http://localhost:3001/api/v1/users/')
-      .pipe(map(response => response.data));
+  getAllUsers(@Headers('authorization') authHeader: any) {
+    return this.httpService.get('http://localhost:3001/api/v1/users', {
+      headers: { 'Authorization': authHeader },
+    }).pipe(map(response => response.data));
   }
 
   @Get('gateway/users/:id')
-  getUserById(@Param('id') id: string) {
-    return this.httpService.get(`http://localhost:3001/api/v1/users/${id}`)
-      .pipe(map(response => response.data)); 
+  getUserById(@Headers('authorization') authHeader: any, @Param('id') id: string) {
+    return this.httpService.get(`http://localhost:3001/api/v1/users/${id}`, {
+      headers: { 'Authorization': authHeader },
+    }).pipe(map(response => response.data));
   }
 
-  @Patch('users/:id')
-  updateUserById(@Param('id') id: string, @Body() updateUserData: any) {
-    return this.httpService.patch(`http://localhost:3001/api/v1/users/${id}`, updateUserData)
-      .pipe(map(response => response.data));
+  @Patch('gateway/users/:id')
+  updateUserById(@Body()userData:UpdateUsersDto,@Headers('authorization') authHeader: any,@Param('id') id: string) {
+    return this.httpService.patch(`http://localhost:3001/api/v1/users/${id}`, userData, {
+      headers: { 'Authorization': authHeader },
+    }).pipe(map(response => response.data));
   }
 
-  @Delete('users/:id')
-  deleteUserById(@Param('id') id: string) {
-    return this.httpService.delete(`http://localhost:3001/api/v1/users/${id}`)
-      .pipe(map(response => response.data));
+  @Delete('gateway/users/:id')
+  deleteUserById(@Headers('authorization') authHeader: any, @Param('id') id: string) {
+    return this.httpService.delete(`http://localhost:3001/api/v1/users/${id}`, {
+      headers: { 'Authorization': authHeader },
+    }).pipe(map(response => response.data));
   }
 
   @Post('register')
