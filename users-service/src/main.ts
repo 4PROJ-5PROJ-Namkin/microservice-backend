@@ -1,30 +1,3 @@
-// import { NestFactory } from '@nestjs/core';
-// import { AppModule } from './app.module';
-// import "reflect-metadata";
-// import { ValidationPipe } from '@nestjs/common';
-// import { MicroserviceOptions, Transport } from '@nestjs/microservices';
-// import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-
-// async function bootstrap() {
-//   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
-//     AppModule,
-//     {
-//       transport: Transport.TCP,
-//       options: {
-//         host: 'localhost',
-//         port: 3001,
-//       },
-//     },
-//   );
-//   // const config = new DocumentBuilder()
-//   app.useGlobalPipes(new ValidationPipe());
-
-//   await app.listen();
-// }
-
-// bootstrap();
-
-
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import "reflect-metadata";
@@ -51,7 +24,7 @@ async function bootstrap() {
   )
   .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('api/v1', app, document);
 
   app.use(cors({
     origin: 'http://localhost:3000',

@@ -53,7 +53,7 @@ let AppController = exports.AppController = class AppController {
     }
 };
 __decorate([
-    (0, common_1.Get)('gateway/users'),
+    (0, common_1.Get)('api/v1/gateway/users'),
     __param(0, (0, common_1.Headers)('authorization')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),

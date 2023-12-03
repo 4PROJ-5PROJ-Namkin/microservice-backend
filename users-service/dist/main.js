@@ -23,7 +23,7 @@ async function bootstrap() {
     }, 'JWT-auth')
         .build();
     const document = swagger_1.SwaggerModule.createDocument(app, config);
-    swagger_1.SwaggerModule.setup('api', app, document);
+    swagger_1.SwaggerModule.setup('api/v1', app, document);
     app.use(cors({
         origin: 'http://localhost:3000',
         methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',

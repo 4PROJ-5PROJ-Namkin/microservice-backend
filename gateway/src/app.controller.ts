@@ -1,7 +1,6 @@
 import { Body, Controller,Headers, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { map } from 'rxjs/operators';
-import { AppService } from './app.service';
 import { LoginUserDto, RegisterUserDto } from './gateway/auth.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { UpdateUsersDto } from './gateway/update-users.dto';
@@ -11,7 +10,7 @@ import { UpdateUsersDto } from './gateway/update-users.dto';
 export class AppController {
   constructor(private httpService: HttpService) {}
 
-  @Get('gateway/users')
+  @Get('api/v1/gateway/users')
   getAllUsers(@Headers('authorization') authHeader: any) {
     return this.httpService.get('http://localhost:3001/api/v1/users', {
       headers: { 'Authorization': authHeader },
