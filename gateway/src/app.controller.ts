@@ -51,8 +51,7 @@ export class AppController {
   deleteUserById(@Headers('authorization') authHeader: any, @Param('id') id: string) {
     return this.httpService.delete(`http://localhost:3001/api/v1/users/${id}`, {
       headers: { 'Authorization': authHeader },
-    }).pipe(
-      map(response => response.data),
+    }).pipe(map(response => response.data),
       catchError(err => {
         throw new HttpException(err.response.data, err.response.status);
       })
@@ -62,13 +61,21 @@ export class AppController {
   @Post('register')
   createUser(@Body() userData: RegisterUserDto) {
     return this.httpService.post('http://localhost:3001/api/v1/register', userData)
-      .pipe(map(response => response.data));
+      .pipe(map(response => response.data),
+      catchError(err => {
+        throw new HttpException(err.response.data, err.response.status);
+      })
+    );
   }
 
   @Post('login')
   login(@Body() loginData: LoginUserDto) {
     return this.httpService.post('http://localhost:3001/api/v1/login', loginData)
-      .pipe(map(response => response.data));
+      .pipe(map(response => response.data),
+      catchError(err => {
+        throw new HttpException(err.response.data, err.response.status);
+      })
+    );
   }
 
 
