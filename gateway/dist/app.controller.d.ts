@@ -10,4 +10,5 @@ export declare class AppController {
     deleteUserById(authHeader: any, id: string): import("rxjs").Observable<any>;
     createUser(userData: RegisterUserDto): import("rxjs").Observable<any>;
     login(loginData: LoginUserDto): import("rxjs").Observable<any>;
+    getMaterialPrices(materialId: number): import("rxjs").Observable<any>;
 }

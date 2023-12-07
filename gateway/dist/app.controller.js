@@ -53,15 +53,25 @@ let AppController = exports.AppController = class AppController {
     }
     createUser(userData) {
         return this.httpService.post('http://localhost:3001/api/v1/register', userData)
-            .pipe((0, operators_1.map)(response => response.data));
+            .pipe((0, operators_1.map)(response => response.data), (0, operators_1.catchError)(err => {
+            throw new common_1.HttpException(err.response.data, err.response.status);
+        }));
     }
     login(loginData) {
         return this.httpService.post('http://localhost:3001/api/v1/login', loginData)
-            .pipe((0, operators_1.map)(response => response.data));
+            .pipe((0, operators_1.map)(response => response.data), (0, operators_1.catchError)(err => {
+            throw new common_1.HttpException(err.response.data, err.response.status);
+        }));
+    }
+    getMaterialPrices(materialId) {
+        return this.httpService.get('http://localhost:3002/api/v1/materials')
+            .pipe((0, operators_1.map)(response => response.data), (0, operators_1.catchError)(err => {
+            throw new common_1.HttpException(err.response.data, err.response.status);
+        }));
     }
 };
 __decorate([
-    (0, common_1.Get)('api/v1/gateway/users'),
+    (0, common_1.Get)('gateway/users'),
     __param(0, (0, common_1.Headers)('authorization')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -106,6 +116,13 @@ __decorate([
     __metadata("design:paramtypes", [auth_dto_1.LoginUserDto]),
     __metadata("design:returntype", void 0)
 ], AppController.prototype, "login", null);
+__decorate([
+    (0, common_1.Get)('gateway/production/:materialId'),
+    __param(0, (0, common_1.Param)('materialId', common_1.ParseIntPipe)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", void 0)
+], AppController.prototype, "getMaterialPrices", null);
 exports.AppController = AppController = __decorate([
     (0, swagger_1.ApiBearerAuth)('JWT-auth'),
     (0, common_1.Controller)(),

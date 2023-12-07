@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
     MDBBtn,
     MDBContainer,
@@ -15,14 +15,12 @@ export default function Inscription() {
     const [prenom, setPrenom] = useState('');
     const [mail, setMail] = useState('');
     const [mdp, setMdp] = useState('');
+    const [telephone, setTelephone] = useState(''); // New state for phone number
 
     const onSubmit = async () => {
         try {
-            postRegister(nom, prenom, mail, mdp);
-          //  const { data } = await ;
-            // handle successful account creation here (e.g., redirect to another page)
+            postRegister(nom, prenom, mail, mdp, telephone); // Updated to include phone number
         } catch (error) {
-            // handle error here
             console.error('Error creating account:', error);
         }
     };
@@ -40,6 +38,7 @@ export default function Inscription() {
                             </div>
                             <MDBInput wrapperClass='mb-4' label='Email' id='mail' type='email' onChange={(e) => setMail(e.target.value)} />
                             <MDBInput wrapperClass='mb-4' label='Mot de passe' id='form4' type='password' onChange={(e) => setMdp(e.target.value)} />
+                            <MDBInput wrapperClass='mb-4' label='Numéro de téléphone' id='telephone' type='tel' onChange={(e) => setTelephone(e.target.value)} />
                             <MDBBtn className='w-100 mb-4' size='md' onClick={onSubmit}>Valider</MDBBtn>
                         </MDBCardBody>
                     </MDBCard>
@@ -49,23 +48,17 @@ export default function Inscription() {
     );
 }
 
-export const postRegister = async (nom, prenom, email, password) => {
+export const postRegister = async (nom, prenom, email, password, telephone) => {
     const body = {
         first_name : prenom,
         last_name: nom,
         email: email,
         password: password,
-        telephoneNumber: "+33608070501"
+        telephoneNumber: telephone
     }
-    console.log(body);
-    return false;
     try {
         const res = await axios.post('http://localhost:3000/register', body);
-        if(res.status === "201"){
-           // document.getElementsByClassName('nodisplay')[0].style.display = "block";
-        }
     } catch (err) {
-      //  var rep = (JSON.parse(err.response.request.responseText));
         throw new Error(err);
     }
 }
