@@ -55,8 +55,10 @@ export const postRegister = async (nom, prenom, email, password) => {
         last_name: nom,
         email: email,
         password: password,
-        telephoneNumber: "+33608070545"
+        telephoneNumber: "+33608070501"
     }
+    console.log(body);
+    return false;
     try {
         const res = await axios.post('http://localhost:3000/register', body);
         if(res.status === "201"){
