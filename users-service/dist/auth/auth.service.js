@@ -57,22 +57,29 @@ let AuthService = class AuthService {
             throw new common_1.HttpException({ message: 'Error creating user' }, common_1.HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    async createAdmin(user) {
-        if (await this.usersRepository.findOneBy({ email: user.email }) || await this.usersRepository.findOneBy({ email: user.email }))
-            throw new common_1.HttpException({ message: 'User may already exist' }, common_1.HttpStatus.BAD_REQUEST);
-        const adminData = {
-            first_name: user.first_name,
-            last_name: user.last_name,
-            email: user.email,
-            telephoneNumber: user.telephoneNumber,
-            password: await argon2.hash(user.password),
-            role: 'admin'
-        };
-        try {
-            await this.usersRepository.save(this.usersRepository.create(adminData));
+    async createAdmin(user, headers) {
+        const token = await headers.authorization.split(' ')[1];
+        const decoded = await (0, jwt_1.DecodeToken)(token);
+        if (decoded.role === 'commercial') {
+            throw new common_1.HttpException({ message: 'You are not allowed to access this resource' }, common_1.HttpStatus.UNAUTHORIZED);
         }
-        catch (error) {
-            throw new common_1.HttpException({ message: 'Error creating user' }, common_1.HttpStatus.INTERNAL_SERVER_ERROR);
+        if (decoded.role === 'admin') {
+            if (await this.usersRepository.findOneBy({ email: user.email }) || await this.usersRepository.findOneBy({ email: user.email }))
+                throw new common_1.HttpException({ message: 'User may already exist' }, common_1.HttpStatus.BAD_REQUEST);
+            const adminData = {
+                first_name: user.first_name,
+                last_name: user.last_name,
+                email: user.email,
+                telephoneNumber: user.telephoneNumber,
+                password: await argon2.hash(user.password),
+                role: 'admin'
+            };
+            try {
+                await this.usersRepository.save(this.usersRepository.create(adminData));
+            }
+            catch (error) {
+                throw new common_1.HttpException({ message: 'Error creating user' }, common_1.HttpStatus.INTERNAL_SERVER_ERROR);
+            }
         }
     }
 };

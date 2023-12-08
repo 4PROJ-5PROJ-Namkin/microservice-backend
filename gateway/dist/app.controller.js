@@ -71,6 +71,7 @@ let AppController = exports.AppController = class AppController {
     }
 };
 __decorate([
+    (0, swagger_1.ApiBearerAuth)('JWT-auth'),
     (0, common_1.Get)('gateway/users'),
     __param(0, (0, common_1.Headers)('authorization')),
     __metadata("design:type", Function),
@@ -78,6 +79,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], AppController.prototype, "getAllUsers", null);
 __decorate([
+    (0, swagger_1.ApiBearerAuth)('JWT-auth'),
     (0, common_1.Get)('gateway/users/:id'),
     __param(0, (0, common_1.Headers)('authorization')),
     __param(1, (0, common_1.Param)('id')),
@@ -86,6 +88,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], AppController.prototype, "getUserById", null);
 __decorate([
+    (0, swagger_1.ApiBearerAuth)('JWT-auth'),
     (0, common_1.Patch)('gateway/users/:id'),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Headers)('authorization')),
@@ -95,6 +98,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], AppController.prototype, "updateUserById", null);
 __decorate([
+    (0, swagger_1.ApiBearerAuth)('JWT-auth'),
     (0, common_1.Delete)('gateway/users/:id'),
     __param(0, (0, common_1.Headers)('authorization')),
     __param(1, (0, common_1.Param)('id')),
@@ -124,7 +128,6 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], AppController.prototype, "getMaterialPrices", null);
 exports.AppController = AppController = __decorate([
-    (0, swagger_1.ApiBearerAuth)('JWT-auth'),
     (0, common_1.Controller)(),
     __metadata("design:paramtypes", [axios_1.HttpService])
 ], AppController);

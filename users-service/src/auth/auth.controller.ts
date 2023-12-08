@@ -1,7 +1,7 @@
 import { Body, Controller, Post, UsePipes, ValidationPipe } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { Token, LoginUserDto, RegisterUserDto } from "./dto/auth.dto";
-import { ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { Roles } from "./guards/auth.decorator";
 import { Role } from "./guards/auth.enum";
 
@@ -35,6 +35,7 @@ export class RegisterController {
     return this.authService.createCommercial(userData);
   }
 
+  @ApiBearerAuth('JWT-auth')
   @Roles(Role.ADMIN)
   @Post('admin')
   @UsePipes(new ValidationPipe({ transform: true }))

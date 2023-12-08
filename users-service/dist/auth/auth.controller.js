@@ -69,6 +69,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], RegisterController.prototype, "createCommercial", null);
 __decorate([
+    (0, swagger_1.ApiBearerAuth)('JWT-auth'),
     (0, auth_decorator_1.Roles)(auth_enum_1.Role.ADMIN),
     (0, common_1.Post)('admin'),
     (0, common_1.UsePipes)(new common_1.ValidationPipe({ transform: true })),

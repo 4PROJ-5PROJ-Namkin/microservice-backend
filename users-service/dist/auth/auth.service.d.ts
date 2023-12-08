@@ -6,5 +6,5 @@ export declare class AuthService {
     constructor(usersRepository: Repository<Users>);
     login(loginData: LoginUserDto): Promise<Token>;
     createCommercial(user: RegisterUserDto): Promise<void>;
-    createAdmin(user: RegisterUserDto): Promise<void>;
+    createAdmin(user: RegisterUserDto, headers: any): Promise<void>;
 }
