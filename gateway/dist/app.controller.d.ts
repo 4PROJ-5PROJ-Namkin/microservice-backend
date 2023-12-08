@@ -8,7 +8,8 @@ export declare class AppController {
     getUserById(authHeader: any, id: string): import("rxjs").Observable<any>;
     updateUserById(userData: UpdateUsersDto, authHeader: any, id: string): import("rxjs").Observable<any>;
     deleteUserById(authHeader: any, id: string): import("rxjs").Observable<any>;
-    createUser(userData: RegisterUserDto): import("rxjs").Observable<any>;
     login(loginData: LoginUserDto): import("rxjs").Observable<any>;
+    createUser(userData: RegisterUserDto): import("rxjs").Observable<any>;
+    createUserAdmin(userData: RegisterUserDto): import("rxjs").Observable<any>;
     getMaterialPrices(materialId: number): import("rxjs").Observable<any>;
 }

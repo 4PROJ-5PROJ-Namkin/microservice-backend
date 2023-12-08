@@ -62,15 +62,6 @@ export class AppController {
     );
   }
 
-  @Post('register')
-  createUser(@Body() userData: RegisterUserDto) {
-    return this.httpService.post('http://localhost:3001/api/v1/register', userData)
-      .pipe(map(response => response.data),
-      catchError(err => {
-        throw new HttpException(err.response.data, err.response.status);
-      })
-    );
-  }
 
   @Post('login')
   login(@Body() loginData: LoginUserDto) {
@@ -82,6 +73,28 @@ export class AppController {
     );
   }
 
+
+  @Post('register')
+  createUser(@Body() userData: RegisterUserDto) {
+    return this.httpService.post('http://localhost:3001/api/v1/register', userData)
+      .pipe(map(response => response.data),
+      catchError(err => {
+        throw new HttpException(err.response.data, err.response.status);
+      })
+    );
+  }
+
+  
+  @ApiBearerAuth('JWT-auth')
+  @Post('register/admin')
+  createUserAdmin(@Body() userData: RegisterUserDto) {
+    return this.httpService.post('http://localhost:3001/api/v1/register/admin', userData)
+      .pipe(map(response => response.data),
+      catchError(err => {
+        throw new HttpException(err.response.data, err.response.status);
+      })
+    );
+  }
 
   //----------------------------------------------
   // production service

@@ -51,14 +51,20 @@ let AppController = exports.AppController = class AppController {
             throw new common_1.HttpException(err.response.data, err.response.status);
         }));
     }
+    login(loginData) {
+        return this.httpService.post('http://localhost:3001/api/v1/login', loginData)
+            .pipe((0, operators_1.map)(response => response.data), (0, operators_1.catchError)(err => {
+            throw new common_1.HttpException(err.response.data, err.response.status);
+        }));
+    }
     createUser(userData) {
         return this.httpService.post('http://localhost:3001/api/v1/register', userData)
             .pipe((0, operators_1.map)(response => response.data), (0, operators_1.catchError)(err => {
             throw new common_1.HttpException(err.response.data, err.response.status);
         }));
     }
-    login(loginData) {
-        return this.httpService.post('http://localhost:3001/api/v1/login', loginData)
+    createUserAdmin(userData) {
+        return this.httpService.post('http://localhost:3001/api/v1/register/admin', userData)
             .pipe((0, operators_1.map)(response => response.data), (0, operators_1.catchError)(err => {
             throw new common_1.HttpException(err.response.data, err.response.status);
         }));
@@ -107,6 +113,13 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], AppController.prototype, "deleteUserById", null);
 __decorate([
+    (0, common_1.Post)('login'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [auth_dto_1.LoginUserDto]),
+    __metadata("design:returntype", void 0)
+], AppController.prototype, "login", null);
+__decorate([
     (0, common_1.Post)('register'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -114,12 +127,13 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], AppController.prototype, "createUser", null);
 __decorate([
-    (0, common_1.Post)('login'),
+    (0, swagger_1.ApiBearerAuth)('JWT-auth'),
+    (0, common_1.Post)('register/admin'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [auth_dto_1.LoginUserDto]),
+    __metadata("design:paramtypes", [auth_dto_1.RegisterUserDto]),
     __metadata("design:returntype", void 0)
-], AppController.prototype, "login", null);
+], AppController.prototype, "createUserAdmin", null);
 __decorate([
     (0, common_1.Get)('gateway/production/:materialId'),
     __param(0, (0, common_1.Param)('materialId', common_1.ParseIntPipe)),
