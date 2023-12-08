@@ -53,11 +53,15 @@ let AppController = exports.AppController = class AppController {
     }
     createUser(userData) {
         return this.httpService.post('http://localhost:3001/api/v1/register', userData)
-            .pipe((0, operators_1.map)(response => response.data));
+            .pipe((0, operators_1.map)(response => response.data), (0, operators_1.catchError)(err => {
+            throw new common_1.HttpException(err.response.data, err.response.status);
+        }));
     }
     login(loginData) {
         return this.httpService.post('http://localhost:3001/api/v1/login', loginData)
-            .pipe((0, operators_1.map)(response => response.data));
+            .pipe((0, operators_1.map)(response => response.data), (0, operators_1.catchError)(err => {
+            throw new common_1.HttpException(err.response.data, err.response.status);
+        }));
     }
     getMaterialPrices(materialId) {
         return this.httpService.get('http://localhost:3002/api/v1/materials')
