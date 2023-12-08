@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UsePipes, ValidationPipe } from "@nestjs/common";
+import { Body, Controller,Headers, Post, UsePipes, ValidationPipe } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { Token, LoginUserDto, RegisterUserDto } from "./dto/auth.dto";
 import { ApiBearerAuth, ApiResponse, ApiTags } from "@nestjs/swagger";
@@ -41,8 +41,8 @@ export class RegisterController {
   @UsePipes(new ValidationPipe({ transform: true }))
   @ApiResponse({ status: 400, description: 'User may already exist' })
   @ApiResponse({ status: 500, description: 'Error creating user' })
-  async createAdmin(@Body() userData: RegisterUserDto): Promise<void> {
-    return this.authService.createAdmin(userData);
+  async createAdmin(@Headers() headers: any, @Body() userData: RegisterUserDto): Promise<void> {
+    return this.authService.createAdmin(userData, headers);
   }
 
 }

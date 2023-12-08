@@ -1,25 +1,15 @@
 version: "3.9"
 services:
-  # backend:
-  #   container_name: users-services-backend
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #   restart: always
-  #   ports:
-  #     - "3001:3001"
-  #   depends_on:
-  #     - database
-  #   volumes:
-  #     - ./:/app
-      # - /app/node_modules
-    # environment:
-    #   POSTGRES_PASSWORD: password1
-    #   POSTGRES_USER: postgres
-    #   POSTGRES_DB: postgres
-    #   POSTGRES_PORT: 5439
-    #   POSTGRES_HOST: localhost
-
+  backend:
+    container_name: users-services-backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "3001:3001"
+    depends_on:
+      - database
 
   database:
     container_name: users-services-database
@@ -31,14 +21,16 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - ./userData:/var/lib/postgresql/data
+      - ./postgresql.conf:/etc/postgresql/postgresql.conf
     ports:
-      - "5439:5432"
+      - "5439:5439"
     healthcheck:
       test: psql -U ${POSTGRES_USER} -q -d ${POSTGRES_DB} -c "SELECT 'ready';"
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 5s
+    command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]
 
 volumes:
   userData:

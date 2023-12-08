@@ -9,5 +9,5 @@ export declare class RegisterController {
     private readonly authService;
     constructor(authService: AuthService);
     createCommercial(userData: RegisterUserDto): Promise<void>;
-    createAdmin(userData: RegisterUserDto): Promise<void>;
+    createAdmin(headers: any, userData: RegisterUserDto): Promise<void>;
 }

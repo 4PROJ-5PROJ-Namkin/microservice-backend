@@ -6,7 +6,6 @@ import Users from "./entities/users.entity";
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { Roles } from "src/auth/guards/auth.decorator";
 import { Role } from "src/auth/guards/auth.enum";
-import { MessagePattern, Payload } from "@nestjs/microservices";
 
 @ApiTags('Users')
 @ApiBearerAuth('JWT-auth')

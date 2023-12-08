@@ -53,8 +53,8 @@ let RegisterController = class RegisterController {
     async createCommercial(userData) {
         return this.authService.createCommercial(userData);
     }
-    async createAdmin(userData) {
-        return this.authService.createAdmin(userData);
+    async createAdmin(headers, userData) {
+        return this.authService.createAdmin(userData, headers);
     }
 };
 __decorate([
@@ -76,9 +76,10 @@ __decorate([
     (0, swagger_1.ApiResponse)({ status: 400, description: 'User may already exist' }),
     (0, swagger_1.ApiResponse)({ status: 500, description: 'Error creating user' }),
     openapi.ApiResponse({ status: 201 }),
-    __param(0, (0, common_1.Body)()),
+    __param(0, (0, common_1.Headers)()),
+    __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [auth_dto_1.RegisterUserDto]),
+    __metadata("design:paramtypes", [Object, auth_dto_1.RegisterUserDto]),
     __metadata("design:returntype", Promise)
 ], RegisterController.prototype, "createAdmin", null);
 RegisterController = __decorate([
