@@ -2,45 +2,73 @@ import { Body, Controller, Get, Param, ParseUUIDPipe, Patch, Post, UseGuards } f
 import { SupplyChainService } from './supply-chain.service';
 import { CreateManySupplyChainDto, CreateSupplyChainDto } from './dto/create-supply-chain.dto';
 import { UpdateManySupplyChainDto, UpdateSupplyChainDto } from './dto/update-supply-chain.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RateLimiterGuard } from 'nestjs-rate-limiter';
+import { KafkaService } from 'src/kafka-producer-service/kafka-producer.service';
 
 @ApiTags('Supply Chain')
 @UseGuards(RateLimiterGuard)
 @Controller('supply-chain')
 export class SupplyChainController {
-  constructor(private readonly supplyChainService: SupplyChainService) { }
+  constructor(
+    private readonly supplyChainService: SupplyChainService,
+    private readonly kafkaService: KafkaService
+  ) { }
 
   @Get()
+  @ApiResponse({ status: 200, description: 'Get all supply chains' })
   async findAllSupplyChains() {
     return this.supplyChainService.findAllSupplyChains();
   }
 
   @Get(':id')
+  @ApiResponse({ status: 200, description: 'Get a specific supply chain by ID' })
+  @ApiResponse({ status: 404, description: 'Supply chain not found' })
   async findSupplyChain(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     return this.supplyChainService.findOneSupplyChain(id);
   }
 
   @Post()
+  @ApiResponse({ status: 201, description: 'Create a new supply chain' })
+  @ApiResponse({ status: 404, description: 'One or more Machine IDs not found.' })
+  @ApiResponse({ status: 404, description: 'One or more PartInformation IDs not found.' })
+  @ApiResponse({ status: 500, description: 'Error in creating a supply chain file.' })
+  @ApiResponse({ status: 500, description: 'Error in associating machines and parts with the supply chain.' })    
   async createSupplyChain(@Body() createSupplyChainDto: CreateSupplyChainDto) {
-    return this.supplyChainService.createSupplyChain(createSupplyChainDto);
+    const createdSupplyChain = await this.supplyChainService.createSupplyChain(createSupplyChainDto);
+    await this.kafkaService.sendMessage('supply_chain', createdSupplyChain);
+
+    return createdSupplyChain;
   }
 
   @Post('many-supply-chain')
+  @ApiResponse({ status: 201, description: 'Create multiple supply chains' })
+  @ApiResponse({ status: 404, description: 'One or more Machine IDs not found.' })
+  @ApiResponse({ status: 404, description: 'One or more PartInformation IDs not found.' })
+  @ApiResponse({ status: 500, description: 'Error in creating a supply chain file.' })
+  @ApiResponse({ status: 500, description: 'Error in associating machines and parts with the supply chain.' })  
   async createManySupplyChain(@Body() createManySupplyChainDto: CreateManySupplyChainDto) {
-    return this.supplyChainService.createManySupplyChains(createManySupplyChainDto);
+    const createdManySupplyChain = await this.supplyChainService.createManySupplyChains(createManySupplyChainDto);
+    for (const supplyChain of createdManySupplyChain) {
+      await this.kafkaService.sendMessage('supply_chain', supplyChain);
+    }
+    return createdManySupplyChain;
   }
 
   @Patch('many-supply-chain')
+  @ApiResponse({ status: 200, description: 'Update multiple supply chains' })
+  @ApiResponse({ status: 404, description: 'One or multiple supply chain not found' })
   async updateManySupplyChain(@Body() updateManySupplyChainDto: UpdateManySupplyChainDto) {
     return this.supplyChainService.updateManySupplyChains(updateManySupplyChainDto);
   }
 
   @Patch(':id')
-  async updateSupplyChain(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+  @ApiResponse({ status: 200, description: 'Update a specific supply chain by ID' })
+  @ApiResponse({ status: 404, description: 'Supply chain not found' })
+  async updateSupplyChain(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
     @Body() updateSupplyChainDto: UpdateSupplyChainDto
   ) {
     return this.supplyChainService.updateOneSupplyChain(updateSupplyChainDto);
   }
-
 }

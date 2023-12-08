@@ -36,7 +36,7 @@ export class PartInformationService {
   async createPartInformation(createPartInformationDto: CreatePartInformationDto): Promise<PartInformation> {
     try {
       const partInformation = this.partInformationRepository.create(createPartInformationDto);
-      return await this.partInformationRepository.save(partInformation);
+      return this.partInformationRepository.save(partInformation);
     } catch (error) {
       throw new HttpException('Error in creating a part information file information.', HttpStatus.INTERNAL_SERVER_ERROR);
     }

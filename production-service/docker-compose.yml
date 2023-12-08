@@ -7,11 +7,11 @@ services:
       dockerfile: Dockerfile
     restart: always
     ports:
-      - "3000:3000"
+      - "3002:3002"
     depends_on:
       - database
     volumes:
-      - ./:/app
+      - ./:/usr/src/app
 
   database:
     container_name: production-services-database
@@ -31,6 +31,31 @@ services:
       timeout: 5s
       retries: 5
       start_period: 5s
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin-container
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - "5050:80"
+    depends_on:
+      - database
+
+  haproxy:
+    container_name: haproxy-load-balancer
+    build:
+      context: ./src/load-balancer
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "80:80"
+      - "8888:8888"
+    depends_on:
+      - backend
+    volumes:
+      - ./src/load-balancer/haproxy_production.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
 
   zookeeper:
     image: wurstmeister/zookeeper

@@ -5,7 +5,7 @@ import { UpdateManyPartInformationDto, UpdatePartInformationDto } from './dto/pa
 import { DeletePartInformationDto } from './dto/part-information/delete-part-information.dto';
 import { CreatePartInformationMaterialsDto } from './dto/part-information-materials/create-part-information-materials.dto';
 import { DeletePartInformationMaterialsDto } from './dto/part-information-materials/delete-part-information-materials.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RateLimiterGuard } from 'nestjs-rate-limiter';
 import { KafkaService } from 'src/kafka-producer-service/kafka-producer.service';
 
@@ -16,36 +16,57 @@ export class PartInformationController {
   constructor(
     private readonly partInformationService: PartInformationService,
     private readonly kafkaService: KafkaService
-    ) { }
+  ) { }
 
   @Get()
+  @ApiResponse({ status: HttpStatus.OK, description: 'Part informations found' })
   async findAllPartInformations() {
     return this.partInformationService.findAllPartInformations();
   }
 
   @Get(':id')
+  @ApiResponse({ status: HttpStatus.OK, description: 'Part information found' })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Part information not found' })
   async findOnePartInformation(@Param('id', ParseIntPipe) id: number) {
     return this.partInformationService.findOnePartInformation(id);
   }
 
   @Post()
+  @ApiResponse({ status: HttpStatus.CREATED, description: 'Part information created' })
+  @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Error in creating part information' })
   async createPartInformation(@Body() createPartInformationDto: CreatePartInformationDto) {
-    const createdPart = this.partInformationService.createPartInformation(createPartInformationDto);
+    const createdPart = await this.partInformationService.createPartInformation(createPartInformationDto);
     await this.kafkaService.sendMessage('part_information', createdPart);
+
     return createdPart;
   }
 
   @Post('many-part-informations')
+  @ApiResponse({ status: HttpStatus.CREATED, description: 'Part informations created' })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Invalid input data' })
+  @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Error in creating part information entries' })
   async createManyPartInformations(@Body() createManyPartInformationDto: CreateManyPartInformationDto) {
-    return this.partInformationService.createManyPartInformations(createManyPartInformationDto);
+    const createdManyParts = await this.partInformationService.createManyPartInformations(createManyPartInformationDto);
+    for (const parts of createdManyParts) {
+      await this.kafkaService.sendMessage('part_information', parts);
+    }
+    return createdManyParts;
   }
 
   @Patch('many-part-informations')
+  @ApiResponse({ status: HttpStatus.OK, description: 'Part informations updated' })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Invalid input data' })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Part information not found' })
+  @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Error in updating part information entries' })
   async updateManyPartInformations(@Body() updateManyPartInformationDto: UpdateManyPartInformationDto) {
     return this.partInformationService.updateManyPartInformations(updateManyPartInformationDto);
   }
 
   @Patch(':id')
+  @ApiResponse({ status: HttpStatus.OK, description: 'Part information updated' })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Material ID does not match' })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Part information not found' })
+  @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Error in updating part information entries' })
   async updateOnePartInformation(
     @Param('id', ParseIntPipe) id: number, @Body() updatePartInformationDto: UpdatePartInformationDto) {
     return this.partInformationService.updateOnePartInformation(id, updatePartInformationDto);
@@ -59,11 +80,15 @@ export class PartInformationController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiResponse({ status: HttpStatus.NO_CONTENT, description: 'Part information deleted' })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Part information not found' })
   async removePartInformation(@Param('id', ParseIntPipe) id: number) {
     return this.partInformationService.deletePartInformation(id);
   }
 
   @Post(':id/materials')
+  @ApiResponse({ status: HttpStatus.NO_CONTENT, description: 'Part informations deleted' })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Part information not found' })
   async addPartInformationToMaterial(@Param('id', ParseIntPipe) id: number,
     @Body() createPartInformationMaterialsDto: CreatePartInformationMaterialsDto
   ) {
@@ -72,6 +97,8 @@ export class PartInformationController {
 
   @Delete(':id/materials')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiResponse({ status: HttpStatus.NO_CONTENT, description: 'Material deleted from part information' })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Part information or material not found' })
   async deletePartInformationToMaterial(@Param('id', ParseIntPipe) id: number,
     @Body() deletePartInformationMaterialsDto: DeletePartInformationMaterialsDto
   ) {
