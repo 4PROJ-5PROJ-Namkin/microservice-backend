@@ -2,7 +2,7 @@ import { Controller, Post, Body, Param, ParseIntPipe, Get, Delete, HttpCode, Htt
 import { MaterialPriceService } from './material-price.service';
 import { CreateMaterialPriceDto, CreateManyMaterialPricesDto } from './dto/material-price-service-dto/create-material-price.dto';
 import { DeleteManyMaterialPricesDto, DeleteMaterialPriceDto } from './dto/material-price-service-dto/delete-material-price.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RateLimiterGuard } from 'nestjs-rate-limiter';
 import { KafkaService } from 'src/kafka-producer-service/kafka-producer.service';
 
@@ -16,11 +16,16 @@ export class MaterialPriceController {
     ) { }
 
     @Get(':materialId')
+    @ApiResponse({ status: HttpStatus.OK, description: 'Material prices found' })
+    @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Material not found' })
+
     async findMaterialPrices(@Param('materialId', ParseIntPipe) materialId: number) {
         return this.materialPriceService.findMaterialPrices(materialId);
     }
 
     @Post(':materialId')
+    @ApiResponse({ status: HttpStatus.CREATED, description: 'Material price created' })
+    @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Material not found' })
     async updateOrCreateMaterialPrice(@Param('materialId', ParseIntPipe) materialId: number,
         @Body() createMaterialPriceDto: CreateMaterialPriceDto
     ) {
@@ -30,6 +35,9 @@ export class MaterialPriceController {
     }
 
     @Post(':materialId/many-prices')
+    @ApiResponse({ status: HttpStatus.CREATED, description: 'Material prices created' })
+    @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Material not found' })
+
     async updateOrCreateManyMaterialPrices(@Param('materialId', ParseIntPipe) materialId: number,
         @Body() createManyMaterialPricesDto: CreateManyMaterialPricesDto
     ) {
@@ -42,6 +50,10 @@ export class MaterialPriceController {
 
     @Delete(':materialId/many-prices')
     @HttpCode(HttpStatus.NO_CONTENT)
+    @ApiResponse({ status: HttpStatus.NO_CONTENT, description: 'Material price deleted' })
+    @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Material not found' })
+    @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Material Price not found' })
+
     async deleteManyMaterialPrices(@Param('materialId', ParseIntPipe) materialId: number,
         @Body() deleteManyMaterialPricesDto: DeleteManyMaterialPricesDto) {
         return this.materialPriceService.deleteManyMaterialPrices(materialId, deleteManyMaterialPricesDto);
@@ -49,6 +61,9 @@ export class MaterialPriceController {
 
     @Delete(':materialId')
     @HttpCode(HttpStatus.NO_CONTENT)
+    @ApiResponse({ status: HttpStatus.NO_CONTENT, description: 'Material price deleted' })
+    @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Material not found' })
+    @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Material Price not found' })
     async deleteMaterialPrice(@Param('materialId', ParseIntPipe) materialId: number,
         @Body() deleteMaterialPriceDto: DeleteMaterialPriceDto) {
         return this.materialPriceService.deleteMaterialPrice(materialId, deleteMaterialPriceDto);

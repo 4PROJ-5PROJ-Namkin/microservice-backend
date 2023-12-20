@@ -16,7 +16,10 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Material found"
+          },
+          "404": {
+            "description": "Material not found"
           }
         },
         "tags": [
@@ -47,7 +50,19 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "Material updated"
+          },
+          "400": {
+            "description": "Material ID does not match"
+          },
+          "404": {
+            "description": "Material not found"
+          },
+          "409": {
+            "description": "Another material with the same name already exists"
+          },
+          "500": {
+            "description": "Error updating material"
           }
         },
         "tags": [
@@ -68,7 +83,10 @@
         ],
         "responses": {
           "204": {
-            "description": ""
+            "description": "Material deleted"
+          },
+          "404": {
+            "description": "Material not found"
           }
         },
         "tags": [
@@ -82,7 +100,7 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "All materials found"
           }
         },
         "tags": [
@@ -104,7 +122,13 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "Material created"
+          },
+          "409": {
+            "description": "Material already exists"
+          },
+          "500": {
+            "description": "Error in creating material"
           }
         },
         "tags": [
@@ -128,7 +152,14 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "Materials created"
+          },
+          "409": {
+            "description": "Some materials already exist"
+          },
+          "500": {
+            "description": "Error in creating multiple materials"
+
           }
         },
         "tags": [
@@ -150,7 +181,20 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "Material updated"
+          },
+          "400": {
+            "description": "Material ID does not match"
+          },
+          "404": {
+            "description": "Material not found"
+          },
+          "409": {
+            "description": "Another material with the same name already exists"
+          },
+          "500": {
+            "description": "Error updating material"
+
           }
         },
         "tags": [
@@ -172,7 +216,11 @@
         },
         "responses": {
           "204": {
-            "description": ""
+            "description": "Materials deleted"
+          },
+          "404": {
+            "description": "One or more materials not found"
+
           }
         },
         "tags": [
@@ -204,8 +252,12 @@
           }
         },
         "responses": {
-          "201": {
-            "description": ""
+          "200": {
+            "description": "Part information added to material"
+          },
+          "404": {
+            "description": "Material not found"
+
           }
         },
         "tags": [
@@ -236,7 +288,13 @@
         },
         "responses": {
           "204": {
-            "description": ""
+            "description": "Part information removed from material"
+          },
+          "404": {
+            "description": "Material not found"
+          },
+          "500": {
+            "description": "Error removing part information from material"
           }
         },
         "tags": [
@@ -259,7 +317,10 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Material prices found"
+          },
+          "404": {
+            "description": "Material not found"
           }
         },
         "tags": [
@@ -290,7 +351,10 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "Material price created"
+          },
+          "404": {
+            "description": "Material not found"
           }
         },
         "tags": [
@@ -321,7 +385,10 @@
         },
         "responses": {
           "204": {
-            "description": ""
+            "description": "Material price deleted"
+          },
+          "404": {
+            "description": "Material not found"
           }
         },
         "tags": [
@@ -354,7 +421,10 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "Material prices created"
+          },
+          "404": {
+            "description": "Material not found"
           }
         },
         "tags": [
@@ -385,7 +455,10 @@
         },
         "responses": {
           "204": {
-            "description": ""
+            "description": "Material price deleted"
+          },
+          "404": {
+            "description": "Material not found"
           }
         },
         "tags": [
@@ -399,7 +472,7 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Part informations found"
           }
         },
         "tags": [
@@ -421,7 +494,11 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "Part information created"
+          },
+          "500": {
+            "description": "Error in creating part information"
+
           }
         },
         "tags": [
@@ -444,7 +521,10 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Part information found"
+          },
+          "404": {
+            "description": "Part information not found"
           }
         },
         "tags": [
@@ -475,7 +555,17 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "Part information updated"
+          },
+          "400": {
+            "description": "Material ID does not match"
+          },
+          "404": {
+            "description": "Part information not found"
+          },
+          "500": {
+            "description": "Error in updating part information entries"
+
           }
         },
         "tags": [
@@ -496,7 +586,10 @@
         ],
         "responses": {
           "204": {
-            "description": ""
+            "description": "Part information deleted"
+          },
+          "404": {
+            "description": "Part information not found"
           }
         },
         "tags": [
@@ -520,7 +613,13 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "Part informations created"
+          },
+          "400": {
+            "description": "Invalid input data"
+          },
+          "500": {
+            "description": "Error in creating part information entries"
           }
         },
         "tags": [
@@ -542,7 +641,16 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "Part informations updated"
+          },
+          "400": {
+            "description": "Invalid input data"
+          },
+          "404": {
+            "description": "Part information not found"
+          },
+          "500": {
+            "description": "Error in updating part information entries"
           }
         },
         "tags": [
@@ -596,8 +704,12 @@
           }
         },
         "responses": {
-          "201": {
-            "description": ""
+          "204": {
+            "description": "Part informations deleted"
+          },
+          "404": {
+            "description": "Part information not found"
+
           }
         },
         "tags": [
@@ -628,7 +740,10 @@
         },
         "responses": {
           "204": {
-            "description": ""
+            "description": "Material deleted from part information"
+          },
+          "404": {
+            "description": "Part information or material not found"
           }
         },
         "tags": [
@@ -738,7 +853,7 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Get all supply chains"
           }
         },
         "tags": [
@@ -760,7 +875,13 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "Create a new supply chain"
+          },
+          "404": {
+            "description": "One or more Machine IDs not found."
+          },
+          "500": {
+            "description": "Error in creating a supply chain file."
           }
         },
         "tags": [
@@ -783,7 +904,10 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Get a specific supply chain by ID"
+          },
+          "404": {
+            "description": "Supply chain not found"
           }
         },
         "tags": [
@@ -814,7 +938,10 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "Update a specific supply chain by ID"
+          },
+          "404": {
+            "description": "Supply chain not found"
           }
         },
         "tags": [
@@ -838,7 +965,14 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "Create multiple supply chains"
+          },
+          "404": {
+            "description": "One or more Machine IDs not found."
+          },
+          "500": {
+            "description": "Error in creating a supply chain file."
+
           }
         },
         "tags": [
@@ -860,7 +994,10 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "Update multiple supply chains"
+          },
+          "404": {
+            "description": "One or multiple supply chain not found"
           }
         },
         "tags": [
@@ -871,7 +1008,7 @@
   },
   "info": {
     "title": "Production API Service - Namkin X SUPINFO",
-    "description": "<a href=\"/api/v1/production/production-swagger-spec.json\" target=\"_blank\">https://localhost:3000/api/v1/production/production-swagger-spec.json</a>",
+    "description": "<a href=\"/api/v1/production/production-swagger-spec.json\" target=\"_blank\">https://localhost:3002/api/v1/production/production-swagger-spec.json</a>",
     "version": "v1",
     "contact": {}
   },
