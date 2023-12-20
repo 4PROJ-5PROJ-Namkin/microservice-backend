@@ -18,6 +18,7 @@ export class MaterialPriceController {
     @Get(':materialId')
     @ApiResponse({ status: HttpStatus.OK, description: 'Material prices found' })
     @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Material not found' })
+
     async findMaterialPrices(@Param('materialId', ParseIntPipe) materialId: number) {
         return this.materialPriceService.findMaterialPrices(materialId);
     }
@@ -36,6 +37,7 @@ export class MaterialPriceController {
     @Post(':materialId/many-prices')
     @ApiResponse({ status: HttpStatus.CREATED, description: 'Material prices created' })
     @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Material not found' })
+
     async updateOrCreateManyMaterialPrices(@Param('materialId', ParseIntPipe) materialId: number,
         @Body() createManyMaterialPricesDto: CreateManyMaterialPricesDto
     ) {
@@ -51,6 +53,7 @@ export class MaterialPriceController {
     @ApiResponse({ status: HttpStatus.NO_CONTENT, description: 'Material price deleted' })
     @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Material not found' })
     @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Material Price not found' })
+
     async deleteManyMaterialPrices(@Param('materialId', ParseIntPipe) materialId: number,
         @Body() deleteManyMaterialPricesDto: DeleteManyMaterialPricesDto) {
         return this.materialPriceService.deleteManyMaterialPrices(materialId, deleteManyMaterialPricesDto);

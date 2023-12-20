@@ -58,6 +58,7 @@ export class SupplyChainController {
   @Patch('many-supply-chain')
   @ApiResponse({ status: 200, description: 'Update multiple supply chains' })
   @ApiResponse({ status: 404, description: 'One or multiple supply chain not found' })
+
   async updateManySupplyChain(@Body() updateManySupplyChainDto: UpdateManySupplyChainDto) {
     return this.supplyChainService.updateManySupplyChains(updateManySupplyChainDto);
   }
@@ -67,6 +68,7 @@ export class SupplyChainController {
   @ApiResponse({ status: 404, description: 'Supply chain not found' })
   async updateSupplyChain(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+
     @Body() updateSupplyChainDto: UpdateSupplyChainDto
   ) {
     return this.supplyChainService.updateOneSupplyChain(updateSupplyChainDto);

@@ -20,6 +20,7 @@ export class PartInformationController {
 
   @Get()
   @ApiResponse({ status: HttpStatus.OK, description: 'Part informations found' })
+
   async findAllPartInformations() {
     return this.partInformationService.findAllPartInformations();
   }
@@ -37,7 +38,6 @@ export class PartInformationController {
   async createPartInformation(@Body() createPartInformationDto: CreatePartInformationDto) {
     const createdPart = await this.partInformationService.createPartInformation(createPartInformationDto);
     await this.kafkaService.sendMessage('part_information', createdPart);
-
     return createdPart;
   }
 
@@ -58,6 +58,7 @@ export class PartInformationController {
   @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Invalid input data' })
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Part information not found' })
   @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Error in updating part information entries' })
+
   async updateManyPartInformations(@Body() updateManyPartInformationDto: UpdateManyPartInformationDto) {
     return this.partInformationService.updateManyPartInformations(updateManyPartInformationDto);
   }
@@ -99,6 +100,7 @@ export class PartInformationController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiResponse({ status: HttpStatus.NO_CONTENT, description: 'Material deleted from part information' })
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Part information or material not found' })
+
   async deletePartInformationToMaterial(@Param('id', ParseIntPipe) id: number,
     @Body() deletePartInformationMaterialsDto: DeletePartInformationMaterialsDto
   ) {

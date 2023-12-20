@@ -56,7 +56,6 @@ services:
       - backend
     volumes:
       - ./src/load-balancer/haproxy_production.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
-
   zookeeper:
     image: wurstmeister/zookeeper
     container_name: zookeeper
