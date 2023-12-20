@@ -7,7 +7,6 @@ import Inscription from "./Pages/Inscription";
 import Logout from "./Pages/Logout";
 import Notes from "./Pages/Contract";
 import Classes from "./Pages/Classes";
-import NewClass from "./Pages/NewClass";
 import SingleClass from "./Pages/SingleClass";
 
 
@@ -33,7 +32,7 @@ export default function App() {
         <Route path="Contrat" element={<Notes />} />
         <Route path="Classes" element={<Classes />} />
         <Route path="Inscription" element={<Inscription />}/>
-        <Route path="classes/new" element={<NewClass />}/>
+        {/* <Route path="classes/new" element={<NewClass />}/> */}
         <Route path="classes/single/:id" element={<SingleClass />} />
 
       </Routes>

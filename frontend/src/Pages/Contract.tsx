@@ -1,5 +1,4 @@
 import React, { CSSProperties, useState } from 'react';
-import { useGradesList } from "../composants/getStudentsGrade";
 import SelectContracts from '../composants/selectContracts';
 
 import {
@@ -16,10 +15,10 @@ import { Link } from "react-router-dom";
 
 export default function Classes() {
     const studentId = "63f9416a-a59b-4407-bdc2-d2c5556e633f"; // this can be dynamic
-    const { data, loading, error } = useGradesList(studentId);
+    //const { data, loading, error } = useGradesList(studentId);
 
-    if (loading) return <p>Loading...</p>;
-    if (error) return <pre>{error.message}</pre>;
+    // if (loading) return <p>Loading...</p>;
+    // if (error) return <pre>{error.message}</pre>;
 
  
     const styles: { [key: string]: CSSProperties } = {
@@ -79,15 +78,12 @@ export default function Classes() {
                             <h2 className="fw-bold mb-5">Ajout d'un contrat</h2>
                             <div className='flexed'>
                                 <MDBInput wrapperClass='mb-4' className="halfWitdh" label='Numéro de contrat' id='Nom' type='text' />
-                                <MDBInput wrapperClass='mb-4' className="halfWitdh" label='Nom du client' id='client' type='number' />
+                                <MDBInput wrapperClass='mb-4' className="halfWitdh" label='Nom du client' id='client' type='text' />
                             </div>
                             <MDBInput wrapperClass='mb-4' label='Date' id='date' type='date' value={formattedDate} />                            <SelectContracts/>
 
                             <MDBBtn className='w-100 mb-4' size='sm' onClick={Register}>Valider</MDBBtn>
-                            <div className="alert alert-success nodisplay" role="alert">
-                                <p>Compte créé avec succès</p>
-                                <Link to={"/Connection"}>Me connecter</Link>
-                            </div>
+
                         </MDBCardBody>
                     </MDBCard>
                 </MDBCol>
