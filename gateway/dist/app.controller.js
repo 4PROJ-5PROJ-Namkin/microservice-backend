@@ -19,6 +19,7 @@ const operators_1 = require("rxjs/operators");
 const auth_dto_1 = require("./gateway/auth.dto");
 const swagger_1 = require("@nestjs/swagger");
 const update_users_dto_1 = require("./gateway/update-users.dto");
+const update_material_dto_1 = require("./gateway/update-material.dto");
 let AppController = exports.AppController = class AppController {
     constructor(httpService) {
         this.httpService = httpService;
@@ -69,9 +70,20 @@ let AppController = exports.AppController = class AppController {
             throw new common_1.HttpException(err.response.data, err.response.status);
         }));
     }
-    getMaterialPrices(materialId) {
-        return this.httpService.get('http://localhost:3002/api/v1/materials')
-            .pipe((0, operators_1.map)(response => response.data), (0, operators_1.catchError)(err => {
+    getAllMaterials() {
+        return this.httpService.get('http://localhost:3002/api/v1/materials').pipe((0, operators_1.map)(response => response.data), (0, operators_1.catchError)(err => {
+            throw new common_1.HttpException(err.response.data, err.response.status);
+        }));
+    }
+    getMaterialById(authHeader, id) {
+        return this.httpService.get(`http://localhost:3002/api/v1/materials/${id}`, {
+            headers: { 'Authorization': authHeader },
+        }).pipe((0, operators_1.map)(response => response.data), (0, operators_1.catchError)(err => {
+            throw new common_1.HttpException(err.response.data, err.response.status);
+        }));
+    }
+    updateMaterialById(materialData) {
+        return this.httpService.patch(`http://localhost:3002/api/v1/materials/`, materialData).pipe((0, operators_1.map)(response => response.data), (0, operators_1.catchError)(err => {
             throw new common_1.HttpException(err.response.data, err.response.status);
         }));
     }
@@ -104,12 +116,11 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], AppController.prototype, "updateUserById", null);
 __decorate([
-    (0, swagger_1.ApiBearerAuth)('JWT-auth'),
     (0, common_1.Delete)('gateway/users/:id'),
     __param(0, (0, common_1.Headers)('authorization')),
     __param(1, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:paramtypes", [Object, Number]),
     __metadata("design:returntype", void 0)
 ], AppController.prototype, "deleteUserById", null);
 __decorate([
@@ -135,12 +146,28 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], AppController.prototype, "createUserAdmin", null);
 __decorate([
-    (0, common_1.Get)('gateway/production/:materialId'),
-    __param(0, (0, common_1.Param)('materialId', common_1.ParseIntPipe)),
+    (0, common_1.Get)('gateway/materials'),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
+    __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
-], AppController.prototype, "getMaterialPrices", null);
+], AppController.prototype, "getAllMaterials", null);
+__decorate([
+    (0, swagger_1.ApiBearerAuth)('JWT-auth'),
+    (0, common_1.Get)('gateway/material/:id'),
+    __param(0, (0, common_1.Headers)('authorization')),
+    __param(1, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Number]),
+    __metadata("design:returntype", void 0)
+], AppController.prototype, "getMaterialById", null);
+__decorate([
+    (0, swagger_1.ApiBearerAuth)('JWT-auth'),
+    (0, common_1.Patch)('gateway/material/:id'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [update_material_dto_1.UpdateMaterialDto]),
+    __metadata("design:returntype", void 0)
+], AppController.prototype, "updateMaterialById", null);
 exports.AppController = AppController = __decorate([
     (0, common_1.Controller)(),
     __metadata("design:paramtypes", [axios_1.HttpService])

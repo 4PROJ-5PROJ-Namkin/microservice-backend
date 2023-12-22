@@ -32,5 +32,9 @@ services:
       start_period: 5s
     command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]
 
+
+
+
+
 volumes:
   userData:

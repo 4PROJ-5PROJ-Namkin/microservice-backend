@@ -14,25 +14,6 @@ export class UsersService {
     private usersRepository: Repository<Users>,
   ) { }
 
-
-
-  // async findById(id: string, headers: any): Promise<Users> {
-
-  //   const token: Token = await headers.authorization.split(' ')[1];
-  //   const decoded = await DecodeToken(token);
-
-  //   if (decoded.id === id) {
-  //     const user = await this.usersRepository.findOneBy({ id })
-  //     if (!user)
-  //       throw new HttpException({ message: 'User not found' }, HttpStatus.NOT_FOUND);
-  //     else
-  //       return user;
-  //   }
-  // }
-
-  //   async findAllUsers(headers: any): Promise<Users[]> {
-  //   return await this.usersRepository.find()
-  // }
   async findAllUsers(headers: any): Promise<Users[]> {
     const token: Token = await headers.authorization.split(' ')[1];
     const decoded = await DecodeToken(token);
