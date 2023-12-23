@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, ParseUUIDPipe, Patch, Post, UseGuards } from '@nestjs/common';
 import { SupplyChainService } from './supply-chain.service';
 import { CreateManySupplyChainDto, CreateSupplyChainDto } from './dto/create-supply-chain.dto';
-import { UpdateManySupplyChainDto, UpdateSupplyChainDto } from './dto/update-supply-chain.dto';
+import { UpdateManySupplyChainDto, UpdateOneSupplyChainDto } from './dto/update-supply-chain.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RateLimiterGuard } from 'nestjs-rate-limiter';
 import { KafkaService } from 'src/kafka-producer-service/kafka-producer.service';
@@ -67,8 +67,8 @@ export class SupplyChainController {
   @ApiResponse({ status: 404, description: 'Supply chain not found' })
   async updateSupplyChain(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
-    @Body() updateSupplyChainDto: UpdateSupplyChainDto
+    @Body() updateSupplyChainDto: UpdateOneSupplyChainDto
   ) {
-    return this.supplyChainService.updateOneSupplyChain(updateSupplyChainDto);
+    return this.supplyChainService.updateOneSupplyChain(id, updateSupplyChainDto);
   }
 }
