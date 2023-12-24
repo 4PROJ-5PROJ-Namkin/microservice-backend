@@ -1,6 +1,6 @@
 {
   "name": "production-service",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "",
   "author": "",
   "private": true,
@@ -78,5 +78,8 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
+  },
+  "publishConfig": {
+    "@RudyT974:registry": "https://npm.pkg.github.com"
   }
 }
