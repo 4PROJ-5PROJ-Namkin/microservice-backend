@@ -78,8 +78,5 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
-  },
-  "publishConfig": {
-    "RudyT974:registry": "https://npm.pkg.github.com"
   }
 }
