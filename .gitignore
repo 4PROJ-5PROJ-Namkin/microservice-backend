@@ -1,1 +1,10 @@
-node_modules
+#Dépendances
+# compiled output
+/dist
+/node_modules
+
+# Fichers d'environnement 
+.env
+./users-service/data
+./users-service/userData
+
