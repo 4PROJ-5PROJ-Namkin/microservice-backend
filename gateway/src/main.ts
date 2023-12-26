@@ -1,3 +1,14 @@
+// import { AppModule } from './app.module';
+// import { NestFactory } from '@nestjs/core';
+
+// async function bootstrap() {
+//   const app = await NestFactory.create(AppModule);
+//   await app.listen(4000);
+// }
+// bootstrap();
+
+
+
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -26,6 +37,6 @@ async function bootstrap() {
 
   // app.setGlobalPrefix('api/v1');
   app.enableCors();
-  await app.listen(3000);
+  await app.listen(4000);
 }
 bootstrap();

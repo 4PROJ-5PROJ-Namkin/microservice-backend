@@ -3,7 +3,8 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class AppService {
 
-  getHello(): string {
-    return 'Hello World!';
+  async getHelloGateway(): Promise <string> {
+    return 'Je suis dans la gateway ';
   }
+  
 }

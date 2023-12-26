@@ -1,15 +1,42 @@
-// app.module.ts dans la Gateway
-import { Module } from '@nestjs/common';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { HttpModule } from "@nestjs/axios";
+import { Module } from '@nestjs/common';
+import { join } from 'path';
 
 @Module({
-  imports: [HttpModule],
+  imports: [
+    ClientsModule.register([
+      {
+        name: 'USERS_SERVICE',
+        transport: Transport.GRPC,
+        options: {
+          package: 'user',
+          protoPath: join(__dirname, '../user.proto'),
+          url: 'users-services-backend:50051',
+        },
+      },
+    ]),
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}
+
+
+
+
+// import { Module } from '@nestjs/common';
+// import { AppController } from './app.controller';
+// import { AppService } from './app.service';
+// import { HttpModule } from "@nestjs/axios";
+
+// @Module({
+//   imports: [HttpModule],
+//   controllers: [AppController],
+//   providers: [AppService],
+// })
+// export class AppModule {}
 
 
 // import { Module } from '@nestjs/common';

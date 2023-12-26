@@ -4,6 +4,15 @@ import { IsArray, IsNumber, IsOptional, IsPositive, IsString, ValidateNested } f
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
+export class UpdateOneMaterialDto extends PartialType(CreateMaterialDto) {
+    @ApiProperty({
+        description: 'The name of the material.',
+        example: "monohulls",
+        type: String,
+    })
+    name?: string;
+};
+
 export class UpdateMaterialDto extends PartialType(CreateMaterialDto) {
     @IsNumber()
     @IsPositive()
