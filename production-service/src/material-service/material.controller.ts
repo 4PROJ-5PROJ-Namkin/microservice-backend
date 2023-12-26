@@ -37,7 +37,7 @@ export class MaterialController {
   @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Error in creating material' })
   async createMaterial(@Body() createMaterialDto: CreateMaterialDto) {
     const createdMaterial = await this.materialService.createMaterial(createMaterialDto);
-    await this.kafkaService.sendMessage('materials', createdMaterial);
+    await this.kafkaService.sendMessage('material', createdMaterial);
     return createdMaterial;
   }
 
@@ -48,7 +48,7 @@ export class MaterialController {
   async createManyMaterials(@Body() createManyMaterialsDto: CreateManyMaterialsDto) {
     const createdManyMaterials = await this.materialService.createManyMaterials(createManyMaterialsDto.materials);
     for (const material of createdManyMaterials) {
-      await this.kafkaService.sendMessage('materials', material);
+      await this.kafkaService.sendMessage('material', material);
     }
     return createdManyMaterials;
   }

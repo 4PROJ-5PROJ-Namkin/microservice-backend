@@ -1,7 +1,7 @@
 version: "3.9"
 services:
   backend:
-    container_name: production-services-backend
+    container_name: production-service-backend
     build:
       context: .
       dockerfile: Dockerfile
@@ -14,7 +14,7 @@ services:
       - ./:/usr/src/app
 
   database:
-    container_name: production-services-database
+    container_name: production-service-database
     image: postgres:latest
     restart: always
     environment:
@@ -44,7 +44,7 @@ services:
       - database
 
   haproxy:
-    container_name: haproxy-load-balancer
+    container_name: production-service-load-balancer
     build:
       context: ./src/load-balancer
       dockerfile: Dockerfile

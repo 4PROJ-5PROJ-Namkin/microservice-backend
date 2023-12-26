@@ -35,7 +35,7 @@ export class MachineController {
 
         const createdMachines = await this.machineService.createManyMachines(quantity);
         for (const machine of createdMachines) {
-            await this.kafkaService.sendMessage('machines', machine);
+            await this.kafkaService.sendMessage('machine', machine);
         }
         return createdMachines;
     }
@@ -44,7 +44,7 @@ export class MachineController {
     @ApiProperty({ type: Machine, description: 'Create a new machine' })
     async createOneMachine() {
         const createdMachine = await this.machineService.createOneMachine();
-        await this.kafkaService.sendMessage('machines', createdMachine);
+        await this.kafkaService.sendMessage('machine', createdMachine);
 
         return createdMachine;
     }
