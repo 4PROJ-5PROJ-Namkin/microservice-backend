@@ -3,9 +3,10 @@ export class UpdateContractsInput {
   contract_number: string;
   client_name: string;
   date: Date;
+  cash : number[];
+  parts : number[];
 
-  constructor(id: string, contract_number: string, client_name: string, date: Date) {
-    this.validateIsUUID(id);
+  constructor(id: string, contract_number: string, client_name: string, date: Date, cash : number[], parts : number[]) {
     this.validateIsNotEmpty(contract_number);
     this.validateIsNotEmpty(client_name);
 
@@ -13,18 +14,14 @@ export class UpdateContractsInput {
     this.contract_number = contract_number;
     this.client_name = client_name;
     this.date = date;
+    this.cash = cash;
+    this.parts = parts;
+
   }
 
   private validateIsNotEmpty(value: string): void {
     if (value === null || value === undefined || value.trim() === '') {
       throw new Error('Value cannot be empty');
-    }
-  }
-
-  private validateIsUUID(value: string): void {
-    const regexExp = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-    if (!regexExp.test(value)) {
-      throw new Error('Invalid UUID');
     }
   }
 }

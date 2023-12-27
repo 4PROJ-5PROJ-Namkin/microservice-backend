@@ -17,6 +17,8 @@ export class ContractsService {
       contract_number: createContractInput.contract_number,
       client_name: createContractInput.client_name,
       date: createContractInput.date,
+      cash : createContractInput.cash,
+      parts : createContractInput.parts
     };
     return await this.contractsRepository.save(this.contractsRepository.create(contractData));
   }

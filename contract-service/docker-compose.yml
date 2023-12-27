@@ -10,7 +10,7 @@ services:
     volumes:
       - ./data:/var/lib/postgresql/data
     ports:
-      - "5433:5432"
+      - "5440:5440"
     healthcheck:
       test: psql -U postgres -q -d postgres -c "SELECT 'ready';"
       interval: 10s
