@@ -159,7 +159,6 @@
           },
           "500": {
             "description": "Error in creating multiple materials"
-
           }
         },
         "tags": [
@@ -194,7 +193,6 @@
           },
           "500": {
             "description": "Error updating material"
-
           }
         },
         "tags": [
@@ -220,7 +218,6 @@
           },
           "404": {
             "description": "One or more materials not found"
-
           }
         },
         "tags": [
@@ -257,7 +254,6 @@
           },
           "404": {
             "description": "Material not found"
-
           }
         },
         "tags": [
@@ -498,7 +494,6 @@
           },
           "500": {
             "description": "Error in creating part information"
-
           }
         },
         "tags": [
@@ -565,7 +560,6 @@
           },
           "500": {
             "description": "Error in updating part information entries"
-
           }
         },
         "tags": [
@@ -709,7 +703,6 @@
           },
           "404": {
             "description": "Part information not found"
-
           }
         },
         "tags": [
@@ -972,7 +965,6 @@
           },
           "500": {
             "description": "Error in creating a supply chain file."
-
           }
         },
         "tags": [
