@@ -1,4 +1,4 @@
-FROM node:18.16.0
+FROM node:20.6.0
 
 WORKDIR /usr/src/app
 
@@ -10,6 +10,6 @@ COPY . .
 
 RUN npm run build
 
-EXPOSE 3000
+EXPOSE 4000
 
 CMD ["npm", "run", "start:debug"]
