@@ -5,6 +5,7 @@ import { Repository } from "typeorm";
 import { Token, LoginUserDto, RegisterUserDto } from "./dto/auth.dto";
 import { DecodeToken, GenerateToken } from "./utils/jwt";
 import Users from "src/users/entities/users.entity";
+import { GrpcMethod } from "@nestjs/microservices";
 
 @Injectable()
 export class AuthService {
@@ -14,6 +15,7 @@ export class AuthService {
   ) { }
 
 
+  @GrpcMethod('AuthService', 'login')
   async login(loginData: LoginUserDto): Promise<Token> {
     const user = await this.usersRepository.findOne({ where: { email: loginData.email }, select: ['id', 'password', 'role'] });
 
@@ -30,6 +32,8 @@ export class AuthService {
       throw new HttpException({ message: 'Wrong password' }, HttpStatus.BAD_REQUEST);
     }
   }
+
+  @GrpcMethod('AuthService', 'createUser')
   async createCommercial(user: RegisterUserDto) {
 
     if (await this.usersRepository.findOneBy({ email: user.email }) || await this.usersRepository.findOneBy({ email: user.email }))

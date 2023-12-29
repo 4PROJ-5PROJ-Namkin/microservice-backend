@@ -1,38 +1,104 @@
-import { Controller, Get, HttpException, Headers, HttpStatus, Inject, OnModuleInit, Body, Post } from '@nestjs/common';
+import { Controller, Get, HttpException, Headers, HttpStatus, Inject, OnModuleInit, Body, Post, Param, Patch, Delete } from '@nestjs/common';
 import { AppService } from './app.service';
-import { ClientGrpc } from '@nestjs/microservices';
+import { ClientGrpc, GrpcMethod } from '@nestjs/microservices';
 import { ApiBearerAuth } from '@nestjs/swagger';
-import { LoginRequest } from './../generated/user/LoginRequest';
 import { LoginResponse } from './../generated/user/LoginResponse';
-// import { UserServiceClient } from './../generated/user/UserService'; 
-import { GrpcMethod } from '@nestjs/microservices';
+import { UsersResponse } from 'generated/user/UsersResponse';
+import { HelloResponse } from 'generated/user/HelloResponse';
+import { UpdateUsersDto } from 'generated/user/UpdateUsersDto';
+import { LoginUserDto } from 'generated/user/LoginUserDto';
+import { RegisterUserDto } from 'generated/user/RegisterUserDto';
 
 @Controller()
 export class AppController implements OnModuleInit {
-  private userService;
-  // private loginData;
-  // private authService;
+  private usersService;
+  private authService;
+
+
   constructor(
     private readonly appService: AppService,
     @Inject('USERS_SERVICE') private client: ClientGrpc,
   ) {}
   onModuleInit() {
-    this.userService = this.client.getService('UserService');
-    // this.loginData = this.client.getService('LoginUserDto');
-    // this.authService = this.client.getService('AuthService');
+    this.usersService = this.client.getService('UsersService');
+    this.authService = this.client.getService('AuthService');
   }
 
-  @GrpcMethod('UserService', 'getHello')
+
   @Get('hello')
-  async getHello(): Promise<{ message: string }> {
+  async getHello(): Promise <HelloResponse>{
     try {
-      return await this.userService.getHelloTest().toPromise();
+      return await this.usersService.getHello({}).toPromise();
     } catch (error) {
       console.error('Erreur gRPC :', error);
       throw new HttpException(" "+error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
+  @ApiBearerAuth('JWT-auth')
+  @Get('gateway/users')
+  async getAllUsers(@Headers('authorization') authHeader: any): Promise<UsersResponse[]>  {
+    try {
+      return await this.usersService.findAllUsers(authHeader).toPromise();
+    } catch (error) {
+      console.error('', error);
+      throw new HttpException('Erreur lors de la récupération des utilisateurs : '+error , HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @ApiBearerAuth('JWT-auth')
+  @Get('gateway/users/:id')
+  async getUserById(@Headers('authorization') authHeader: any, @Param('id') id: string): Promise<UsersResponse> {
+    try {
+      return await this.usersService.findById(id, authHeader).toPromise();
+    } catch (error) {
+      console.error('', error);
+      throw new HttpException('Erreur lors de la récupération de l utilisateur : ' +error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @ApiBearerAuth('JWT-auth')
+  @Patch('gateway/users/:id')
+  async updateUserById(updateUsersDto: UpdateUsersDto, @Param('id') id: string) {
+    try {
+      return await this.usersService.updatePassword(id, updateUsersDto).toPromise();
+    } catch (error) {
+      console.error('', error);
+      throw new HttpException('echec de la mise a jour : '+error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @ApiBearerAuth('JWT-auth')
+  @Delete('gateway/users/:id')
+  deleteUserById(@Param('id') id: string) {
+    try {
+      return this.usersService.remove(id).toPromise();
+    } catch (error) {
+      console.error('', error);
+      throw new HttpException('Erreur de suppression : ' + error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @Post('login')
+  async login(@Body() loginData: LoginUserDto): Promise<LoginResponse> {
+    try {
+      const response: LoginResponse = await this.authService.login(loginData).toPromise();
+      return response; 
+    } catch (error) {
+      console.error('', error);
+      throw new HttpException('Erreur de connexion : ' +error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @Post('register')
+  createUser(@Body() userData: RegisterUserDto) {
+    try {
+      return this.usersService.createCommercial(userData).toPromise();
+    } catch (error) {
+      console.error('', error);
+      throw new HttpException('Erreur de creation du compte : '+error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
     // Users service
   
   // @ApiBearerAuth('JWT-auth')
@@ -48,29 +114,6 @@ export class AppController implements OnModuleInit {
   //       })
   //     );
   //   }
-  @ApiBearerAuth('JWT-auth')
-  @Get('gateway/users')
-  async getAllUsers(@Headers('authorization') authHeader: string) {
-    try {
-      return await this.userService.getAllUsers({}).toPromise();
-    } catch (error) {
-      console.error('Erreur gRPC :', error);
-      throw new HttpException('Erreur lors de la récupération des utilisateurs', HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-  }
-  
-
-  @Post('login')
-  async login(@Body() loginData: LoginRequest): Promise<LoginResponse> {
-    try {
-      const response: LoginResponse = await this.userService.login(loginData).toPromise();
-      return response; 
-    } catch (error) {
-      console.error('Erreur gRPC lors du login :', error);
-      throw new HttpException('Erreur lors de la connexion', HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-  }
-
   // @Post('login')
   // login1(@Body() loginData: LoginUserDto) {
   //   return this.httpService.post('http://localhost:3001/api/v1/login', loginData).pipe(map(response => response.data),
@@ -82,7 +125,7 @@ export class AppController implements OnModuleInit {
 
   // @ApiBearerAuth('JWT-auth')
   // @Get('gateway/users')
-  // getAllUserss(@Headers('authorization') authHeader: any) 
+  // getAllUsers(@Headers('authorization') authHeader: any) 
   //     return this.httpService.get('http://localhost:3001/api/v1/users', {
   //     headers: { 'Authorization': authHeader },
   //   }).pipe(map(response => response.data),

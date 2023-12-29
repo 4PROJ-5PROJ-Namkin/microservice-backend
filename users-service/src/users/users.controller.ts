@@ -20,13 +20,13 @@ import Users from "./entities/users.entity";
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { Roles } from "src/auth/guards/auth.decorator";
 import { Role } from "src/auth/guards/auth.enum";
-import { UserService } from "./users.service";
+import { UsersService } from "./users.service";
 
 @ApiTags('Users')
 @ApiBearerAuth('JWT-auth')
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UserService) {}
+  constructor(private readonly usersService: UsersService) {}
 
   // @Get('users')
   // // @Roles(Role.ADMIN)

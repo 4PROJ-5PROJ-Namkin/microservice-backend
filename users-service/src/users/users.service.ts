@@ -7,6 +7,7 @@ import { UpdateUsersDto } from './dto/update-users.dto';
 import { Token } from 'src/auth/dto/auth.dto';
 import { DecodeToken } from 'src/auth/utils/jwt';
 import { GrpcMethod } from '@nestjs/microservices';
+import { HelloResponse } from 'generated/user/HelloResponse';
 
 @Injectable()
 export class UsersService {
@@ -15,12 +16,17 @@ export class UsersService {
     private userRepository: Repository<Users>,
   ) { }
 
-  @GrpcMethod('UserService', 'getHello')
-  async getHelloTest(): Promise<{ message: string }> {
+
+  @GrpcMethod('UsersService', 'getHello')
+  async getHello(): Promise<HelloResponse> {
     return { message: 'Je suis dans users-service' };
   }
-
-  @GrpcMethod('UserService', 'getAllUsers')
+  
+  // @GrpcMethod('UsersService', 'getHello')
+  // async getHello(): Promise<{ message: string }> {
+  //   return { message: 'Je suis dans users-service' };
+  // }
+  @GrpcMethod('UsersService', 'getAllUsers')
   async findAllUsers(headers: any): Promise<Users[]> {
     const token: Token = await headers.authorization.split(' ')[1];
     const decoded = await DecodeToken(token);
@@ -37,6 +43,7 @@ export class UsersService {
   }
 
 
+  @GrpcMethod('UsersService', 'getUserById')
   async findById(id: string, headers: any): Promise<Users> {
 
     const token: Token = await headers.authorization.split(' ')[1];
@@ -72,6 +79,7 @@ export class UsersService {
     }
   }
 
+  @GrpcMethod('UsersService', 'updateUser')
   async updatePassword(id: string, updatePasswordUserDto: UpdateUsersDto) {
     const user = await this.userRepository.findOneBy({ id });
     if (!user)
@@ -84,7 +92,7 @@ export class UsersService {
     }
   }
 
-
+  @GrpcMethod('UsersService', 'deleteUser')
   async remove(id: string) {
     const user = await this.userRepository.findOneBy({ id });
     if (!user)

@@ -9,7 +9,6 @@ services:
     restart: always
     ports:
       - "4000:4000"
-      
     networks:
       - shared-network
 

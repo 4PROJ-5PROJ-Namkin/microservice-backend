@@ -26,6 +26,8 @@ bootstrap();
 // import { ValidationPipe } from '@nestjs/common';
 // import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 // import * as cors from 'cors';
+// import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+// import { join } from 'path';
 // async function bootstrap() {
 //   const app = await NestFactory.create(AppModule);
 //   const config = new DocumentBuilder()
@@ -45,6 +47,7 @@ bootstrap();
 //     'JWT-auth',
 //   )
 //   .build();
+  
 //   const document = SwaggerModule.createDocument(app, config);
 //   SwaggerModule.setup('api/v1/user', app, document);
 
@@ -54,10 +57,18 @@ bootstrap();
 //     credentials: true,
 //     optionsSuccessStatus: 204,
 //   }));
-  
+//   app.connectMicroservice<MicroserviceOptions>({
+//     transport: Transport.GRPC,
+//     options: {
+//       package: 'user',
+//       protoPath: join(__dirname, '../user.proto'),
+//       url: 'users-services-backend:50051',
+//     },
+//   });
+//   await app.startAllMicroservices();
 //   app.setGlobalPrefix('api/v1');
 //   app.useGlobalPipes(new ValidationPipe());
-//   await app.listen(3001);
+//   // await app.listen(3001);
 // }
 
 // bootstrap();

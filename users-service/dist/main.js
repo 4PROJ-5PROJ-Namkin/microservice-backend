@@ -11,11 +11,10 @@ async function bootstrap() {
         options: {
             package: 'user',
             protoPath: (0, path_1.join)(__dirname, '../user.proto'),
-            url: 'localhost:50051',
+            url: 'users-services-backend:50051',
         },
     });
     await app.startAllMicroservices();
-    await app.listen(3000);
 }
 bootstrap();
 //# sourceMappingURL=main.js.map
