@@ -43,7 +43,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateOneMaterialDto"
+                "$ref": "#/components/schemas/UpdateMaterialDto"
               }
             }
           }
@@ -543,7 +543,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateOnePartInformationDto"
+                "$ref": "#/components/schemas/UpdatePartInformationDto"
               }
             }
           }
@@ -924,7 +924,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateOneSupplyChainDto"
+                "$ref": "#/components/schemas/UpdateSupplyChainDto"
               }
             }
           }
@@ -1083,19 +1083,6 @@
         },
         "required": [
           "materials"
-        ]
-      },
-      "UpdateOneMaterialDto": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "The name of the material.",
-            "example": "monohulls"
-          }
-        },
-        "required": [
-          "name"
         ]
       },
       "MaterialToDeleteDto": {
@@ -1315,23 +1302,17 @@
           "partInformations"
         ]
       },
-      "UpdateOnePartInformationDto": {
+      "UpdatePartInformationDto": {
         "type": "object",
         "properties": {
-          "defaultPrice": {
+          "id": {
             "type": "number",
-            "description": "Default price of a given part.",
-            "example": 14999.99
-          },
-          "timeToProduce": {
-            "type": "number",
-            "description": "Time of production of a given part in seconds.",
-            "example": 360
+            "description": "Part Information ID.",
+            "example": 47
           }
         },
         "required": [
-          "defaultPrice",
-          "timeToProduce"
+          "id"
         ]
       },
       "PartInformationToDeleteDto": {
@@ -1529,10 +1510,7 @@
           "supplyChains": {
             "description": "Array of supply chain update objects.",
             "example": [
-              {
-                "id": "cde7964c-819b-11ee-b962-0242ac120002",
-                "timeOfProduction": "15/12/2023"
-              }
+              "cde7964c-819b-11ee-b962-0242ac120002"
             ],
             "type": "array",
             "items": {
@@ -1542,25 +1520,6 @@
         },
         "required": [
           "supplyChains"
-        ]
-      },
-      "UpdateOneSupplyChainDto": {
-        "type": "object",
-        "properties": {
-          "timeOfProduction": {
-            "type": "string",
-            "description": "Date of production for a given piece in timestamp (epoch)",
-            "example": "10/12/2023"
-          },
-          "order": {
-            "type": "number",
-            "description": "Id of a piece order.",
-            "example": 15
-          }
-        },
-        "required": [
-          "timeOfProduction",
-          "order"
         ]
       }
     }

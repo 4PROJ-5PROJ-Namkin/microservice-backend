@@ -5,7 +5,7 @@ import { Connection, In, Repository } from "typeorm";
 import { PartInformation } from "src/part-information-service/entities/part-information.entity";
 import { Machine } from "./entities/machine.entity";
 import { CreateManySupplyChainDto, CreateSupplyChainDto } from "./dto/create-supply-chain.dto";
-import { UpdateManySupplyChainDto, UpdateOneSupplyChainDto } from "./dto/update-supply-chain.dto";
+import { UpdateManySupplyChainDto, UpdateSupplyChainDto } from "./dto/update-supply-chain.dto";
 
 @Injectable()
 export class SupplyChainService {
@@ -113,8 +113,8 @@ export class SupplyChainService {
     return createdSupplyChains;
   }
 
-  async updateOneSupplyChain(id: string, updateSupplyChainDto: UpdateOneSupplyChainDto): Promise<SupplyChain> {
-    const { machineIds, partIds, ...updateData } = updateSupplyChainDto;
+  async updateOneSupplyChain(updateSupplyChainDto: UpdateSupplyChainDto): Promise<SupplyChain> {
+    const { id, machineIds, partIds, ...updateData } = updateSupplyChainDto;
 
     const supplyChainToUpdate = await this.supplyChainRepository.findOne({ where: { id } });
     if (!supplyChainToUpdate) {

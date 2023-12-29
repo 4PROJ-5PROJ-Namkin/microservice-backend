@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { PartInformation } from './entities/part-information.entity';
 import { CreateManyPartInformationDto, CreatePartInformationDto } from './dto/part-information/create-part-information.dto';
-import { UpdateManyPartInformationDto, UpdateOnePartInformationDto, UpdatePartInformationDto } from './dto/part-information/update-part-information.dto';
+import { UpdateManyPartInformationDto, UpdatePartInformationDto } from './dto/part-information/update-part-information.dto';
 import { DeletePartInformationDto } from './dto/part-information/delete-part-information.dto';
 import { CreatePartInformationMaterialsDto } from './dto/part-information-materials/create-part-information-materials.dto';
 import { Material } from 'src/material-service/entities/material.entity';
@@ -57,7 +57,10 @@ export class PartInformationService {
     }
   }
 
-  async updateOnePartInformation(id: number, updatePartInformationDto: UpdateOnePartInformationDto): Promise<PartInformation> {
+  async updateOnePartInformation(id: number, updatePartInformationDto: UpdatePartInformationDto): Promise<PartInformation> {
+    if (updatePartInformationDto.id != id) {
+      throw new HttpException("Material ID doesn't match.", HttpStatus.BAD_REQUEST);
+    }
 
     const partInformation = await this.partInformationRepository.preload({
       id: id,

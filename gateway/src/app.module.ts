@@ -16,6 +16,15 @@ import { join } from 'path';
           url: 'users-services-backend:50051',
         },
       },
+      {
+        name: 'PRODUCTION_SERVICE',
+        transport: Transport.GRPC,
+        options: {
+          package: 'production',
+          protoPath: join(__dirname, '../production.proto'),
+          url: 'production-services-backend:50052',
+        },
+      },
     ]),
   ],
   controllers: [AppController],

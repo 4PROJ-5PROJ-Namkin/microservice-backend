@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "prebuild": "cp user.proto src/",
+    "prebuild": "cp user.proto src/ && cp production.proto src/",
     "build": "nest build && copyfiles user.proto dist",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",

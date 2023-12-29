@@ -1,27 +1,31 @@
 import { Controller, Get, HttpException, Headers, HttpStatus, Inject, OnModuleInit, Body, Post, Param, Patch, Delete } from '@nestjs/common';
 import { AppService } from './app.service';
-import { ClientGrpc, GrpcMethod } from '@nestjs/microservices';
+import { ClientGrpc } from '@nestjs/microservices';
 import { ApiBearerAuth } from '@nestjs/swagger';
-import { LoginResponse } from './../generated/user/LoginResponse';
-import { UsersResponse } from 'generated/user/UsersResponse';
-import { HelloResponse } from 'generated/user/HelloResponse';
-import { UpdateUsersDto } from 'generated/user/UpdateUsersDto';
-import { LoginUserDto } from 'generated/user/LoginUserDto';
-import { RegisterUserDto } from 'generated/user/RegisterUserDto';
+import { HelloResponse } from 'generatedUserProto/user/HelloResponse';
+import { UsersResponse } from 'generatedUserProto/user/UsersResponse';
+import { UpdateUsersDto } from 'generatedUserProto/user/UpdateUsersDto';
+import { LoginUserDto } from 'generatedUserProto/user/LoginUserDto';
+import { LoginResponse } from 'generatedUserProto/user/LoginResponse';
+import { RegisterUserDto } from 'generatedUserProto/user/RegisterUserDto';
+
 
 @Controller()
 export class AppController implements OnModuleInit {
   private usersService;
   private authService;
+  private materialService;
 
 
   constructor(
     private readonly appService: AppService,
-    @Inject('USERS_SERVICE') private client: ClientGrpc,
+    @Inject('USERS_SERVICE') private userClient: ClientGrpc,
+    @Inject('PRODUCTION_SERVICE') private productionClient: ClientGrpc,
   ) {}
   onModuleInit() {
-    this.usersService = this.client.getService('UsersService');
-    this.authService = this.client.getService('AuthService');
+    this.usersService = this.userClient.getService('UsersService');
+    this.authService = this.userClient.getService('AuthService');
+    this.materialService = this.productionClient.getService('MaterialService');
   }
 
 
@@ -34,6 +38,8 @@ export class AppController implements OnModuleInit {
       throw new HttpException(" "+error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+
+    // Users service
 
   @ApiBearerAuth('JWT-auth')
   @Get('gateway/users')
@@ -99,7 +105,75 @@ export class AppController implements OnModuleInit {
       throw new HttpException('Erreur de creation du compte : '+error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
-    // Users service
+ 
+  // production service
+  // Material
+
+
+  // @ApiBearerAuth('JWT-auth')
+  // @Post('gateway/material')
+  // createMaterial(@Headers('authorization') authHeader: any, @Body() materialData: CreateMaterialDto) {
+  //   return this.httpService.post(`http://localhost:3002/api/v1/materials`, materialData, {
+  //     headers: { 'Authorization': authHeader },
+  //   }).pipe(
+  //     map(response => response.data),
+  //     catchError(err => { 
+  //       throw new HttpException(err.response.data, err.response.status);
+  //     })
+  //   );
+  // }
+
+
+  @Get('gateway/materials')
+  getAllMaterials() {
+    try {
+      return this.materialService.getMaterials().toPromise();
+    } catch (error) {
+      console.error('', error);
+      throw new HttpException('Erreur de creation du compte : '+error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+//   @ApiBearerAuth('JWT-auth')
+//   @Get('gateway/material/:id')
+//   getMaterialById(@Headers('authorization') authHeader: any,@Param('id') id: number) {
+//     return this.httpService.get(`http://localhost:3002/api/v1/materials/${id}`, {
+//       headers: { 'Authorization': authHeader },
+//     }).pipe(
+//       map(response => response.data),
+//       catchError(err => {
+//         throw new HttpException(err.response.data, err.response.status);
+//       })
+//     );
+//   }
+
+//   // @ApiBearerAuth('JWT-auth')
+//   // @Patch('gateway/material/:id')
+//   // updateMaterialById(@Body() materialData: UpdateMaterialDto, @Param('id') id: number) {
+//   //   return this.httpService.patch(`http://localhost:3002/api/v1/materials/${id}`, materialData).pipe(
+      
+//   //     map(response => response.data),
+//   //     catchError(err => {
+//   //       throw new HttpException(err.response.data, err.response.status);
+//   //     })
+//   //   );
+//   // }
+
+//   @ApiBearerAuth('JWT-auth')
+//   @Delete('gateway/material/:id')
+//   deleteMaterialByID(@Headers('authorization') authHeader: any,@Param('id') id: number) {
+//     return this.httpService.delete(`http://localhost:3002/api/v1/materials/${id}`, {
+//       headers: { 'Authorization': authHeader },
+//     }).pipe(
+//       map(response => response.data),
+//       catchError(err => {
+//         throw new HttpException(err.response.data, err.response.status);
+//       })
+//     );
+//   }
+// }
+
+
   
   // @ApiBearerAuth('JWT-auth')
   // @GrpcMethod('UserService', 'getAllUsers')

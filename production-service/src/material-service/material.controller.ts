@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, HttpCode, ParseIntPipe, UseGuards } from '@nestjs/common';
 import { MaterialService } from './material.service';
 import { CreateManyMaterialsDto, CreateMaterialDto } from './dto/material-service-dto/create-material.dto';
-import { UpdateManyMaterialsDto, UpdateOneMaterialDto, UpdateMaterialDto } from './dto/material-service-dto/update-material.dto';
+import { UpdateManyMaterialsDto, UpdateMaterialDto } from './dto/material-service-dto/update-material.dto';
 import { DeleteManyMaterialsDto } from './dto/material-service-dto/delete-material.dto';
 import { CreateMaterialPartInformationsDto } from './dto/material-part-informations-dto/create-part-information-materials.dto';
 import { DeleteMaterialPartInformationsDto } from './dto/material-part-informations-dto/delete-part-information-materials.dto';
@@ -69,7 +69,7 @@ export class MaterialController {
   @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Material ID does not match' })
   @ApiResponse({ status: HttpStatus.CONFLICT, description: 'Another material with the same name already exists' })
   @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Error updating material' })
-  async updateMaterial(@Param('id', ParseIntPipe) id: number, @Body() updateMaterialDto: UpdateOneMaterialDto) {
+  async updateMaterial(@Param('id', ParseIntPipe) id: number, @Body() updateMaterialDto: UpdateMaterialDto) {
     return this.materialService.updateMaterial(id, updateMaterialDto);
   }
 

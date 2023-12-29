@@ -7,7 +7,7 @@ import { UpdateUsersDto } from './dto/update-users.dto';
 import { Token } from 'src/auth/dto/auth.dto';
 import { DecodeToken } from 'src/auth/utils/jwt';
 import { GrpcMethod } from '@nestjs/microservices';
-import { HelloResponse } from 'generated/user/HelloResponse';
+import { HelloResponse } from '../../generatedUserProto/user/HelloResponse';
 
 @Injectable()
 export class UsersService {

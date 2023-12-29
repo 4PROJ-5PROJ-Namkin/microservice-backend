@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Patch, Post, UseGuards } from '@nestjs/common';
 import { PartInformationService } from './part-information.service';
 import { CreateManyPartInformationDto, CreatePartInformationDto } from './dto/part-information/create-part-information.dto';
-import { UpdateManyPartInformationDto, UpdateOnePartInformationDto } from './dto/part-information/update-part-information.dto';
+import { UpdateManyPartInformationDto, UpdatePartInformationDto } from './dto/part-information/update-part-information.dto';
 import { DeletePartInformationDto } from './dto/part-information/delete-part-information.dto';
 import { CreatePartInformationMaterialsDto } from './dto/part-information-materials/create-part-information-materials.dto';
 import { DeletePartInformationMaterialsDto } from './dto/part-information-materials/delete-part-information-materials.dto';
@@ -68,7 +68,7 @@ export class PartInformationController {
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Part information not found' })
   @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Error in updating part information entries' })
   async updateOnePartInformation(
-    @Param('id', ParseIntPipe) id: number, @Body() updatePartInformationDto: UpdateOnePartInformationDto) {
+    @Param('id', ParseIntPipe) id: number, @Body() updatePartInformationDto: UpdatePartInformationDto) {
     return this.partInformationService.updateOnePartInformation(id, updatePartInformationDto);
   }
 
