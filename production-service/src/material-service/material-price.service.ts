@@ -21,7 +21,13 @@ export class MaterialPriceService {
             throw new NotFoundException(`Material with ID ${materialId} not found`);
         }
 
-        return this.materialPriceRepository.find({ where: { material: { id: materialId } } });
+        const materialPricesFound: MaterialPrice[] = await this.materialPriceRepository.find({ where: { material: { id: materialId } } });
+
+        if (materialPricesFound.length == 0) {
+            throw new NotFoundException(`No prices found for the Material with ID ${materialId}`);
+        }
+
+        return materialPricesFound;
     }
 
     async updateOrCreateMaterialPrice(materialId: number, createMaterialPriceDto: CreateMaterialPriceDto): Promise<MaterialPrice> {
