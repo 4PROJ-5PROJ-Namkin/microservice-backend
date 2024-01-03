@@ -1,0 +1,50 @@
+version: "3.9"
+services:
+  user-backend:
+    container_name: users-services-backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "3001:3001"
+    depends_on:
+      - database
+
+  database:
+    container_name: users-services-database
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - ./userData:/var/lib/postgresql/data
+      - ./postgresql.conf:/etc/postgresql/postgresql.conf
+    ports:
+      - "5439:5439"
+    healthcheck:
+      test: psql -U ${POSTGRES_USER} -q -d ${POSTGRES_DB} -c "SELECT 'ready';"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]
+
+  haproxy:
+    container_name: haproxy-load-balancer
+    build:
+      context: ./src/load-balancer
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "81:81"
+      - "8889:8889"
+    depends_on:
+      - user-backend 
+    volumes:
+      - ./src/load-balancer/haproxy_users.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+
+volumes:
+  userData:
