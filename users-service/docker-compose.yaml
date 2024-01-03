@@ -32,9 +32,19 @@ services:
       start_period: 5s
     command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]
 
-
-
-
+  haproxy:
+    container_name: haproxy-load-balancer
+    build:
+      context: ./src/load-balancer
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "81:81"
+      - "8889:8889"
+    depends_on:
+      - user-backend 
+    volumes:
+      - ./src/load-balancer/haproxy_users.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
 
 volumes:
   userData:
