@@ -1,20 +1,32 @@
 const argon2 = require('argon2');
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { HttpException, HttpStatus, Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { Repository, UpdateResult } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from './entities/users.entity';
 import { UpdateUsersDto } from './dto/update-users.dto';
-import { Token } from 'src/auth/dto/auth.dto';
-import { DecodeToken } from 'src/auth/utils/jwt';
-import { GrpcMethod } from '@nestjs/microservices';
+import { ClientGrpc, GrpcMethod } from '@nestjs/microservices';
 import { HelloResponse } from '../../generatedUserProto/user/HelloResponse';
+import { Token, TokenStructure } from 'src/auth/dto/auth.dto';
+
+
+
+interface AuthService {
+  decodeToken(payload: any): Promise<TokenStructure>;
+}
 
 @Injectable()
-export class UsersService {
+export class UsersService implements OnModuleInit{
+
+  private authService : AuthService;
+
   constructor(
     @InjectRepository(Users)
     private userRepository: Repository<Users>,
+    // @Inject('AUTH_SERVICE') private authClient: ClientGrpc,
   ) { }
+  onModuleInit() {
+    // this.authService = this.authClient.getService('AuthService');
+  }
 
 
   @GrpcMethod('UsersService', 'getHello')
@@ -22,16 +34,12 @@ export class UsersService {
     return { message: 'Je suis dans users-service' };
   }
   
-  // @GrpcMethod('UsersService', 'getHello')
-  // async getHello(): Promise<{ message: string }> {
-  //   return { message: 'Je suis dans users-service' };
-  // }
   @GrpcMethod('UsersService', 'getAllUsers')
-  async findAllUsers(headers: any): Promise<Users[]> {
+  async getAllUsers(headers: any): Promise<Users[]> {
     const token: Token = await headers.authorization.split(' ')[1];
-    const decoded = await DecodeToken(token);
     try {
-      switch (decoded.role) {
+      const decodedResponse = await this.authService.decodeToken({ token: token });
+      switch (decodedResponse.role) {
         case 'commercial':
           return await this.userRepository.findBy({ role: 'commercial' })
         case 'admin':
@@ -42,45 +50,44 @@ export class UsersService {
     }
   }
 
+  // @GrpcMethod('UsersService', 'getUserById')
+  // async getUserById(id: string, headers: any): Promise<User> {
 
-  @GrpcMethod('UsersService', 'getUserById')
-  async findById(id: string, headers: any): Promise<Users> {
+  //   const token: Token = await headers.authorization.split(' ')[1];
+  //   const decoded = await DecodeToken(token);
 
-    const token: Token = await headers.authorization.split(' ')[1];
-    const decoded = await DecodeToken(token);
+  //   if (decoded.role === 'commercial' && decoded.id !== id) {
+  //     throw new HttpException({ message: 'You are not allowed to access this resource' }, HttpStatus.UNAUTHORIZED);
+  //   }
 
-    if (decoded.role === 'commercial' && decoded.id !== id) {
-      throw new HttpException({ message: 'You are not allowed to access this resource' }, HttpStatus.UNAUTHORIZED);
-    }
+  //   if (decoded.id === id) {
+  //     const user = await this.userRepository.findOneBy({ id })
+  //     if (!user)
+  //       throw new HttpException({ message: 'User not found' }, HttpStatus.NOT_FOUND);
+  //     else
+  //       return user;
+  //   }
 
-    if (decoded.id === id) {
-      const user = await this.userRepository.findOneBy({ id })
-      if (!user)
-        throw new HttpException({ message: 'User not found' }, HttpStatus.NOT_FOUND);
-      else
-        return user;
-    }
+  //   if (decoded.role === 'commercial') {
+  //     const user = await this.userRepository.findOneBy({ id, role: 'commercial' })
+  //     if (!user)
+  //       throw new HttpException({ message: 'User not found' }, HttpStatus.NOT_FOUND);
+  //     else
+  //       return user;
+  //   }
 
-    if (decoded.role === 'commercial') {
-      const user = await this.userRepository.findOneBy({ id, role: 'commercial' })
-      if (!user)
-        throw new HttpException({ message: 'User not found' }, HttpStatus.NOT_FOUND);
-      else
-        return user;
-    }
+  //   if (decoded.role === 'admin') {
+  //     const user = await this.userRepository.findOneBy({ id })
+  //     if (!user)
+  //       throw new HttpException({ message: 'User not found' }, HttpStatus.NOT_FOUND);
+  //     else
+  //       return user;
 
-    if (decoded.role === 'admin') {
-      const user = await this.userRepository.findOneBy({ id })
-      if (!user)
-        throw new HttpException({ message: 'User not found' }, HttpStatus.NOT_FOUND);
-      else
-        return user;
-
-    }
-  }
+  //   }
+  // }
 
   @GrpcMethod('UsersService', 'updateUser')
-  async updatePassword(id: string, updatePasswordUserDto: UpdateUsersDto) {
+  async updateUser(id: string, updatePasswordUserDto: UpdateUsersDto): Promise<UpdateResult> {
     const user = await this.userRepository.findOneBy({ id });
     if (!user)
       throw new HttpException({ message: 'User not found.' }, HttpStatus.NOT_FOUND);
@@ -93,7 +100,7 @@ export class UsersService {
   }
 
   @GrpcMethod('UsersService', 'deleteUser')
-  async remove(id: string) {
+  async deleteUser(id: string) {
     const user = await this.userRepository.findOneBy({ id });
     if (!user)
       throw new HttpException({ message: 'User not found.' }, HttpStatus.NOT_FOUND);

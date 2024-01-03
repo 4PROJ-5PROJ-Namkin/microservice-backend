@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "prebuild": "cp user.proto src/ && cp production.proto src/",
+    "prebuild": "cp user.proto src/ &&  cp production.proto src/ &&  cp auth.proto src/",
     "build": "nest build && copyfiles user.proto dist",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
@@ -32,14 +32,17 @@
     "@nestjs/typeorm": "^10.0.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
+    "argon2": "^0.30.3",
     "dotenv": "^16.3.1",
     "kafkajs": "^2.2.4",
     "moment": "^2.29.4",
+    "jsonwebtoken": "^9.0.2",
     "nestjs-rate-limiter": "^3.1.0",
     "path": "^0.12.7",
     "pg": "^8.11.3",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
+    "ts-proto": "^1.166.2",
     "typeorm": "^0.3.17"
   },
   "devDependencies": {

@@ -6,10 +6,4 @@ import { GrpcMethod } from '@nestjs/microservices';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-
-  // @GrpcMethod('UserService', 'getHello')
-  // findOne(data: any): any {
-  //   console.log(data); 
-  //   return { test: 'Hello response from user service' };
-  // }
 }
