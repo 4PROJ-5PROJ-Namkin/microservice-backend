@@ -1,4 +1,4 @@
-import { Controller, Get, HttpException, Headers, HttpStatus, Inject, OnModuleInit, Body, Post, Param, Patch, Delete, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, HttpException, Headers, HttpStatus, Inject, OnModuleInit, Body, Post, Param, Patch, Delete, UsePipes, ValidationPipe, Header } from '@nestjs/common';
 import { ClientGrpc, Payload } from '@nestjs/microservices';
 import * as grpc from '@grpc/grpc-js';
 import { UpdateUsersDto } from 'generatedUserProto/user/UpdateUsersDto';
@@ -11,11 +11,13 @@ import { HelloResponse } from 'generatedUserProto/user/HelloResponse';
 import { LoginUserDto } from 'generatedUserProto/user/LoginUserDto';
 import { Token } from 'generatedUserProto/user/Token';
 import { RegisterUserDto } from 'generatedUserProto/user/RegisterUserDto';
+import { Roles } from './guards/auth.decorator';
+import { Role } from './guards/auth.enum';
 
 
 interface UsersService {
   getHello(payload: any): Promise<HelloResponse>;
-  getAllUsers(authHeader: any, payload: any): Promise<Users[]>;
+  getAllUsers(authHeader: any): Promise<Users[]>;
   getUserById(authHeader: any,payload: { id: string }): Promise<User>;
   updateUser(authHeader: any,payload: UpdateUsersDto): Promise<User>;
   deleteUser(authHeader: any,payload: { id: string }): Promise<Empty>;
@@ -90,7 +92,7 @@ export class AppController implements OnModuleInit {
 
   @ApiBearerAuth('JWT-auth')
   @Get('gateway/users')
-  // @Roles(Role.ADMIN) 
+  @Roles(Role.ADMIN) 
   @ApiOperation({ summary: 'Find all user' })
   @ApiResponse({ status: 401, description: 'Token is expired or invalid' })
   @ApiResponse({ status: 403, description: 'Forbidden resource' })
@@ -98,7 +100,7 @@ export class AppController implements OnModuleInit {
   @UsePipes(new ValidationPipe({ transform: true }))
   async getAllUsers(@Headers('authorization') authHeader: any): Promise<Users[]>  {
     try {
-      return await this.usersService.getAllUsers({}, authHeader);
+      return await this.usersService.getAllUsers(authHeader);
     } catch (error) {
       console.error('Erreur gRPC détaillée:', error);
   
@@ -115,68 +117,68 @@ export class AppController implements OnModuleInit {
     }
   }
 
-  // @ApiBearerAuth('JWT-auth')
-  // @Get('gateway/users/:id')
-  // async getUserById(@Headers('authorization') authHeader: any, @Param('id') id: string): Promise<User> {
-  //   try {
-  //     return await this.usersService.getUserById(id, authHeader);
-  //   } catch (error) {
-  //     console.error('', error);
-  //     throw new HttpException('Erreur lors de la récupération de l utilisateur : ' +error, HttpStatus.INTERNAL_SERVER_ERROR);
-  //   }
-  // }
+  @ApiBearerAuth('JWT-auth')
+  @Get('gateway/users/:id')
+  async getUserById(@Headers('authorization') authHeader: any, @Param('id') id: string): Promise<User> {
+    try {
+      return await this.usersService.getUserById(id, authHeader);
+    } catch (error) {
+      console.error('', error);
+      throw new HttpException('Erreur lors de la récupération de l utilisateur : ' +error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
 
-  // @ApiBearerAuth('JWT-auth')
-  // @Patch('gateway/users/:id')
-  // async updateUserById(updateUsersDto: UpdateUsersDto, @Param('id') id: string): Promise<User> {
-  //   try {
-  //     return await this.usersService.updateUser(id, updateUsersDto);
-  //   } catch (error) {
-  //     console.error('', error);
-  //     throw new HttpException('echec de la mise a jour : '+error, HttpStatus.INTERNAL_SERVER_ERROR);
-  //   }
-  // }
+  @ApiBearerAuth('JWT-auth')
+  @Patch('gateway/users/:id')
+  async updateUserById(updateUsersDto: UpdateUsersDto, @Param('id') id: string): Promise<User> {
+    try {
+      return await this.usersService.updateUser(id, updateUsersDto);
+    } catch (error) {
+      console.error('', error);
+      throw new HttpException('echec de la mise a jour : '+error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
 
-  // @ApiBearerAuth('JWT-auth')
-  // @Delete('gateway/users/:id')
-  // deleteUserById(@Param('id') id: string) {
-  //   try {
-  //     return this.usersService.remove(id).toPromise();
-  //   } catch (error) {
-  //     console.error('', error);
-  //     throw new HttpException('Erreur de suppression : ' + error, HttpStatus.INTERNAL_SERVER_ERROR);
-  //   }
-  // }
+  @ApiBearerAuth('JWT-auth')
+  @Delete('gateway/users/:id')
+  deleteUserById(@Headers('authorization') authHeader: any,@Param('id') id: string, ) {
+    try {
+      return this.usersService.deleteUser(authHeader, { id });
+    } catch (error) {
+      console.error('', error);
+      throw new HttpException('Erreur de suppression : ' + error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
 
-  // @Post('login')
-  // async login(@Body() loginData: LoginUserDto): Promise<Token> {
-  //   try {
-  //      return await this.authService.login(loginData);
-  //   } catch (error) {
-  //     console.error('Erreur gRPC détaillée:', error);
+  @Post('login')
+  async login(@Body() loginData: LoginUserDto): Promise<Token> {
+    try {
+       return await this.authService.login(loginData);
+    } catch (error) {
+      console.error('Erreur gRPC détaillée:', error);
   
-  //     switch (error.code) {
-  //       case grpc.status.UNIMPLEMENTED:
-  //         throw new HttpException("Méthode non implémentée", HttpStatus.NOT_IMPLEMENTED);
-  //       case grpc.status.UNAVAILABLE:
-  //         throw new HttpException("Service indisponible", HttpStatus.SERVICE_UNAVAILABLE);
-  //       case grpc.status.PERMISSION_DENIED:
-  //         throw new HttpException("Permission refusée", HttpStatus.FORBIDDEN);
-  //       default:
-  //         throw new HttpException("Erreur inconnue du serveur", HttpStatus.INTERNAL_SERVER_ERROR);
-  //     }
-  //   }
-  // }
+      switch (error.code) {
+        case grpc.status.UNIMPLEMENTED:
+          throw new HttpException("Méthode non implémentée", HttpStatus.NOT_IMPLEMENTED);
+        case grpc.status.UNAVAILABLE:
+          throw new HttpException("Service indisponible", HttpStatus.SERVICE_UNAVAILABLE);
+        case grpc.status.PERMISSION_DENIED:
+          throw new HttpException("Permission refusée", HttpStatus.FORBIDDEN);
+        default:
+          throw new HttpException("Erreur inconnue du serveur", HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+    }
+  }
 
-  // @Post('register')
-  // async createUser(@Body() userData: RegisterUserDto): Promise<User> {
-  //   try {
-  //     return await this.authService.createCommercial(userData);
-  //   } catch (error) {
-  //     console.error('', error);
-  //     throw new HttpException('Erreur de creation du compte : '+error, HttpStatus.INTERNAL_SERVER_ERROR);
-  //   }
-  // }
+  @Post('register')
+  async createUser(@Body() userData: RegisterUserDto): Promise<User> {
+    try {
+      return await this.authService.createCommercial(userData);
+    } catch (error) {
+      console.error('', error);
+      throw new HttpException('Erreur de creation du compte : '+error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
  
   // production service
   // Material

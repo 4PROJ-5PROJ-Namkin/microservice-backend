@@ -7,35 +7,28 @@ import { UsersService } from "./users.service";
 import { GrpcMethod } from "@nestjs/microservices";
 import { HelloResponse } from "generatedUserProto/user/HelloResponse";
 import { UpdateResult } from "typeorm";
-import { AuthService } from "src/auth/auth.service";
 
 @ApiTags('Users')
 @ApiBearerAuth('JWT-auth')
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService,
-    private readonly authService: AuthService) {}
+  constructor(private readonly usersService: UsersService) {}
 
-  @GrpcMethod('UsersService', 'getAllUsers')
-  @Get()
-  // @Roles(Role.ADMIN)
-  @ApiOperation({ summary: 'Find all user' })
-  @ApiResponse({ status: 401, description: 'Token is expired or invalid' })
-  @ApiResponse({ status: 403, description: 'Forbidden resource' })
-  @ApiResponse({ status: 500, description: 'Error finding users' })
-  @UsePipes(new ValidationPipe({ transform: true }))
-  async getAllUsers(headers: any): Promise<Users[]> {
-    return this.usersService.getAllUsers(headers);
-  }
+  // @GrpcMethod('UsersService', 'getAllUsers')
+  // @Get()
+  // // @Roles(Role.ADMIN)
+  // @ApiOperation({ summary: 'Find all user' })
+  // @ApiResponse({ status: 401, description: 'Token is expired or invalid' })
+  // @ApiResponse({ status: 403, description: 'Forbidden resource' })
+  // @ApiResponse({ status: 500, description: 'Error finding users' })
+  // @UsePipes(new ValidationPipe({ transform: true }))
+  // async getAllUsers(headers: any): Promise<Users[]> {
+  //   return await this.usersService.getAllUsers(headers);
+  // }
 
   @GrpcMethod('UsersService', 'getHello')
   async getHello(): Promise<HelloResponse> {
     return this.usersService.getHello();
-  }
-
-  @GrpcMethod('AuthService', 'getHelloAuth')
-  async getHelloAuth(): Promise<HelloResponse> {
-    return this.authService.getHelloAuth();
   }
 
   // @GrpcMethod('UsersService', 'getUserById')
@@ -50,17 +43,17 @@ export class UsersController {
   // }
 
 
-  @GrpcMethod('UsersService', 'updateUser')
-  @Patch(':id')
-  // @Roles(Role.ADMIN, Role.COMMERCIAL)
-  @ApiOperation({ summary: 'Update password' })
-  @ApiResponse({status: 200, description: 'password updated', type: Users})
-  @ApiResponse({status: 404, description: 'User not found.'})
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @UsePipes(new ValidationPipe({ transform: true }))
-  async updateUser(@Param() id: UUID, @Body() updateUsersDto: UpdateUsersDto): Promise<UpdateResult> {
-    return this.usersService.updateUser(id.id, updateUsersDto);
-  }
+  // @GrpcMethod('UsersService', 'updateUser')
+  // @Patch(':id')
+  // // @Roles(Role.ADMIN, Role.COMMERCIAL)
+  // @ApiOperation({ summary: 'Update password' })
+  // @ApiResponse({status: 200, description: 'password updated', type: Users})
+  // @ApiResponse({status: 404, description: 'User not found.'})
+  // @ApiResponse({ status: 403, description: 'Forbidden' })
+  // @UsePipes(new ValidationPipe({ transform: true }))
+  // async updateUser(@Param() id: UUID, @Body() updateUsersDto: UpdateUsersDto): Promise<UpdateResult> {
+  //   return this.usersService.updateUser(id.id, updateUsersDto);
+  // }
 
   // @Delete(':id')
   // @Roles(Role.ADMIN)

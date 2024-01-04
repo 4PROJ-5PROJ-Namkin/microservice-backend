@@ -5,13 +5,11 @@ import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { join } from 'path';
-import { AuthService } from 'src/auth/auth.service';
-import { AuthModule } from 'src/auth/auth.modules';
 
 
 @Module({
   imports: [TypeOrmModule.forFeature([Users]),
-  AuthModule,
+  // AuthModule,
   ClientsModule.register([
     {
       name: 'USER_SERVICE',

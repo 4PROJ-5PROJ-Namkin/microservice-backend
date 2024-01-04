@@ -21,9 +21,9 @@ import { AppService } from './app.service';
         name: 'AUTH_SERVICE',
         transport: Transport.GRPC,
         options: {
-          package: 'user',
-          protoPath: join(__dirname, '../user.proto'),
-          url: 'users-services-backend:50051',
+          package: 'auth',
+          protoPath: join(__dirname, '../auth.proto'),
+          url: 'auth-services-backend:50052',
         },
       },
       {

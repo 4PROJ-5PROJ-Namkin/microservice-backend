@@ -6,12 +6,11 @@ import { Users } from './entities/users.entity';
 import { UpdateUsersDto } from './dto/update-users.dto';
 import { ClientGrpc, GrpcMethod } from '@nestjs/microservices';
 import { HelloResponse } from '../../generatedUserProto/user/HelloResponse';
-import { Token, TokenStructure } from 'src/auth/dto/auth.dto';
 
 
 
 interface AuthService {
-  decodeToken(payload: any): Promise<TokenStructure>;
+  // decodeToken(token: Token): Promise<TokenStructure>;
 }
 
 @Injectable()
@@ -34,24 +33,24 @@ export class UsersService implements OnModuleInit{
     return { message: 'Je suis dans users-service' };
   }
   
-  @GrpcMethod('UsersService', 'getAllUsers')
-  async getAllUsers(headers: any): Promise<Users[]> {
-    const token: Token = await headers.authorization.split(' ')[1];
-    try {
-      const decodedResponse = await this.authService.decodeToken({ token: token });
-      switch (decodedResponse.role) {
-        case 'commercial':
-          return await this.userRepository.findBy({ role: 'commercial' })
-        case 'admin':
-          return await this.userRepository.find()
-      }
-    } catch (error) {
-      throw new HttpException({ message: 'Error finding users' }, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-  }
+  // @GrpcMethod('UsersService', 'getAllUsers')
+  // async getAllUsers(headers: any): Promise<Users[]> {
+  //   const token: Token = await headers.authorization.split(' ')[1];
+  //   try {
+  //     const decodedResponse = await this.authService.decodeToken(token);
+  //     switch (decodedResponse.role) {
+  //       case 'commercial':
+  //         return await this.userRepository.findBy({ role: 'commercial' })
+  //       case 'admin':
+  //         return await this.userRepository.find()
+  //     }
+  //   } catch (error) {
+  //     throw new HttpException({ message: 'Error finding users' }, HttpStatus.INTERNAL_SERVER_ERROR);
+  //   }
+  // }
 
   // @GrpcMethod('UsersService', 'getUserById')
-  // async getUserById(id: string, headers: any): Promise<User> {
+  // async getUserById(id: string, headers: any): Promise<Users> {
 
   //   const token: Token = await headers.authorization.split(' ')[1];
   //   const decoded = await DecodeToken(token);
@@ -86,25 +85,25 @@ export class UsersService implements OnModuleInit{
   //   }
   // }
 
-  @GrpcMethod('UsersService', 'updateUser')
-  async updateUser(id: string, updatePasswordUserDto: UpdateUsersDto): Promise<UpdateResult> {
-    const user = await this.userRepository.findOneBy({ id });
-    if (!user)
-      throw new HttpException({ message: 'User not found.' }, HttpStatus.NOT_FOUND);
-    else {
-      const userData = {
-        password: await argon2.hash(updatePasswordUserDto.password),
-      }
-      return await this.userRepository.update({ id }, userData);
-    }
-  }
+  // @GrpcMethod('UsersService', 'updateUser')
+  // async updateUser(id: string, updatePasswordUserDto: UpdateUsersDto): Promise<UpdateResult> {
+  //   const user = await this.userRepository.findOneBy({ id });
+  //   if (!user)
+  //     throw new HttpException({ message: 'User not found.' }, HttpStatus.NOT_FOUND);
+  //   else {
+  //     const userData = {
+  //       password: await argon2.hash(updatePasswordUserDto.password),
+  //     }
+  //     return await this.userRepository.update({ id }, userData);
+  //   }
+  // }
 
-  @GrpcMethod('UsersService', 'deleteUser')
-  async deleteUser(id: string) {
-    const user = await this.userRepository.findOneBy({ id });
-    if (!user)
-      throw new HttpException({ message: 'User not found.' }, HttpStatus.NOT_FOUND);
-    else
-      return await this.userRepository.delete({ id });
-  }
+  // @GrpcMethod('UsersService', 'deleteUser')
+  // async deleteUser(id: string) {
+  //   const user = await this.userRepository.findOneBy({ id });
+  //   if (!user)
+  //     throw new HttpException({ message: 'User not found.' }, HttpStatus.NOT_FOUND);
+  //   else
+  //     return await this.userRepository.delete({ id });
+  // }
 }
