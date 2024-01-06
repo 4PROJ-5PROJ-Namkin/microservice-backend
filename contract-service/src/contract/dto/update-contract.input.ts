@@ -1,17 +1,12 @@
 export class UpdateContractsInput {
-  id: string;
-  contract_number: string;
   client_name: string;
   date: Date;
   cash : number[];
   parts : number[];
 
-  constructor(id: string, contract_number: string, client_name: string, date: Date, cash : number[], parts : number[]) {
-    this.validateIsNotEmpty(contract_number);
+  constructor( client_name: string, date: Date, cash : number[], parts : number[]) {
     this.validateIsNotEmpty(client_name);
 
-    this.id = id;
-    this.contract_number = contract_number;
     this.client_name = client_name;
     this.date = date;
     this.cash = cash;

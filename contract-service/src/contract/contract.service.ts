@@ -27,30 +27,30 @@ export class ContractsService {
     return await this.contractsRepository.find();
   }
 
-  async findOneById(id: string): Promise<Contract> {
-    const contract = await this.contractsRepository.findOneBy({ id });
+  async findOneById(contract_number: string): Promise<Contract> {
+    const contract = await this.contractsRepository.findOneBy({ contract_number });
     if (!contract) {
       throw new HttpException({ message: 'Contract not found.' }, HttpStatus.NOT_FOUND);
     }
     return contract;
   }
 
-  async update(id: string, updateContractInput: UpdateContractsInput): Promise<Contract> {
-    const contract = await this.contractsRepository.findOneBy({ id });
+  async update(contract_number: string, updateContractInput: UpdateContractsInput): Promise<Contract> {
+    const contract = await this.contractsRepository.findOneBy({ contract_number });
     if (!contract) {
       throw new HttpException({ message: 'Contract not found.' }, HttpStatus.NOT_FOUND);
     } else {
-      await this.contractsRepository.update(id, { ...updateContractInput });
-      return this.contractsRepository.findOneBy({ id });
+      await this.contractsRepository.update(contract_number, { ...updateContractInput });
+      return this.contractsRepository.findOneBy({ contract_number });
     }
   }
 
-  async remove(id: string): Promise<void> {
-    const contract = await this.contractsRepository.findOneBy({ id });
+  async remove(contract_number: string): Promise<void> {
+    const contract = await this.contractsRepository.findOneBy({ contract_number });
     if (!contract) {
       throw new HttpException({ message: 'Contract not found.' }, HttpStatus.NOT_FOUND);
     } else {
-      await this.contractsRepository.delete({ id });
+      await this.contractsRepository.delete({ contract_number });
     }
   }
 }

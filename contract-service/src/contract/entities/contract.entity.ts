@@ -1,11 +1,9 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Contract {
-  @PrimaryGeneratedColumn("uuid")
-  id: string;
 
-  @Column({ unique: true, nullable: false })
+  @PrimaryColumn({ unique: true, nullable: false })
   contract_number: string;
 
   @Column({ unique: false, nullable: false })

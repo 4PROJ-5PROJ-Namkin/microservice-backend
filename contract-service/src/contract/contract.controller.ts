@@ -17,17 +17,17 @@ export class ContractsController {
     return this.contractsService.findAllContracts();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.contractsService.findOneById(id);
+  @Get(':contract_number')
+  findOne(@Param('contract_number') contract_number: string) {
+    return this.contractsService.findOneById(contract_number);
   }
-  @Put(':id')
-  update(@Body() body: any, @Param('id') id) {
-  const updateContractInput = new UpdateContractsInput(id, body.contract_number, body.client_name, body.date, body.cash, body.parts );
-  return this.contractsService.update(id, updateContractInput);
+  @Put(':contract_number')
+  update(@Body() body: any, @Param('contract_number') contract_number) {
+  const updateContractInput = new UpdateContractsInput(body.client_name, body.date, body.cash, body.parts );
+  return this.contractsService.update(contract_number, updateContractInput);
 }
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.contractsService.remove(id);
+  @Delete(':contract_number')
+  remove(@Param('contract_number') contract_number: string) {
+    return this.contractsService.remove(contract_number);
   }
 }
