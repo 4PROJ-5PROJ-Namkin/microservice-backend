@@ -1,4 +1,4 @@
-import { Controller, Get, HttpException, Headers, HttpStatus, Inject, OnModuleInit, Body, Post, Param, Patch, Delete, UsePipes, ValidationPipe, Header } from '@nestjs/common';
+import { Controller, Get, HttpException, Headers, HttpStatus, Inject, OnModuleInit, Body, Post, Param, Patch, Delete, UsePipes, ValidationPipe, Header, UseInterceptors } from '@nestjs/common';
 import { ClientGrpc, Payload } from '@nestjs/microservices';
 import * as grpc from '@grpc/grpc-js';
 import { UpdateUsersDto } from 'generatedUserProto/user/UpdateUsersDto';
@@ -13,6 +13,7 @@ import { Token } from 'generatedUserProto/user/Token';
 import { RegisterUserDto } from 'generatedUserProto/user/RegisterUserDto';
 import { Roles } from './guards/auth.decorator';
 import { Role } from './guards/auth.enum';
+import { HelloAuthResponse } from 'generatedAuthProto/auth/HelloAuthResponse';
 
 
 interface UsersService {
@@ -24,7 +25,7 @@ interface UsersService {
 }
 
 interface AuthService {
-  getHelloAuth(payload: any): Promise<HelloResponse>;
+  getHelloAuth(payload: any): Promise<HelloAuthResponse>;
   login(Body: LoginUserDto): Promise<Token>;
   createCommercial(payload: RegisterUserDto): Promise<User>;
 }
@@ -67,7 +68,7 @@ export class AppController implements OnModuleInit {
   }
   
   @Get('helloAuth')
-  async getHelloAuth(): Promise<HelloResponse> {
+  async getHelloAuth() {
     try {
       return await this.authService.getHelloAuth({});
     } catch (error) {

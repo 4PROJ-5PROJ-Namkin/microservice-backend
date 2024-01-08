@@ -7,6 +7,8 @@ import { UsersService } from "./users.service";
 import { GrpcMethod } from "@nestjs/microservices";
 import { HelloResponse } from "generatedUserProto/user/HelloResponse";
 import { UpdateResult } from "typeorm";
+import { Roles } from "src/guards/auth.decorator";
+import { Role } from "src/guards/auth.enum";
 
 @ApiTags('Users')
 @ApiBearerAuth('JWT-auth')
@@ -14,17 +16,17 @@ import { UpdateResult } from "typeorm";
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  // @GrpcMethod('UsersService', 'getAllUsers')
-  // @Get()
-  // // @Roles(Role.ADMIN)
-  // @ApiOperation({ summary: 'Find all user' })
-  // @ApiResponse({ status: 401, description: 'Token is expired or invalid' })
-  // @ApiResponse({ status: 403, description: 'Forbidden resource' })
-  // @ApiResponse({ status: 500, description: 'Error finding users' })
-  // @UsePipes(new ValidationPipe({ transform: true }))
-  // async getAllUsers(headers: any): Promise<Users[]> {
-  //   return await this.usersService.getAllUsers(headers);
-  // }
+  @GrpcMethod('UsersService', 'getAllUsers')
+  @Get()
+  @Roles(Role.ADMIN)
+  @ApiOperation({ summary: 'Find all user' })
+  @ApiResponse({ status: 401, description: 'Token is expired or invalid' })
+  @ApiResponse({ status: 403, description: 'Forbidden resource' })
+  @ApiResponse({ status: 500, description: 'Error finding users' })
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async getAllUsers(headers: any): Promise<Users[]> {
+    return await this.usersService.getAllUsers(headers);
+  }
 
   @GrpcMethod('UsersService', 'getHello')
   async getHello(): Promise<HelloResponse> {

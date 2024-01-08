@@ -6,11 +6,13 @@ import { Users } from './entities/users.entity';
 import { UpdateUsersDto } from './dto/update-users.dto';
 import { ClientGrpc, GrpcMethod } from '@nestjs/microservices';
 import { HelloResponse } from '../../generatedUserProto/user/HelloResponse';
+import { Token } from '../../generatedUserProto/user/Token';
+import { TokenStructure } from '../../generatedUserProto/user/TokenStructure';
 
 
 
 interface AuthService {
-  // decodeToken(token: Token): Promise<TokenStructure>;
+  decodeToken(token: Token): Promise<TokenStructure>;
 }
 
 @Injectable()
@@ -33,21 +35,21 @@ export class UsersService implements OnModuleInit{
     return { message: 'Je suis dans users-service' };
   }
   
-  // @GrpcMethod('UsersService', 'getAllUsers')
-  // async getAllUsers(headers: any): Promise<Users[]> {
-  //   const token: Token = await headers.authorization.split(' ')[1];
-  //   try {
-  //     const decodedResponse = await this.authService.decodeToken(token);
-  //     switch (decodedResponse.role) {
-  //       case 'commercial':
-  //         return await this.userRepository.findBy({ role: 'commercial' })
-  //       case 'admin':
-  //         return await this.userRepository.find()
-  //     }
-  //   } catch (error) {
-  //     throw new HttpException({ message: 'Error finding users' }, HttpStatus.INTERNAL_SERVER_ERROR);
-  //   }
-  // }
+  @GrpcMethod('UsersService', 'getAllUsers')
+  async getAllUsers(headers: any): Promise<Users[]> {
+    const token: Token = await headers.authorization.split(' ')[1];
+    try {
+      const decodedResponse = await this.authService.decodeToken(token);
+      switch (decodedResponse.role) {
+        case 'commercial':
+          return await this.userRepository.findBy({ role: 'commercial' })
+        case 'admin':
+          return await this.userRepository.find()
+      }
+    } catch (error) {
+      throw new HttpException({ message: 'Error finding users' }, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
 
   // @GrpcMethod('UsersService', 'getUserById')
   // async getUserById(id: string, headers: any): Promise<Users> {
