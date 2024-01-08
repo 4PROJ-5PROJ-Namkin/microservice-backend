@@ -9,6 +9,7 @@ import { HelloResponse } from "generatedUserProto/user/HelloResponse";
 import { UpdateResult } from "typeorm";
 import { Roles } from "src/guards/auth.decorator";
 import { Role } from "src/guards/auth.enum";
+import { Token } from "src/dto/auth.dto";
 
 @ApiTags('Users')
 @ApiBearerAuth('JWT-auth')
@@ -17,15 +18,14 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @GrpcMethod('UsersService', 'getAllUsers')
-  @Get()
   @Roles(Role.ADMIN)
   @ApiOperation({ summary: 'Find all user' })
   @ApiResponse({ status: 401, description: 'Token is expired or invalid' })
   @ApiResponse({ status: 403, description: 'Forbidden resource' })
   @ApiResponse({ status: 500, description: 'Error finding users' })
   @UsePipes(new ValidationPipe({ transform: true }))
-  async getAllUsers(headers: any): Promise<Users[]> {
-    return await this.usersService.getAllUsers(headers);
+  async getAllUsers(@Headers() token: any): Promise<Users[]> {
+    return await this.usersService.getAllUsers(token);
   }
 
   @GrpcMethod('UsersService', 'getHello')

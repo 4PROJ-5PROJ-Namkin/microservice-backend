@@ -15,10 +15,9 @@ import { Roles } from './guards/auth.decorator';
 import { Role } from './guards/auth.enum';
 import { HelloAuthResponse } from 'generatedAuthProto/auth/HelloAuthResponse';
 
-
 interface UsersService {
   getHello(payload: any): Promise<HelloResponse>;
-  getAllUsers(authHeader: any): Promise<Users[]>;
+  getAllUsers(token: any): Promise<Users[]>;
   getUserById(authHeader: any,payload: { id: string }): Promise<User>;
   updateUser(authHeader: any,payload: UpdateUsersDto): Promise<User>;
   deleteUser(authHeader: any,payload: { id: string }): Promise<Empty>;
@@ -52,7 +51,7 @@ export class AppController implements OnModuleInit {
     try {
       return await this.usersService.getHello({});
     } catch (error) {
-      console.error('Erreur gRPC détaillée:', error);
+      console.error('Erreur :', error);
   
       switch (error.code) {
         case grpc.status.UNIMPLEMENTED:
@@ -72,7 +71,7 @@ export class AppController implements OnModuleInit {
     try {
       return await this.authService.getHelloAuth({});
     } catch (error) {
-      console.error('Erreur gRPC détaillée:', error);
+      console.error('Erreur :', error);
   
       switch (error.code) {
         case grpc.status.UNIMPLEMENTED:
@@ -90,7 +89,6 @@ export class AppController implements OnModuleInit {
 
 
   //   // Users service
-
   @ApiBearerAuth('JWT-auth')
   @Get('gateway/users')
   @Roles(Role.ADMIN) 
@@ -101,9 +99,11 @@ export class AppController implements OnModuleInit {
   @UsePipes(new ValidationPipe({ transform: true }))
   async getAllUsers(@Headers('authorization') authHeader: any): Promise<Users[]>  {
     try {
-      return await this.usersService.getAllUsers(authHeader);
+      const token = authHeader.split(' ')[1];
+      console.log(authHeader, " app controller gateway")
+      return await this.usersService.getAllUsers(token);
     } catch (error) {
-      console.error('Erreur gRPC détaillée:', error);
+      console.error('Erreur : ', error);
   
       switch (error.code) {
         case grpc.status.UNIMPLEMENTED:
@@ -156,7 +156,7 @@ export class AppController implements OnModuleInit {
     try {
        return await this.authService.login(loginData);
     } catch (error) {
-      console.error('Erreur gRPC détaillée:', error);
+      console.error('Erreur :', error);
   
       switch (error.code) {
         case grpc.status.UNIMPLEMENTED:

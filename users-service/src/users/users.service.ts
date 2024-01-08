@@ -1,10 +1,10 @@
 const argon2 = require('argon2');
-import { HttpException, HttpStatus, Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { HttpException, HttpStatus, Headers, Injectable, OnModuleInit } from '@nestjs/common';
 import { Repository, UpdateResult } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from './entities/users.entity';
 import { UpdateUsersDto } from './dto/update-users.dto';
-import { ClientGrpc, GrpcMethod } from '@nestjs/microservices';
+import { ClientGrpc, GrpcMethod, RpcException } from '@nestjs/microservices';
 import { HelloResponse } from '../../generatedUserProto/user/HelloResponse';
 import { Token } from '../../generatedUserProto/user/Token';
 import { TokenStructure } from '../../generatedUserProto/user/TokenStructure';
@@ -12,13 +12,13 @@ import { TokenStructure } from '../../generatedUserProto/user/TokenStructure';
 
 
 interface AuthService {
-  decodeToken(token: Token): Promise<TokenStructure>;
+  decodeToken(token: string): Promise<TokenStructure>;
 }
 
 @Injectable()
-export class UsersService implements OnModuleInit{
+export class UsersService implements OnModuleInit {
 
-  private authService : AuthService;
+  private authService: AuthService;
 
   constructor(
     @InjectRepository(Users)
@@ -34,20 +34,69 @@ export class UsersService implements OnModuleInit{
   async getHello(): Promise<HelloResponse> {
     return { message: 'Je suis dans users-service' };
   }
+
+  // @GrpcMethod('UsersService', 'getAllUsers')
+  // async getAllUsers(token: any): Promise<Users[]> {
+  //   try {
+  //     console.log(token, " test 1")
+  //     console.log("on vas bientot verifier le token (users-service)")
+  //     const token1: Token = await token.authorization.split(' ')[1];
+  //     console.log(token1, " test 2")
+  //     const decodedResponse = await this.authService.decodeToken(token1);
+  //     console.log("le token est verifié (users-service)")
+  //     switch (decodedResponse.role) {
+  //       case 'commercial':
+  //         return await this.userRepository.findBy({ role: 'commercial' })
+  //       case 'admin':
+  //         return await this.userRepository.find()
+  //     }
+  //   } catch (error) {
+  //     throw new HttpException({ message: 'Error :' , error }, HttpStatus.INTERNAL_SERVER_ERROR);
+  //   }
+  // }
+
+  // @GrpcMethod('UsersService', 'getAllUsers')
+  // async getAllUsers(token: any): Promise<Users[]> {
+  //   try {
+  //     console.log(`Token reçu dans users service: ${token}`);
   
+  //     // Extrait le token si nécessaire
+  //     const token1: Token = token.startsWith('Bearer ') ? token.split(' ')[1] : token;
+  //     console.log(`Token extrait: ${token1}`);
+  
+  //     const decodedResponse = await this.authService.decodeToken(token1);
+  //     console.log("Token décodé dans users service:", decodedResponse);
+
+  //     switch (decodedResponse.role) {
+  //       case 'commercial':
+  //         return await this.userRepository.findBy({ role: 'commercial' });
+  //       case 'admin':
+  //         return await this.userRepository.find();
+  //     }
+  //   } catch (error) {
+  //     console.error('Erreur dans users service: ', error);
+  //     throw new HttpException({ message: 'Error :' , error }, HttpStatus.INTERNAL_SERVER_ERROR);
+  //   }
+  // }
   @GrpcMethod('UsersService', 'getAllUsers')
-  async getAllUsers(headers: any): Promise<Users[]> {
-    const token: Token = await headers.authorization.split(' ')[1];
+  async getAllUsers(token: string): Promise<Users[]> {
     try {
-      const decodedResponse = await this.authService.decodeToken(token);
-      switch (decodedResponse.role) {
+      console.log(`Token reçu dans le service: ${token}`);
+  
+      const decodedToken = await this.authService.decodeToken(token);
+      console.log("Token décodé dans le service: ", decodedToken);
+
+      switch (decodedToken.role) {
         case 'commercial':
-          return await this.userRepository.findBy({ role: 'commercial' })
+          return await this.userRepository.findBy({ role: 'commercial' });
         case 'admin':
-          return await this.userRepository.find()
+          return await this.userRepository.find();
+        default:
+          throw new HttpException("Role non autorisé", HttpStatus.FORBIDDEN);
       }
     } catch (error) {
-      throw new HttpException({ message: 'Error finding users' }, HttpStatus.INTERNAL_SERVER_ERROR);
+      console.error('Erreur dans users service: ', error);
+      throw new HttpException({ message: 'Erreur :', error }, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 

@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package production;
+
+service MaterialService {
+    rpc getMaterial(MaterialRequest) returns (MaterialResponse) {}
+    rpc getMaterials(Empty) returns (MaterialResponses) {}
+    rpc createMaterial(MaterialRequest) returns (MaterialResponse) {}
+    rpc updateMaterial(MaterialRequest) returns (MaterialResponse) {}
+    rpc deleteMaterial(MaterialRequest) returns (Empty) {}
+}
+
+
+message MaterialRequest {
+  string id = 1;
+  string name = 2;
+}
+
+
+message MaterialResponse {
+  string id = 1;
+  string name = 2;
+}
+
+message MaterialResponses {
+  repeated MaterialResponse materials = 1;
+}
+
+message Empty {}
+

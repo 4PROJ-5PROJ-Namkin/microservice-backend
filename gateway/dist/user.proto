@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package user;
+
+service UsersService {
+  rpc getHello(Empty) returns (HelloResponse) {}
+  rpc getAllUsers(Empty) returns (UsersResponse) {}
+}
+
+service AuthService {
+  rpc login(LoginRequest) returns (LoginResponse) {}
+}
+
+message UserResponse {
+  string id = 1;
+  string first_name = 2;
+  string last_name = 3;
+  string email = 4;
+  string telephoneNumber = 5;
+  string role = 6;
+}
+
+message GetAllUsersRequest {}
+
+message Empty {}
+
+
+message UsersResponse {
+  repeated UserResponse users = 1;
+}
+
+message HelloResponse {
+  string message = 1;
+}
+
+
+message LoginRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  string token = 1;
+}

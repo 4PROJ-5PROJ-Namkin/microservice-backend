@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+package user;
+
+service UsersService {
+  rpc getHello(Empty) returns (HelloResponse) {}
+  rpc getAllUsers(Empty) returns (Users) {}
+  rpc getUserById(UserByIdRequest) returns (User) {}
+  rpc updateUser(UpdateUsersDto) returns (UpdateUsersDto) {}
+  rpc deleteUser(UserByIdRequest) returns (Empty) {}
+}
+
+
+message UserByIdRequest {
+  string id = 1;
+}
+
+message User {
+  string id = 1;
+  string first_name = 2;
+  string last_name = 3;
+  string email = 4;
+  string telephoneNumber = 5;
+  string password = 6;
+  string role = 7;
+}
+
+message GetAllUsersRequest {}
+
+message Empty {}
+
+message UpdateUsersDto {
+  string id = 1;
+  string newPassword = 2;
+}
+
+message Users {
+  repeated User users = 1;
+}
+
+message HelloResponse {
+  string message = 1;
+}
+
+message LoginUserDto {
+  string email = 1;
+  string password = 2;
+}
+  
+message Token {
+  string token = 1;
+}
+
+message RegisterUserDto {
+  string first_name = 1;
+  string last_name = 2;
+  string email = 3;
+  string telephoneNumber = 4;
+  string password = 5;
+  string role = 6;
+}
+
+message TokenStructure {
+  string id = 1;
+  string role = 2;
+}
