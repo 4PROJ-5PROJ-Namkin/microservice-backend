@@ -51,12 +51,14 @@ export class AuthService implements OnModuleInit {
   }
 
   @GrpcMethod('AuthService', 'DecodeToken')
-  async DecodeToken(token: Token): Promise<TokenStructure> {
+  async DecodeToken(token: any): Promise<TokenStructure> {
     try {
-      console.log("decodage du token...")
-      return await jwt.decode(token);
+      console.log('le token de decode token :', token);
+      const token1: Token = await token.authorization.split(' ')[1];
+      console.log('le token de decode token :', token1);
+      return await jwt.decode(token1);
     } catch (error) {
-      throw new HttpException({ message: 'Error decoding token' }, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException({ message: 'Error decoding token'+ error }, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 

@@ -8,6 +8,7 @@ services:
     restart: always
     ports:
       - "50052:50052"
+      - "4002:4002"
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}

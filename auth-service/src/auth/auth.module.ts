@@ -15,23 +15,14 @@ import { RolesGuard } from './guards/auth.guard';
     TypeOrmModule.forFeature([Users]), 
     ClientsModule.register([
     {
-      name: 'AUTH_SERVICE',
+      name: 'USERS_SERVICE',
       transport: Transport.GRPC,
       options: {
-        package: 'auth',
-        protoPath: join(__dirname, '../../auth.proto'),
-        url: 'auth-services-backend:50052',
+        package: 'user',
+        protoPath: join(__dirname, '../../user.proto'),
+        url: 'users-services-backend:50051',
       },
     },
-    // {
-    //   name: 'USERS_SERVICE',
-    //   transport: Transport.GRPC,
-    //   options: {
-    //     package: 'user',
-    //     protoPath: join(__dirname, '../../user.proto'),
-    //     url: 'users-services-backend:50051',
-    //   },
-    // },
 
   ]),
 ],

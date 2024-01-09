@@ -100,8 +100,9 @@ export class AppController implements OnModuleInit {
   async getAllUsers(@Headers('authorization') authHeader: any): Promise<Users[]>  {
     try {
       const token = authHeader.split(' ')[1];
+      console.log(token.toString(), " app controller gateway")
       console.log(authHeader, " app controller gateway")
-      return await this.usersService.getAllUsers(token);
+      return await this.usersService.getAllUsers(authHeader);
     } catch (error) {
       console.error('Erreur : ', error);
   

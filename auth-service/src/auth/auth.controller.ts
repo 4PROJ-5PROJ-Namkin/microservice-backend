@@ -1,18 +1,16 @@
-import { Body, Controller, Headers, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Headers, Post, UsePipes, ValidationPipe } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { GrpcMethod } from '@nestjs/microservices';
 import { HelloAuthResponse } from 'generatedAuthProto/auth/HelloAuthResponse';
 import { ApiBearerAuth, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { LoginUserDto } from 'generatedAuthProto/auth/LoginUserDto';
-import { Token } from 'generatedAuthProto/auth/Token';
-import { TokenStructure } from './dto/auth.dto';
+import { LoginUserDto, Token, TokenStructure } from './dto/auth.dto';
 
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
 
-
+  @Get('hello')
   @GrpcMethod('AuthService', 'getHelloAuth')
   async getHelloAuth(): Promise<HelloAuthResponse> {
     return this.authService.getHelloAuth();
@@ -24,7 +22,7 @@ export class AuthController {
   @ApiResponse({ status: 401, description: 'Error during token generation' })
   @ApiResponse({ status: 401, description: 'Wrong password' })
   @GrpcMethod('AuthService', 'login')
-  @Post()
+  @Post('Login')
   async login(@Body() loginData: LoginUserDto): Promise <Token> {
     return this.authService.login(loginData);
   }
@@ -34,7 +32,7 @@ export class AuthController {
   @ApiResponse({ status: 401, description: 'Error during token generation' })
   @ApiResponse({ status: 401, description: 'Wrong password' })
   @GrpcMethod('AuthService', 'DecodeToken')
-  @Post()
+  @Get('decodeToken')
   async decodeToken(@Headers('authorization') authHeader: any): Promise <TokenStructure> {
     return this.authService.DecodeToken(authHeader);
   }

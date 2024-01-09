@@ -12,15 +12,14 @@ import { join } from 'path';
   // AuthModule,
   ClientsModule.register([
     {
-      name: 'USER_SERVICE',
+      name: 'AUTH_SERVICE',
       transport: Transport.GRPC,
       options: {
-        package: 'user',
-        protoPath: join(__dirname, '../../user.proto'),
-        url: 'users-services-backend:50051',
+        package: 'auth',
+        protoPath: join(__dirname, '../../auth.proto'),
+        url: 'auth-services-backend:50052',
       },
     },
-
   ]),
 ],
     providers: [UsersService],

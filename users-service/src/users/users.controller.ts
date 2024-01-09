@@ -17,6 +17,9 @@ import { Token } from "src/dto/auth.dto";
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+
+  @ApiBearerAuth('JWT-auth')
+  @Get('/GetAllusers')
   @GrpcMethod('UsersService', 'getAllUsers')
   @Roles(Role.ADMIN)
   @ApiOperation({ summary: 'Find all user' })
@@ -28,41 +31,41 @@ export class UsersController {
     return await this.usersService.getAllUsers(token);
   }
 
-  @GrpcMethod('UsersService', 'getHello')
+  @Get('hello')
   async getHello(): Promise<HelloResponse> {
     return this.usersService.getHello();
   }
 
-  // @GrpcMethod('UsersService', 'getUserById')
-  // @Get(':id')
-  // // @Roles(Role.ADMIN)
-  // @ApiOperation({ summary: 'Find one user' })
-  // @ApiResponse({status: 401, description: 'unauthorized'})
-  // @ApiResponse({ status: 403, description: 'Forbidden resource' })
-  // @UsePipes(new ValidationPipe({ transform: true }))
-  // async getUserById(@Headers() headers: any,@Param() id: UUID): Promise<User> {
-  //   return this.usersService.getUserById(id.id, headers);
-  // }
+  @GrpcMethod('UsersService', 'getUserById')
+  @Get(':id')
+  @Roles(Role.ADMIN)
+  @ApiOperation({ summary: 'Find one user' })
+  @ApiResponse({status: 401, description: 'unauthorized'})
+  @ApiResponse({ status: 403, description: 'Forbidden resource' })
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async getUserById(@Headers() headers: any, @Param('id') id: string): Promise<Users> {
+    return this.usersService.getUserById(id, headers);
+  }
 
 
-  // @GrpcMethod('UsersService', 'updateUser')
-  // @Patch(':id')
-  // // @Roles(Role.ADMIN, Role.COMMERCIAL)
-  // @ApiOperation({ summary: 'Update password' })
-  // @ApiResponse({status: 200, description: 'password updated', type: Users})
-  // @ApiResponse({status: 404, description: 'User not found.'})
-  // @ApiResponse({ status: 403, description: 'Forbidden' })
-  // @UsePipes(new ValidationPipe({ transform: true }))
-  // async updateUser(@Param() id: UUID, @Body() updateUsersDto: UpdateUsersDto): Promise<UpdateResult> {
-  //   return this.usersService.updateUser(id.id, updateUsersDto);
-  // }
+  @GrpcMethod('UsersService', 'updateUser')
+  @Patch(':id')
+  @Roles(Role.ADMIN, Role.COMMERCIAL)
+  @ApiOperation({ summary: 'Update password' })
+  @ApiResponse({status: 200, description: 'password updated', type: Users})
+  @ApiResponse({status: 404, description: 'User not found.'})
+  @ApiResponse({ status: 403, description: 'Forbidden' })
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async updateUser(@Param('id') id: string, @Body() updateUsersDto: UpdateUsersDto): Promise<UpdateResult> {
+    return this.usersService.updateUser(id, updateUsersDto);
+  }
 
-  // @Delete(':id')
-  // @Roles(Role.ADMIN)
-  // @ApiOperation({ summary: 'delete one user' })
-  // @ApiResponse({ status: 403, description: 'Forbidden' })
-  // @UsePipes(new ValidationPipe({ transform: true }))
-  // async remove(@Param() id: UUID) {
-  //   return this.usersService.remove(id.id);
-  // }
+  @Delete(':id')
+  @Roles(Role.ADMIN)
+  @ApiOperation({ summary: 'delete one user' })
+  @ApiResponse({ status: 403, description: 'Forbidden' })
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async remove(@Param('id') id: string) {
+    return this.usersService.deleteUser(id);
+  }
 }
