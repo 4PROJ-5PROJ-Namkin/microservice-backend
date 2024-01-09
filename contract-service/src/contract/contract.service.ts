@@ -34,6 +34,13 @@ export class ContractsService {
     }
     return contract;
   }
+  async exists(contract_number: string): Promise<Boolean> {
+    const contract = await this.contractsRepository.findOneBy({ contract_number });
+    if (!contract) {
+      return false;
+    }
+    return true;
+  }
 
   async update(contract_number: string, updateContractInput: UpdateContractsInput): Promise<Contract> {
     const contract = await this.contractsRepository.findOneBy({ contract_number });
