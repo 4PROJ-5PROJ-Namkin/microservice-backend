@@ -4,8 +4,8 @@ package auth;
 
 service AuthService {
   rpc login(LoginUserDto) returns (Token) {}
-  rpc createCommercial(RegisterUserDto) returns (User) {}
-  rpc getHelloAuth(Empty) returns (HelloResponse) {}
+  rpc createUser(RegisterUserDto) returns (User) {}
+  rpc getHelloAuth(Empty) returns (HelloAuthResponse) {}
   rpc DecodeToken(Token) returns (TokenStructure) {}
 }
 
@@ -22,7 +22,7 @@ message User {
 message Empty {}
 
 
-message HelloResponse {
+message HelloAuthResponse {
   string message = 1;
 }
 

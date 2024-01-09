@@ -5,6 +5,7 @@ package auth;
 service AuthService {
   rpc login(LoginUserDto) returns (Token) {}
   rpc createCommercial(RegisterUserDto) returns (User) {}
+  rpc createAdmin(RegisterUserDto) returns (User) {}
   rpc getHelloAuth(Empty) returns (HelloAuthResponse) {}
   rpc DecodeToken(Token) returns (TokenStructure) {}
 }
