@@ -36,8 +36,7 @@ export class SupplyChainController {
   @ApiResponse({ status: 500, description: 'Error in associating machines and parts with the supply chain.' })    
   async createSupplyChain(@Body() createSupplyChainDto: CreateSupplyChainDto) {
     const createdSupplyChain = await this.supplyChainService.createSupplyChain(createSupplyChainDto);
-    await this.kafkaService.sendMessage('supply_chain', createdSupplyChain);
-
+    await this.kafkaService.sendMessage('supply_chain', createdSupplyChain, 'POST');
     return createdSupplyChain;
   }
 
@@ -50,7 +49,7 @@ export class SupplyChainController {
   async createManySupplyChain(@Body() createManySupplyChainDto: CreateManySupplyChainDto) {
     const createdManySupplyChain = await this.supplyChainService.createManySupplyChains(createManySupplyChainDto);
     for (const supplyChain of createdManySupplyChain) {
-      await this.kafkaService.sendMessage('supply_chain', supplyChain);
+      await this.kafkaService.sendMessage('supply_chain', supplyChain, 'POST');
     }
     return createdManySupplyChain;
   }
@@ -59,7 +58,11 @@ export class SupplyChainController {
   @ApiResponse({ status: 200, description: 'Update multiple supply chains' })
   @ApiResponse({ status: 404, description: 'One or multiple supply chain not found' })
   async updateManySupplyChain(@Body() updateManySupplyChainDto: UpdateManySupplyChainDto) {
-    return this.supplyChainService.updateManySupplyChains(updateManySupplyChainDto);
+    const updatedManySupplyChain = await this.supplyChainService.updateManySupplyChains(updateManySupplyChainDto);
+    for (const supplyChain of updatedManySupplyChain) {
+      await this.kafkaService.sendMessage('supply_chain', supplyChain, 'PATCH');
+    }
+    return updatedManySupplyChain;
   }
 
   @Patch(':id')
@@ -69,6 +72,8 @@ export class SupplyChainController {
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
     @Body() updateSupplyChainDto: UpdateOneSupplyChainDto
   ) {
-    return this.supplyChainService.updateOneSupplyChain(id, updateSupplyChainDto);
+    const updatedSupplyChain = await this.supplyChainService.updateOneSupplyChain(id, updateSupplyChainDto);
+    await this.kafkaService.sendMessage('supply_chain', updatedSupplyChain, 'PATCH');
+    return updatedSupplyChain;
   }
 }

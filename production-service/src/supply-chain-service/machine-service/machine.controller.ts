@@ -4,6 +4,8 @@ import { ApiTags, ApiProperty } from "@nestjs/swagger";
 import { RateLimiterGuard } from "nestjs-rate-limiter";
 import { KafkaService } from "src/kafka-producer-service/kafka-producer.service";
 import { Machine } from "../entities/machine.entity";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
 
 @ApiTags('Machine')
 @UseGuards(RateLimiterGuard)
@@ -11,7 +13,9 @@ import { Machine } from "../entities/machine.entity";
 export class MachineController {
     constructor(
         private readonly machineService: MachineService,
-        private readonly kafkaService: KafkaService
+        private readonly kafkaService: KafkaService,
+        @InjectRepository(Machine)
+        private readonly machineRepository: Repository<Machine>
     ) { }
 
     @Get(':id')
@@ -35,7 +39,7 @@ export class MachineController {
 
         const createdMachines = await this.machineService.createManyMachines(quantity);
         for (const machine of createdMachines) {
-            await this.kafkaService.sendMessage('machine', machine);
+            await this.kafkaService.sendMessage('machine', machine, 'POST');
         }
         return createdMachines;
     }
@@ -44,8 +48,7 @@ export class MachineController {
     @ApiProperty({ type: Machine, description: 'Create a new machine' })
     async createOneMachine() {
         const createdMachine = await this.machineService.createOneMachine();
-        await this.kafkaService.sendMessage('machine', createdMachine);
-
+        await this.kafkaService.sendMessage('machine', createdMachine, 'POST');
         return createdMachine;
     }
 
@@ -60,6 +63,8 @@ export class MachineController {
     @HttpCode(HttpStatus.NO_CONTENT)
     @ApiProperty({ description: 'Delete a machine by its ID' })
     async deleteOneMachine(@Param('id', ParseIntPipe) id: number) {
+        const machineToDelete = await this.machineRepository.findOne({ where: { id: id } });
+        await this.kafkaService.sendMessage('machine', machineToDelete, 'DELETE');
         return this.machineService.deleteOneMachine(id);
     }
 }

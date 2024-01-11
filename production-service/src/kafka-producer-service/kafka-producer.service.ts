@@ -33,9 +33,14 @@ export class KafkaService implements OnModuleInit, OnModuleDestroy {
     }
   }
 
-  async sendMessage(topic: string, message: object): Promise<void> {
+  async sendMessage(topic: string, message: object, httpMethod: string): Promise<void> {
     try {
       await this.ensureTopicExists(topic);
+
+      const initDate = new Date();
+      (message as any).isDeleted = httpMethod === 'DELETE';
+      (message as any).lastUpdate = `${initDate.getFullYear()}-${String(initDate.getMonth() + 1).padStart(2, '0')}-${String(initDate.getDate()).padStart(2, '0')} ${String(initDate.getHours()).padStart(2, '0')}:${String(initDate.getMinutes()).padStart(2, '0')}:${String(initDate.getSeconds()).padStart(2, '0')}.0000000`;
+
       const payload = { value: JSON.stringify(message) };
       await this.producer.send({ topic, messages: [payload] });
       console.log(`Sent message to ${topic}:`, payload);

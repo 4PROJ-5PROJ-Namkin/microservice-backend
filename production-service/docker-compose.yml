@@ -10,8 +10,6 @@ services:
       - "3002:3002"
     depends_on:
       - database
-    volumes:
-      - ./:/usr/src/app
 
   database:
     container_name: production-service-database
