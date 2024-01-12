@@ -1,6 +1,6 @@
 import { PartialType } from "@nestjs/mapped-types";
 import { CreateSupplyChainDto } from "./create-supply-chain.dto";
-import { IsArray, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
+import { IsArray, IsUUID, ValidateNested } from "class-validator";
 import { Type } from "class-transformer";
 import { ApiProperty } from "@nestjs/swagger";
 

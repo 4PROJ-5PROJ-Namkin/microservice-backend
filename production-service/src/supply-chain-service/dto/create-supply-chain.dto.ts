@@ -6,7 +6,7 @@ export class CreateSupplyChainDto {
     @IsDate()
     @ApiProperty({
         description: 'Date of production for a given piece in timestamp (epoch)',
-        example: "10/10/2023",
+        example: "2023-12-10T00:00:00.000Z",
         type: String
     })
     timeOfProduction: Date;
@@ -80,7 +80,7 @@ export class CreateManySupplyChainDto {
         description: 'Collection of supply chain objects.',
         type: [CreateSupplyChainDto],
         example: [
-            { timeOfProduction: "10/12/2023", order: 5, var5: false, machineId: 1, partId: 40 },
+            { timeOfProduction: "2023-12-10T00:00:00.000Z", order: 5, var5: false, machineId: 1, partId: 40 },
         ]
     })
     supplyChains: CreateSupplyChainDto[];
