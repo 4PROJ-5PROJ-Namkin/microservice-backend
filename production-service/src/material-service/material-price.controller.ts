@@ -22,7 +22,7 @@ export class MaterialPriceController {
 
     @Get(':materialId')
     @ApiResponse({ status: HttpStatus.OK, description: 'Material prices found' })
-    @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Material not found' })
+    @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Material not found/No prices found for the Material' })
     async findMaterialPrices(@Param('materialId', ParseIntPipe) materialId: number) {
         return this.materialPriceService.findMaterialPrices(materialId);
     }
@@ -54,8 +54,7 @@ export class MaterialPriceController {
     @Delete(':materialId/many-prices')
     @HttpCode(HttpStatus.NO_CONTENT)
     @ApiResponse({ status: HttpStatus.NO_CONTENT, description: 'Material price deleted' })
-    @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Material not found' })
-    @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Material Price not found' })
+    @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Material/Material Price not found.' })
     async deleteManyMaterialPrices(@Param('materialId', ParseIntPipe) materialId: number,
         @Body() deleteManyMaterialPricesDto: DeleteManyMaterialPricesDto) {
         return this.materialPriceService.deleteManyMaterialPrices(materialId, deleteManyMaterialPricesDto);
@@ -64,8 +63,7 @@ export class MaterialPriceController {
     @Delete(':materialId')
     @HttpCode(HttpStatus.NO_CONTENT)
     @ApiResponse({ status: HttpStatus.NO_CONTENT, description: 'Material price deleted' })
-    @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Material not found' })
-    @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Material Price not found' })
+    @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Material/Material Price not found' })
     async deleteMaterialPrice(@Param('materialId', ParseIntPipe) materialId: number,
         @Body() deleteMaterialPriceDto: DeleteMaterialPriceDto) {
         const materialPriceToDelete = await this.materialPriceRepository.findOne({

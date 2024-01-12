@@ -104,8 +104,7 @@ export class MaterialController {
 
   @Post(':id/part-informations')
   @ApiResponse({ status: HttpStatus.OK, description: 'Part information added to material' })
-  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Material not found' })
-  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'One or more Part Information not found' })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Material not found/One or more Part Information not found.' })
   async addPartInformationToMaterial(@Param('id', ParseIntPipe) id: number,
     @Body() createMaterialPartInformationsDto: CreateMaterialPartInformationsDto
   ) {

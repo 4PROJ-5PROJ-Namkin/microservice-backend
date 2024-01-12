@@ -1,7 +1,7 @@
 import { InjectRepository } from "@nestjs/typeorm";
 import { SupplyChain } from "./entities/supply-chain.entity";
 import { HttpException, HttpStatus, Injectable, NotFoundException } from "@nestjs/common";
-import { Connection, In, Repository } from "typeorm";
+import { Repository } from "typeorm";
 import { PartInformation } from "src/part-information-service/entities/part-information.entity";
 import { Machine } from "./entities/machine.entity";
 import { CreateManySupplyChainDto, CreateSupplyChainDto } from "./dto/create-supply-chain.dto";
@@ -31,43 +31,25 @@ export class SupplyChainService {
   }
 
   async createSupplyChain(createSupplyChainDto: CreateSupplyChainDto): Promise<SupplyChain> {
-    const machines = await this.machineRepository.findByIds(createSupplyChainDto.machineIds);
-    if (machines.length !== createSupplyChainDto.machineIds.length) {
-      throw new NotFoundException('One or more Machine IDs not found.');
+    const machine = await this.machineRepository.findOne({ where: { id: createSupplyChainDto.machineId } });
+    if (!machine) {
+      throw new NotFoundException('Machine ID not found.');
     }
 
-    const parts = await this.partInformationRepository.findByIds(createSupplyChainDto.partIds);
-    if (parts.length !== createSupplyChainDto.partIds.length) {
-      throw new NotFoundException('One or more PartInformation IDs not found.');
+    const part = await this.partInformationRepository.findOne({ where: { id: createSupplyChainDto.partId } });
+    if (!part) {
+      throw new NotFoundException('PartInformation ID not found.');
     }
 
-    const newSupplyChain = this.supplyChainRepository.create(createSupplyChainDto);
-
-    let savedSupplyChain;
     try {
-      savedSupplyChain = await this.supplyChainRepository.save(newSupplyChain);
+      const newSupplyChain = this.supplyChainRepository.create({
+        ...createSupplyChainDto,
+        machine,
+        part
+      });
+      return this.supplyChainRepository.save(newSupplyChain);
     } catch (error) {
       throw new HttpException('Error in creating a supply chain file.', HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    try {
-      await Promise.all(createSupplyChainDto.machineIds.map(machineId =>
-        this.machineRepository.createQueryBuilder()
-          .relation(Machine, 'supplyChain')
-          .of(machineId)
-          .add(savedSupplyChain)
-      ));
-
-      await Promise.all(createSupplyChainDto.partIds.map(partId =>
-        this.partInformationRepository.createQueryBuilder()
-          .relation(PartInformation, 'supplyChain')
-          .of(partId)
-          .add(savedSupplyChain)
-      ));
-
-      return savedSupplyChain;
-    } catch (error) {
-      throw new HttpException('Error in associating machines and parts with the supply chain.', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -75,97 +57,66 @@ export class SupplyChainService {
     const createdSupplyChains: SupplyChain[] = [];
 
     for (const createSupplyChainDto of createManySupplyChainDto.supplyChains) {
-      const machines = await this.machineRepository.findByIds(createSupplyChainDto.machineIds);
-      if (machines.length !== createSupplyChainDto.machineIds.length) {
-        throw new NotFoundException('One or more Machine IDs not found.');
+      const machine = await this.machineRepository.findOne({ where: { id: createSupplyChainDto.machineId } });
+      if (!machine) {
+        throw new NotFoundException('Machine ID not found.');
       }
 
-      const parts = await this.partInformationRepository.findByIds(createSupplyChainDto.partIds);
-      if (parts.length !== createSupplyChainDto.partIds.length) {
-        throw new NotFoundException('One or more PartInformation IDs not found.');
+      const part = await this.partInformationRepository.findOne({ where: { id: createSupplyChainDto.partId } });
+      if (!part) {
+        throw new NotFoundException('PartInformation ID not found.');
       }
-
-      const newSupplyChain = this.supplyChainRepository.create(createSupplyChainDto);
-
       try {
+        const newSupplyChain = this.supplyChainRepository.create({
+          ...createSupplyChainDto,
+          machine,
+          part
+        });
+
         const savedSupplyChain = await this.supplyChainRepository.save(newSupplyChain);
-
-        await Promise.all(createSupplyChainDto.machineIds.map(machineId =>
-          this.machineRepository.createQueryBuilder()
-            .relation(Machine, 'supplyChain')
-            .of(machineId)
-            .add(savedSupplyChain)
-        ));
-
-        await Promise.all(createSupplyChainDto.partIds.map(partId =>
-          this.partInformationRepository.createQueryBuilder()
-            .relation(PartInformation, 'supplyChain')
-            .of(partId)
-            .add(savedSupplyChain)
-        ));
-
         createdSupplyChains.push(savedSupplyChain);
+
       } catch (error) {
         throw new HttpException('Error in creating a supply chain file.', HttpStatus.INTERNAL_SERVER_ERROR);
       }
     }
-
     return createdSupplyChains;
   }
 
   async updateOneSupplyChain(id: string, updateSupplyChainDto: UpdateOneSupplyChainDto): Promise<SupplyChain> {
-    const { machineIds, partIds, ...updateData } = updateSupplyChainDto;
-
-    const supplyChainToUpdate = await this.supplyChainRepository.findOne({ where: { id } });
+    const supplyChainToUpdate = await this.supplyChainRepository.findOne({ where: { id }, relations: ['machine', 'part'] });
     if (!supplyChainToUpdate) {
       throw new NotFoundException(`SupplyChain with ID ${id} not found.`);
     }
 
-    let isUpdateNeeded = false;
-
-    for (const key in updateData) {
-      if (supplyChainToUpdate[key] !== updateData[key]) {
-        isUpdateNeeded = true;
-        supplyChainToUpdate[key] = updateData[key];
-      }
+    const machine = await this.machineRepository.findOne({ where: { id: updateSupplyChainDto.machineId } });
+    if (!machine && updateSupplyChainDto.machineId !== undefined) {
+      throw new NotFoundException('Machine ID not found.');
     }
 
-    if (isUpdateNeeded) {
-      await this.supplyChainRepository.save(supplyChainToUpdate);
+    const part = await this.partInformationRepository.findOne({ where: { id: updateSupplyChainDto.partId } });
+    if (!part && updateSupplyChainDto.partId !== undefined) {
+      throw new NotFoundException('PartInformation ID not found.');
     }
 
-    return this.supplyChainRepository.findOne({ where: { id }, relations: ['machine', 'part'] });
+    Object.assign(supplyChainToUpdate, updateSupplyChainDto);
+    if (machine) {
+      supplyChainToUpdate.machine = machine;
+    }
+    if (part) {
+      supplyChainToUpdate.part = part;
+    }
+
+    return this.supplyChainRepository.save(supplyChainToUpdate);
   }
 
   async updateManySupplyChains(updateManySupplyChainDto: UpdateManySupplyChainDto): Promise<SupplyChain[]> {
     const updatedSupplyChains: SupplyChain[] = [];
 
     for (const updateDto of updateManySupplyChainDto.supplyChains) {
-      const supplyChain = await this.supplyChainRepository.findOne({ where: { id: updateDto.id } });
-      if (!supplyChain) {
-        throw new NotFoundException(`SupplyChain with ID ${updateDto.id} not found.`);
-      }
-      if (updateDto.machineIds) {
-        const foundMachines = await this.machineRepository.findByIds(updateDto.machineIds);
-        if (foundMachines.length !== updateDto.machineIds.length) {
-          throw new NotFoundException('One or more Machine IDs not found.');
-        }
-      }
-
-      if (updateDto.partIds) {
-        const foundParts = await this.partInformationRepository.findByIds(updateDto.partIds);
-        if (foundParts.length !== updateDto.partIds.length) {
-          throw new NotFoundException('One or more PartInformation IDs not found.');
-        }
-      }
-
-      Object.assign(supplyChain, updateDto);
-
-      const updatedSupplyChain = await this.supplyChainRepository.save(supplyChain);
+      const updatedSupplyChain = await this.updateOneSupplyChain(updateDto.id, updateDto);
       updatedSupplyChains.push(updatedSupplyChain);
     }
-
     return updatedSupplyChains;
   }
-
 }

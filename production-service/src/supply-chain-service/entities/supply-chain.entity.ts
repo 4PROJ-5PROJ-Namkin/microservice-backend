@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { PartInformation } from '../../part-information-service/entities/part-information.entity';
 import { Machine } from './machine.entity';
 import { UnixTimestampTransformer } from 'src/utils/timestamp';
@@ -8,8 +8,12 @@ export class SupplyChain {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => Machine, machine => machine.supplyChain, { cascade: true })
-  machine: Machine[];
+  @ManyToOne(() => Machine, machine => machine.supplyChain)
+  @JoinColumn({ name: "machineId" })
+  machine: Machine;
+
+  @Column()
+  machineId: number;
 
   @Column({
     type: 'bigint',
@@ -17,8 +21,12 @@ export class SupplyChain {
   })
   timeOfProduction: Date;
 
-  @ManyToOne(() => PartInformation, partInformation => partInformation.supplyChain)
-  part: PartInformation[];
+  @ManyToOne(() => PartInformation)
+  @JoinColumn({ name: "partId" })
+  part: PartInformation;
+
+  @Column()
+  partId: number;
 
   @Column({ unique: false, nullable: false })
   order: number;

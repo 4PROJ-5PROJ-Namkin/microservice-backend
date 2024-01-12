@@ -30,10 +30,8 @@ export class SupplyChainController {
 
   @Post()
   @ApiResponse({ status: 201, description: 'Create a new supply chain' })
-  @ApiResponse({ status: 404, description: 'One or more Machine IDs not found.' })
-  @ApiResponse({ status: 404, description: 'One or more PartInformation IDs not found.' })
-  @ApiResponse({ status: 500, description: 'Error in creating a supply chain file.' })
-  @ApiResponse({ status: 500, description: 'Error in associating machines and parts with the supply chain.' })    
+  @ApiResponse({ status: 404, description: 'One or more Machine IDs not found/One or more PartInformation IDs not found' })
+  @ApiResponse({ status: 500, description: 'Error in creating a supply chain file/associating machines and parts with the supply chain.' })
   async createSupplyChain(@Body() createSupplyChainDto: CreateSupplyChainDto) {
     const createdSupplyChain = await this.supplyChainService.createSupplyChain(createSupplyChainDto);
     await this.kafkaService.sendMessage('supply_chain', createdSupplyChain, 'POST');
@@ -42,10 +40,8 @@ export class SupplyChainController {
 
   @Post('many-supply-chain')
   @ApiResponse({ status: 201, description: 'Create multiple supply chains' })
-  @ApiResponse({ status: 404, description: 'One or more Machine IDs not found.' })
-  @ApiResponse({ status: 404, description: 'One or more PartInformation IDs not found.' })
-  @ApiResponse({ status: 500, description: 'Error in creating a supply chain file.' })
-  @ApiResponse({ status: 500, description: 'Error in associating machines and parts with the supply chain.' })  
+  @ApiResponse({ status: 404, description: 'One or more Machine/PartInformation IDs not found.' })
+  @ApiResponse({ status: 500, description: 'Error in creating a supply chain file/Error in associating machines and parts with the supply chain.' })
   async createManySupplyChain(@Body() createManySupplyChainDto: CreateManySupplyChainDto) {
     const createdManySupplyChain = await this.supplyChainService.createManySupplyChains(createManySupplyChainDto);
     for (const supplyChain of createdManySupplyChain) {

@@ -6,6 +6,6 @@ export class Machine {
     @PrimaryGeneratedColumn("increment")
     id: number;
 
-    @OneToMany(() => SupplyChain, supplyChain => supplyChain.machine)
+    @OneToMany(() => SupplyChain, supplyChain => supplyChain.machine, { cascade: true })
     supplyChain: SupplyChain;
 }
