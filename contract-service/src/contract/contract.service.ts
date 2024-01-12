@@ -4,12 +4,14 @@ import { Repository } from 'typeorm';
 import { Contract } from './entities/contract.entity';
 import { CreateContractInput } from './dto/create-contract.input';
 import { UpdateContractsInput } from './dto/update-contract.input';
-
+import { HttpService } from '@nestjs/axios';
+import { lastValueFrom } from 'rxjs';
 @Injectable()
 export class ContractsService {
   constructor(
     @InjectRepository(Contract)
     private contractsRepository: Repository<Contract>,
+    private readonly httpService: HttpService,
   ) {}
 
   async create(createContractInput: CreateContractInput): Promise<Contract> {
@@ -59,5 +61,20 @@ export class ContractsService {
     } else {
       await this.contractsRepository.delete({ contract_number });
     }
+  }
+  async checkIfPieceExists(parts: number[]): Promise<void> {
+    await Promise.all(parts.map(async partId => {
+      try {
+        const response = await lastValueFrom(this.httpService.get(`http://localhost:3002/api/v1/part-information/${partId}`));
+      } catch (error) {
+        if (error.response) {
+          if (error.response.status === 404) {
+            throw new HttpException({ message: `Part with ID ${partId} not found.` }, HttpStatus.NOT_FOUND);
+          }
+        } else {
+            throw error;
+        }
+      }
+    }));
   }
 }

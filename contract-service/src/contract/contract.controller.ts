@@ -11,6 +11,7 @@ export class ContractsController {
   @UsePipes(new ValidationPipe({ transform: true, whitelist: true, exceptionFactory: (errors) => new BadRequestException(errors) }))
   async create(@Body() createContractInput: CreateContractInput) {
     const existingContract = await this.contractsService.exists(createContractInput.contract_number);
+    await this.contractsService.checkIfPieceExists(createContractInput.parts);
     if (existingContract) {
       throw new BadRequestException('Contract number already exists');
     }
@@ -28,8 +29,8 @@ export class ContractsController {
   @Put(':contract_number')
   @UsePipes(new ValidationPipe({ transform: true, whitelist: true, exceptionFactory: (errors) => new BadRequestException(errors) }))
   async update(@Body() updateContractsInput: UpdateContractsInput, @Param('contract_number') contract_number:string) {
+      await this.contractsService.checkIfPieceExists(updateContractsInput.parts);
       return this.contractsService.update(contract_number, updateContractsInput);
-
   }
 
   @Delete(':contract_number')
