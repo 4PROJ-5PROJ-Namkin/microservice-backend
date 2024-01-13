@@ -6,7 +6,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const config = new DocumentBuilder()
-  .setTitle('Api swagger')
+  .setTitle('Contract Service API - Namkin X Supinfo ')
   .setDescription('Namkin Api swagger')
   .setVersion('1.0')
   .addServer('/api/v1')
