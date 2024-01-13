@@ -6,7 +6,7 @@ export class CreateSupplyChainDto {
     @IsDate()
     @ApiProperty({
         description: 'Date of production for a given piece in timestamp (epoch)',
-        example: "10/10/2023",
+        example: "2023-12-10T00:00:00.000Z",
         type: String
     })
     timeOfProduction: Date;
@@ -55,21 +55,21 @@ export class CreateSupplyChainDto {
     })
     var5: boolean;
 
-    @IsNumber({}, { each: true })
+    @IsNumber()
     @ApiProperty({
-        description: 'Array of machine Ids.',
-        example: [1, 2, 3, 4],
-        type: [Number]
+        description: 'ID of a machine.',
+        example: 1,
+        type: Number
     })
-    machineIds: number[];
+    machineId: number;
 
-    @IsNumber({}, { each: true })
+    @IsNumber()
     @ApiProperty({
-        description: 'Array of part information Ids.',
-        example: [10, 20, 30, 40],
-        type: [Number]
+        description: 'ID of a part information.',
+        example: 10,
+        type: Number
     })
-    partIds: number[];
+    partId: number;
 }
 
 export class CreateManySupplyChainDto {
@@ -80,7 +80,7 @@ export class CreateManySupplyChainDto {
         description: 'Collection of supply chain objects.',
         type: [CreateSupplyChainDto],
         example: [
-            { timeOfProduction: "10/12/2023", order: 5, var5: false, machineIds: [1, 4, 7], partIds: [40, 45, 50] },
+            { timeOfProduction: "2023-12-10T00:00:00.000Z", order: 5, var5: false, machineId: 1, partId: 40 },
         ]
     })
     supplyChains: CreateSupplyChainDto[];

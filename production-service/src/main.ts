@@ -25,9 +25,10 @@ async function bootstrap() {
   const productionDocument = SwaggerModule.createDocument(app, openApiOptions, {
     include: [ProductionModule]
   });
+
   SwaggerModule.setup('api/v1/production', app, productionDocument);
   writeFileSync('./production-swagger-spec.json', JSON.stringify(productionDocument, null, 2));
-
+  
   app.setGlobalPrefix('api/v1');
   app.enableCors();
   await app.listen(3002);

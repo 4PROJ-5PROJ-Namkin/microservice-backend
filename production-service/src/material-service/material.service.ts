@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, Equal, In, Not, Repository } from 'typeorm';
 import { Material } from './entities/material.entity';
 import { CreateMaterialDto } from './dto/material-service-dto/create-material.dto';
-import { UpdateManyMaterialsDto, UpdateMaterialDto } from './dto/material-service-dto/update-material.dto';
+import { UpdateManyMaterialsDto, UpdateOneMaterialDto, UpdateMaterialDto } from './dto/material-service-dto/update-material.dto';
 import { DeleteManyMaterialsDto } from './dto/material-service-dto/delete-material.dto';
 import { CreateMaterialPartInformationsDto } from './dto/material-part-informations-dto/create-part-information-materials.dto';
 import { PartInformation } from 'src/part-information-service/entities/part-information.entity';
@@ -72,14 +72,10 @@ export class MaterialService {
     }
   }
 
-  async updateMaterial(id: number, updateMaterialDto: UpdateMaterialDto): Promise<Material> {
+  async updateMaterial(id: number, updateMaterialDto: UpdateOneMaterialDto): Promise<Material> {
     const material = await this.materialRepository.findOne({ where: { id: id } });
     if (!material) {
       throw new HttpException("Material ID doesn't exist.", HttpStatus.NOT_FOUND);
-    }
-
-    if (updateMaterialDto.id != id) {
-      throw new HttpException("Material ID doesn't match.", HttpStatus.BAD_REQUEST);
     }
 
     if (updateMaterialDto.name) {

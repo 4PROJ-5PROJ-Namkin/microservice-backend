@@ -2,7 +2,9 @@ FROM node:18.16.0
 
 WORKDIR /usr/src/app
 
-COPY package*.json .
+COPY package*.json ./
+
+RUN npm install -g @nestjs/cli
 
 RUN npm install
 
@@ -12,4 +14,4 @@ RUN npm run build
 
 EXPOSE 3002
 
-CMD ["npm", "run", "start:debug"]
+CMD ["npm", "run", "start:dev"]

@@ -1,4 +1,4 @@
-import { Body, Controller, Headers, Delete, Get, ParseIntPipe, Param, Patch, Post, HttpException } from '@nestjs/common';
+import { Body, Controller, Headers, Delete, Get, ParseIntPipe, Param, Patch, Post, HttpException, HttpStatus } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { catchError, map } from 'rxjs/operators';
 import { LoginUserDto, RegisterUserDto } from './gateway/auth.dto';
@@ -15,20 +15,25 @@ export class AppController {
   @ApiBearerAuth('JWT-auth')
   @Get('gateway/users')
   getAllUsers(@Headers('authorization') authHeader: any) {
-    return this.httpService.get('http://localhost:3001/api/v1/users', {
+    return this.httpService.get('http://users-services-backend:3001/api/v1/users', {
       headers: { 'Authorization': authHeader },
     }).pipe(
       map(response => response.data),
       catchError(err => {
-        throw new HttpException(err.response.data, err.response.status);
+        if (err.response) {
+          throw new HttpException(err.response.data, err.response.status);
+        } else {
+          throw new HttpException('Erreur de connexion au service', HttpStatus.SERVICE_UNAVAILABLE);
+        }
       })
     );
   }
+  
 
   @ApiBearerAuth('JWT-auth')
   @Get('gateway/users/:id')
   getUserById(@Headers('authorization') authHeader: any, @Param('id') id: string) {
-    return this.httpService.get(`http://localhost:3001/api/v1/users/${id}`, {
+    return this.httpService.get(`http://users-services-backend:3001/api/v1/users/${id}`, {
       headers: { 'Authorization': authHeader },
     }).pipe(
       map(response => response.data),
@@ -41,7 +46,7 @@ export class AppController {
   @ApiBearerAuth('JWT-auth')
   @Patch('gateway/users/:id')
   updateUserById(@Body() userData: UpdateUsersDto, @Headers('authorization') authHeader: any, @Param('id') id: string) {
-    return this.httpService.patch(`http://localhost:3001/api/v1/users/${id}`, userData, {
+    return this.httpService.patch(`http://users-services-backend:3001/api/v1/users/${id}`, userData, {
       headers: { 'Authorization': authHeader },
     }).pipe(
       map(response => response.data),
@@ -51,9 +56,10 @@ export class AppController {
     );
   }
 
+  @ApiBearerAuth('JWT-auth')
   @Delete('gateway/users/:id')
-  deleteUserById(@Headers('authorization') authHeader: any, @Param('id') id: number) {
-    return this.httpService.delete(`http://localhost:3001/api/v1/users/${id}`, {
+  deleteUserById(@Headers('authorization') authHeader: any, @Param('id') id: string) {
+    return this.httpService.delete(`http://users-services-backend:3001/api/v1/users/${id}`, {
       headers: { 'Authorization': authHeader },
     }).pipe(map(response => response.data),
       catchError(err => {
@@ -65,7 +71,7 @@ export class AppController {
 
   @Post('login')
   login(@Body() loginData: LoginUserDto) {
-    return this.httpService.post('http://localhost:3001/api/v1/login', loginData)
+    return this.httpService.post('http://users-services-backend:3001/api/v1/login', loginData)
       .pipe(map(response => response.data),
       catchError(err => {
         throw new HttpException(err.response.data, err.response.status);
@@ -76,7 +82,7 @@ export class AppController {
 
   @Post('register')
   createUser(@Body() userData: RegisterUserDto) {
-    return this.httpService.post('http://localhost:3001/api/v1/register', userData)
+    return this.httpService.post('http://users-services-backend:3001/api/v1/register', userData)
       .pipe(map(response => response.data),
       catchError(err => {
         throw new HttpException(err.response.data, err.response.status);
@@ -88,7 +94,7 @@ export class AppController {
   @ApiBearerAuth('JWT-auth')
   @Post('register/admin')
   createUserAdmin(@Body() userData: RegisterUserDto) {
-    return this.httpService.post('http://localhost:3001/api/v1/register/admin', userData)
+    return this.httpService.post('http://users-services-backend:3001/api/v1/register/admin', userData)
       .pipe(map(response => response.data),
       catchError(err => {
         throw new HttpException(err.response.data, err.response.status);
@@ -101,7 +107,7 @@ export class AppController {
   // Material
   @Get('gateway/materials')
   getAllMaterials() {
-    return this.httpService.get('http://localhost:3002/api/v1/materials').pipe(
+    return this.httpService.get('http://users-services-backend:3002/api/v1/materials').pipe(
       map(response => response.data),
       catchError(err => {
         throw new HttpException(err.response.data, err.response.status);

@@ -50,7 +50,7 @@ export class UsersController {
   @ApiOperation({ summary: 'delete one user' })
   @ApiResponse({ status: 403, description: 'Forbidden' })
   @UsePipes(new ValidationPipe({ transform: true }))
-  async remove(@Param() id: UUID) {
-    return this.usersService.remove(id.id);
+  async remove(@Headers() headers: any, @Param() id: UUID) {
+    return this.usersService.remove(id.id, headers);
   }
 }

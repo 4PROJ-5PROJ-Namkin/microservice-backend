@@ -10,6 +10,8 @@ services:
       - "3001:3001"
     depends_on:
       - database
+    networks:
+      - shared_network
 
   database:
     container_name: users-services-database
@@ -31,11 +33,13 @@ services:
       retries: 5
       start_period: 5s
     command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]
+    networks:
+      - shared_network
 
   haproxy:
     container_name: haproxy-load-balancer
     build:
-      context: ./src/load-balancer
+      context: ./load-balancer
       dockerfile: Dockerfile
     restart: always
     ports:
@@ -44,7 +48,10 @@ services:
     depends_on:
       - user-backend 
     volumes:
-      - ./src/load-balancer/haproxy_users.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+      - ./load-balancer/haproxy_users.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+    networks:
+      - shared_network
 
-volumes:
-  userData:
+networks:
+  shared_network:
+     external: true
