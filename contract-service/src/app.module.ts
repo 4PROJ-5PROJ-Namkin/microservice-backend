@@ -4,7 +4,6 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Contract } from './contract/entities/contract.entity';
 import { ContractsModule } from './contract/contract.module';
-import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -16,7 +15,6 @@ import { AuthModule } from './auth/auth.module';
       entities: [Contract],
       synchronize: true,
     }),
-    AuthModule,
     ContractsModule,
   
   ],
