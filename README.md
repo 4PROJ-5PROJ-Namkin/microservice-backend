@@ -45,7 +45,7 @@ In our gateway, this service will act as an event emitter that publish messages 
 
 # Kafka Producer (PubSub System)
 A Kafka broker enabled by a docker compose that setup the Zookeeper and the Kafka Broker with multiple partitions created by default in all topics.
-Our backend service will act as a Kafka producer where our Python Client will subscribe to the topics recognized.
+Our backend service will act as a Kafka producer where our [Python Client](https://github.com/4PROJ-5PROJ-Namkin/data-migration) will subscribe to the topics recognized.
 
 # Load Balancing And API Infrastructure
 Load balancing is performed by haproxy in each service.
