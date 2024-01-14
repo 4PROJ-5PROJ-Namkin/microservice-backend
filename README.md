@@ -39,11 +39,11 @@ Here's an example of the OpenAPI documentation:
 ![documentation](https://i.imgur.com/bvM4Ybk.png)
 
 # MQTT Broker Service
-A basic simulation of a MQTT environment to pull or push messages in a light MQTT broker system named *Mosquitto*. Each machine of the production stream events avout the supply chain, the part information references or the materials data.
+A basic simulation of a MQTT environment to pull or push messages in a light MQTT broker system named *Mosquitto*. Each machine of the production stream events about the supply chain, the part information references or the materials data.
 
 In our gateway, this service will act as an event emitter that publish messages and insert it in the Production service API.
 
-# Kafka Producter (PubSub System)
+# Kafka Producer (PubSub System)
 A Kafka broker enabled by a docker compose that setup the Zookeeper and the Kafka Broker with multiple partitions created by default in all topics.
 Our backend service will act as a Kafka producer where our Python Client will subscribe to the topics recognized.
 
