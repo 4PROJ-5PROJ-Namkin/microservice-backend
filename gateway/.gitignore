@@ -1,8 +1,7 @@
 #Dépendances
-./node_modules
 node_modules
-./users-service/dist
-./dist
+users-service/dist
+dist
 # Fichers d'environnement 
 .env
 ./users-service/data

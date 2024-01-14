@@ -1,0 +1,74 @@
+version: "3.9"
+services:
+  backend:
+    container_name: contract-service-backend
+    build:
+      context: .
+      dockerfile: dockerfile
+    restart: always
+    ports:
+      - "4002:4002"
+    depends_on:
+      - database 
+    networks:
+      - shared_network
+
+
+  database:
+    container_name: db-contract-service
+    image: postgres:latest
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - ./data:/var/lib/postgresql/data
+      - ./postgresql.conf:/etc/postgresql/postgresql.conf
+    ports:
+      - "5440:5440"
+    healthcheck:
+      test: psql -U postgres -q -d postgres -c "SELECT 'ready';"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]
+    networks:
+      - shared_network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin-container-contract
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - "5054:80"
+    depends_on:
+      - database    
+    networks:
+      - shared_network
+
+
+  haproxy:
+    container_name: contract-load-balancer
+    build:
+      context: ./load-balancer
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "82:82"
+      - "8890:8890"
+    depends_on:
+      - backend
+    volumes:
+      - ./load-balancer/haproxy_contract.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+    networks:
+      - shared_network
+
+networks:
+  shared_network:
+     external: true
+
+volumes:
+  data:

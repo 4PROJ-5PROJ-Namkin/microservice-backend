@@ -3,11 +3,10 @@ import { AppModule } from './app.module';
 import "reflect-metadata";
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import * as cors from 'cors';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const config = new DocumentBuilder()
-  .setTitle('User Service - Namkin X Supinfo')
+  .setTitle('Contract Service API - Namkin X Supinfo ')
   .setDescription('Namkin Api swagger')
   .setVersion('1.0')
   .addServer('/api/v1')
@@ -24,11 +23,11 @@ async function bootstrap() {
   )
   .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api/v1/user', app, document);
-  
+  SwaggerModule.setup('api/v1/contract', app, document);
   app.setGlobalPrefix('api/v1');
   app.useGlobalPipes(new ValidationPipe());
-  await app.listen(3001);
+  app.enableCors();
+  await app.listen(4002);
 }
 
 bootstrap();
