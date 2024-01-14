@@ -1,2 +1,3 @@
-/node_modules
-/userData
+node_modules
+dist
+userData

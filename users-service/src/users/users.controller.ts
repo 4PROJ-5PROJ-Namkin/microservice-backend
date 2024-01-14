@@ -1,4 +1,4 @@
-import { Body, Headers, Controller, Delete, Get, Param, UsePipes, ValidationPipe, Patch, Post } from "@nestjs/common";
+import { Body, Headers, Controller, Delete, Get, Param, UsePipes, ValidationPipe, Patch } from "@nestjs/common";
 import { UUID } from './dto/params-user.dto';
 import { UpdateUsersDto } from './dto/update-users.dto';
 import { UsersService } from './users.service';
@@ -6,7 +6,6 @@ import Users from "./entities/users.entity";
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { Roles } from "src/auth/guards/auth.decorator";
 import { Role } from "src/auth/guards/auth.enum";
-import { MessagePattern, Payload } from "@nestjs/microservices";
 
 @ApiTags('Users')
 @ApiBearerAuth('JWT-auth')
@@ -51,7 +50,7 @@ export class UsersController {
   @ApiOperation({ summary: 'delete one user' })
   @ApiResponse({ status: 403, description: 'Forbidden' })
   @UsePipes(new ValidationPipe({ transform: true }))
-  async remove(@Param() id: UUID) {
-    return this.usersService.remove(id.id);
+  async remove(@Headers() headers: any, @Param() id: UUID) {
+    return this.usersService.remove(id.id, headers);
   }
 }
