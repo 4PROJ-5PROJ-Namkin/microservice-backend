@@ -1,0 +1,9 @@
+#Dépendances
+node_modules
+users-service/dist
+dist
+# Fichers d'environnement 
+.env
+./users-service/data
+./users-service/userData
+

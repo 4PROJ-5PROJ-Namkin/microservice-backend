@@ -77,11 +77,38 @@ export class UsersService {
   }
 
 
-    async remove(id: string) {
-    const user = await this.usersRepository.findOneBy({ id });
-    if (!user)
-      throw new HttpException({ message: 'User not found.' }, HttpStatus.NOT_FOUND);
-    else
-      return await this.usersRepository.delete({ id });
+  async remove(id: string, headers: any) {
+
+    const token: Token = await headers.authorization.split(' ')[1];
+    const decoded = await DecodeToken(token);
+
+    if (decoded.role === 'commercial' && decoded.id !== id) {
+      throw new HttpException({ message: 'You are not allowed to access this resource' }, HttpStatus.UNAUTHORIZED);
+    }
+
+    if (decoded.id === id) {
+      const user = await this.usersRepository.findOneBy({ id })
+      if (!user)
+        throw new HttpException({ message: 'User not found' }, HttpStatus.NOT_FOUND);
+      else
+        return await this.usersRepository.delete({ id });
+    }
+
+    if (decoded.role === 'commercial') {
+      const user = await this.usersRepository.findOneBy({ id, role: 'commercial' })
+      if (!user)
+        throw new HttpException({ message: 'User not found' }, HttpStatus.NOT_FOUND);
+      else
+        return await this.usersRepository.delete({ id });
+    }
+
+    if (decoded.role === 'admin') {
+      const user = await this.usersRepository.findOneBy({ id })
+      if (!user)
+        throw new HttpException({ message: 'User not found' }, HttpStatus.NOT_FOUND);
+      else
+        return await this.usersRepository.delete({ id });
+
+    }
   }
 }

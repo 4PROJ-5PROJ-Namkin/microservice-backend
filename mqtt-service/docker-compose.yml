@@ -11,6 +11,9 @@ services:
       - "3006:3006"
     depends_on:
       - mqtt-broker
+    networks:
+      - shared_network
+
 
   mqtt-broker:
     container_name: mqtt
@@ -23,6 +26,13 @@ services:
     ports:
       - 1883:1883
       - 9001:9001
+    networks:
+      - shared_network
+
+networks:
+  shared_network:
+     external: true
+
 volumes:
   config:
   data:

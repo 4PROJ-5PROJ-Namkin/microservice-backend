@@ -8,12 +8,9 @@ services:
     restart: always
     ports:
       - "3000:3000"
+    networks:
+      - shared_network
 
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin-container-gateway-backend
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
-    ports:
-      - "5050:80"
+networks:
+  shared_network:
+    external: true
